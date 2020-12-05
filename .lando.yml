@@ -1,0 +1,20 @@
+name: project
+recipe: laravel
+config:
+  webroot: public
+services:
+  node:
+    type: node
+    build:
+      - npm install
+  phpmyadmin:
+    type: phpmyadmin
+tooling:
+  npm:
+    service: node
+  node:
+    service: node
+  phpunit:
+    service: appserver
+    description: "Run PHP Unit tests: lando phpunit"
+    cmd: /app/vendor/bin/phpunit
