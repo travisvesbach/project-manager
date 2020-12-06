@@ -4315,6 +4315,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['projects'],
@@ -49164,11 +49166,24 @@ var render = function() {
           "div",
           { staticClass: "max-w-7xl mx-auto py-10 sm:px-6 lg:px-8" },
           _vm._l(_vm.projects, function(project) {
-            return _c("div", { staticClass: "card" }, [
-              _c("h3", [_vm._v(_vm._s(project.name))]),
-              _vm._v(" "),
-              _c("p", [_vm._v(_vm._s(project.description))])
-            ])
+            return _c(
+              "div",
+              { staticClass: "card" },
+              [
+                _c(
+                  "inertia-link",
+                  {
+                    attrs: {
+                      href: _vm.route("projects.show", { id: project.id })
+                    }
+                  },
+                  [_c("h2", [_vm._v(_vm._s(project.name))])]
+                ),
+                _vm._v(" "),
+                _c("p", [_vm._v(_vm._s(project.description))])
+              ],
+              1
+            )
           }),
           0
         )
@@ -63620,15 +63635,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!************************************************!*\
   !*** ./resources/js/Pages/Projects/Create.vue ***!
   \************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Create_vue_vue_type_template_id_fc517d90___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Create.vue?vue&type=template&id=fc517d90& */ "./resources/js/Pages/Projects/Create.vue?vue&type=template&id=fc517d90&");
 /* harmony import */ var _Create_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Create.vue?vue&type=script&lang=js& */ "./resources/js/Pages/Projects/Create.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Create_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Create_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -63658,7 +63672,7 @@ component.options.__file = "resources/js/Pages/Projects/Create.vue"
 /*!*************************************************************************!*\
   !*** ./resources/js/Pages/Projects/Create.vue?vue&type=script&lang=js& ***!
   \*************************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

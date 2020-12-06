@@ -9,7 +9,9 @@
         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
                 <div class="card" v-for="project in projects">
-                    <h3>{{ project.name }}</h3>
+                    <inertia-link :href="route('projects.show', {id: project.id})">
+                        <h2>{{ project.name }}</h2>
+                    </inertia-link>
                     <p>{{ project.description }}</p>
                 </div>
             </div>
