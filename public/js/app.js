@@ -4242,6 +4242,18 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
+/* harmony import */ var _Jetstream_ActionMessage__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Jetstream/ActionMessage */ "./resources/js/Jetstream/ActionMessage.vue");
+/* harmony import */ var _Jetstream_Button__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Jetstream/Button */ "./resources/js/Jetstream/Button.vue");
+/* harmony import */ var _Jetstream_Input__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/Input */ "./resources/js/Jetstream/Input.vue");
+/* harmony import */ var _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Jetstream/InputError */ "./resources/js/Jetstream/InputError.vue");
+/* harmony import */ var _Jetstream_Label__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Jetstream/Label */ "./resources/js/Jetstream/Label.vue");
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -4265,16 +4277,26 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
+
+
+
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
-    AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"]
+    AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
+    JetActionMessage: _Jetstream_ActionMessage__WEBPACK_IMPORTED_MODULE_1__["default"],
+    JetButton: _Jetstream_Button__WEBPACK_IMPORTED_MODULE_2__["default"],
+    JetInput: _Jetstream_Input__WEBPACK_IMPORTED_MODULE_3__["default"],
+    JetInputError: _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_4__["default"],
+    JetLabel: _Jetstream_Label__WEBPACK_IMPORTED_MODULE_5__["default"]
   },
   data: function data() {
     return {
-      form: {
+      form: this.$inertia.form({
         name: null,
         description: null
-      }
+      })
     };
   },
   methods: {
@@ -49046,72 +49068,88 @@ var render = function() {
     },
     [
       _vm._v(" "),
-      _c("div", [
-        _c("div", { staticClass: "max-w-7xl mx-auto py-10 sm:px-6 lg:px-8" }, [
-          _c(
-            "form",
-            {
-              on: {
-                submit: function($event) {
-                  $event.preventDefault()
-                  return _vm.submit($event)
-                }
+      _c(
+        "form",
+        {
+          staticClass: "max-w-7xl mx-auto py-10 sm:px-6 lg:px-8 m-2",
+          on: {
+            submit: function($event) {
+              $event.preventDefault()
+              return _vm.submit($event)
+            }
+          }
+        },
+        [
+          _c("jet-label", { attrs: { for: "name", value: "Project Name" } }),
+          _vm._v(" "),
+          _c("jet-input", {
+            staticClass: "mt-1 block w-full",
+            attrs: { id: "name", autocomplete: "new-name" },
+            model: {
+              value: _vm.form.name,
+              callback: function($$v) {
+                _vm.$set(_vm.form, "name", $$v)
+              },
+              expression: "form.name"
+            }
+          }),
+          _vm._v(" "),
+          _c("jet-input-error", {
+            staticClass: "mt-2",
+            attrs: { message: _vm.form.error("name") }
+          }),
+          _vm._v(" "),
+          _c("jet-label", {
+            attrs: { for: "description", value: "Description" }
+          }),
+          _vm._v(" "),
+          _c("textarea", {
+            directives: [
+              {
+                name: "model",
+                rawName: "v-model",
+                value: _vm.form.description,
+                expression: "form.description"
               }
+            ],
+            staticClass: "form-input rounded-md shadow-sm mt-1 block w-full",
+            attrs: { id: "description" },
+            domProps: { value: _vm.form.description },
+            on: {
+              input: function($event) {
+                if ($event.target.composing) {
+                  return
+                }
+                _vm.$set(_vm.form, "description", $event.target.value)
+              }
+            }
+          }),
+          _vm._v(" "),
+          _c("jet-input-error", {
+            staticClass: "mt-2",
+            attrs: { message: _vm.form.error("description") }
+          }),
+          _vm._v(" "),
+          _c(
+            "jet-action-message",
+            {
+              staticClass: "mr-3 mt-2",
+              attrs: { on: _vm.form.recentlySuccessful }
             },
-            [
-              _c("label", { attrs: { for: "name" } }, [_vm._v("Name:")]),
-              _vm._v(" "),
-              _c("input", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.form.name,
-                    expression: "form.name"
-                  }
-                ],
-                attrs: { id: "name" },
-                domProps: { value: _vm.form.name },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.form, "name", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("label", { attrs: { for: "description" } }, [
-                _vm._v("Description:")
-              ]),
-              _vm._v(" "),
-              _c("textarea", {
-                directives: [
-                  {
-                    name: "model",
-                    rawName: "v-model",
-                    value: _vm.form.description,
-                    expression: "form.description"
-                  }
-                ],
-                attrs: { id: "description" },
-                domProps: { value: _vm.form.description },
-                on: {
-                  input: function($event) {
-                    if ($event.target.composing) {
-                      return
-                    }
-                    _vm.$set(_vm.form, "description", $event.target.value)
-                  }
-                }
-              }),
-              _vm._v(" "),
-              _c("button", { attrs: { type: "submit" } }, [_vm._v("Submit")])
-            ]
+            [_vm._v("\n            Saved.\n        ")]
+          ),
+          _vm._v(" "),
+          _c(
+            "jet-button",
+            {
+              class: { "opacity-25": _vm.form.processing },
+              attrs: { disabled: _vm.form.processing }
+            },
+            [_vm._v("\n            Save\n        ")]
           )
-        ])
-      ])
+        ],
+        1
+      )
     ]
   )
 }

@@ -44,4 +44,16 @@ class ManageProjectsTest extends TestCase
             ->assertSee($attributes['name'])
             ->assertSee($attributes['description']);
     }
+
+    /** @test **/
+    public function a_user_can_update_a_project() {
+        $this->withoutExceptionHandling();
+        $project = Project::factory()->create();
+
+        $this->actingAs($project->owner)
+            ->patch($project->path(), $attributes = ['description' => 'Changed'])
+            ->assertRedirect($project->path());
+
+        $this->assertDatabaseHas('projects', $attributes);
+    }
 }

@@ -38,8 +38,11 @@ class ProjectsController extends Controller
     public function update(Project $project) {
         $this->authorize('update', $project);
 
-        $project->update(request(['notes']));
+        $project->update(request([
+            'name',
+            'description'
+        ]));
 
-        // return redirect($project->path());
+        return redirect($project->path());
     }
 }
