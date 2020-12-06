@@ -24,7 +24,7 @@ Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
 })->name('dashboard');
 
 
-Route::group(['middleware', 'auth'], function() {
+Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
 
     Route::get('/projects', [ProjectsController::class, 'index']);
     Route::get('/projects/create', [ProjectsController::class, 'create']);
