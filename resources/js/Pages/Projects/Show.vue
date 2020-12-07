@@ -20,6 +20,9 @@
                                 <jet-dropdown-link @click.native="editingProject = true" as="button">
                                     Edit Project
                                 </jet-dropdown-link>
+                                <jet-dropdown-link @click.native="confirmingDeleteProject = true" as="button">
+                                    Delete Project
+                                </jet-dropdown-link>
                             </template>
                         </jet-dropdown>
                     </div>
@@ -49,14 +52,34 @@
                 </template>
 
                 <template #actions>
-                    <jet-button @click.native="updateProject()">
-                        Save
-                    </jet-button>
                     <jet-secondary-button @click.native="editingProject = false">
                         Cancel
                     </jet-secondary-button>
+                    <jet-button @click.native="updateProject()">
+                        Save
+                    </jet-button>
                 </template>
             </modal-form>
+
+            <jet-confirmation-modal :show="confirmingDeleteProject" @close="confirmingDeleteProject = false">
+                <template #title>
+                    Delete Project
+                </template>
+
+                <template #content>
+                    Are you sure you want to delete this project? All of this project's tasks will be deleted as well.
+                </template>
+
+                <template #footer>
+                    <jet-secondary-button @click.native="confirmingDeleteProject = false">
+                        Cancel
+                    </jet-secondary-button>
+                    <jet-danger-button class="ml-2" @click.native="deleteProject" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
+                        Delete Project
+                    </jet-danger-button>
+                </template>
+            </jet-confirmation-modal>
+
 
     </app-layout>
 </template>
@@ -68,10 +91,12 @@
     import JetDropdownLink from '@/Jetstream/DropdownLink'
     import JetButton from '@/Jetstream/Button'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import JetDangerButton from '@/Jetstream/DangerButton'
     import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetInput from '@/Jetstream/Input'
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
 
     export default {
         props: ['project'],
@@ -83,14 +108,17 @@
             JetDropdownLink,
             JetButton,
             JetSecondaryButton,
+            JetDangerButton,
             JetActionMessage,
             JetInput,
             JetInputError,
             JetLabel,
+            JetConfirmationModal,
         },
         data() {
             return {
                 editingProject: false,
+                confirmingDeleteProject: false,
                 form: this.$inertia.form({
                     id: this.project.id,
                     name: this.project.name,
@@ -102,6 +130,9 @@
             updateProject() {
                 this.$inertia.patch('/projects/' + this.form.id, this.form);
                 this.editingProject = false;
+            },
+            deleteProject() {
+                this.$inertia.delete('/projects/' + this.form.id);
             }
         }
     }

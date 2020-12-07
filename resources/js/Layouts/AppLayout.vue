@@ -21,28 +21,39 @@
 
                         <!-- Navigation Links -->
                         <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex flex-grow justify-end">
-                            <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
-                                Dashboard
+                            <!-- Dashboard link -->
+                            <jet-nav-link :href="route('dashboard')" :active="route().current('dashboard')" title="Dashboard">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+                                </svg>
                             </jet-nav-link>
-                            <jet-nav-link :href="route('projects')" :active="route().current('projects')">
-                                Projects
+
+                            <!-- Projects link -->
+                            <jet-nav-link :href="route('projects')" :active="route().current('projects')" title="Projects">
+                                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                </svg>
                             </jet-nav-link>
                         </div>
                     </div>
 
-                    <!-- Create Dropdown -->
+                    <!-- Create/Add Dropdown -->
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <div class="ml-3 relative">
                             <jet-dropdown align="right" width="48">
                                 <template #trigger>
-                                    <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
-                                        <div>+</div>
+                                    <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out" title="Add">
+                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
                                     </button>
                                 </template>
 
                                 <template #content>
                                     <jet-dropdown-link :href="route('projects.create')">
-                                        New Project
+                                        <svg class="h-5 w-5 inline-block align-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                        </svg> New Project
                                     </jet-dropdown-link>
                                 </template>
                             </jet-dropdown>
@@ -113,6 +124,16 @@
                 <div class="pt-2 pb-3 space-y-1">
                     <jet-responsive-nav-link :href="route('dashboard')" :active="route().current('dashboard')">
                         Dashboard
+                    </jet-responsive-nav-link>
+                    <jet-responsive-nav-link :href="route('projects')" :active="route().current('projects')">
+                        Projects
+                    </jet-responsive-nav-link>
+                </div>
+
+                <!-- Responsive Create/Add -->
+                <div class="pt-4 pb-1 border-t border-gray-200">
+                    <jet-responsive-nav-link :href="route('projects.create')" :active="route().current('projects.create')">
+                        New Project
                     </jet-responsive-nav-link>
                 </div>
 
