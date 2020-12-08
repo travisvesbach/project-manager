@@ -3,5 +3,18 @@
 @import 'tailwindcss/utilities';
 
 .card {
-    @apply .bg-white .p-5 .rounded-lg .shadow;
+    @apply bg-white p-5 rounded-lg shadow;
+}
+
+
+.dark-nav-link {
+    @apply dark:text-yellow-600 dark:hover:text-yellow-500 dark:hover:border-yellow-500 dark:focus:text-yellow-400 dark:focus:border-yellow-400;
+}
+
+.dark-nav-link-active {
+    @apply dark:text-yellow-500 dark:border-yellow-500 dark:focus:border-yellow-400;
+}
+
+.dark-link {
+    @apply dark:text-yellow-600 dark:hover:text-yellow-500 dark:focus:text-yellow-400;
 }

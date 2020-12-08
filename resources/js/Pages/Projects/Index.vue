@@ -1,9 +1,7 @@
 <template>
     <app-layout>
         <template #header>
-            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                Projects
-            </h2>
+            Projects
         </template>
 
         <div>

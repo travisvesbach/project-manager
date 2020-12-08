@@ -54,6 +54,13 @@
                 <jet-input id="email" type="email" class="mt-1 block w-full" v-model="form.email" />
                 <jet-input-error :message="form.error('email')" class="mt-2" />
             </div>
+
+            <!-- Theme -->
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="theme" value="Theme" />
+                <select-input id="theme" class="mt=1 block w-full" v-model="form.theme" v-bind:options="['light', 'dark']" />
+                <jet-input-error :message="form.error('theme')" class="mt-2" />
+            </div>
         </template>
 
         <template #actions>
@@ -76,6 +83,7 @@
     import JetLabel from '@/Jetstream/Label'
     import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import SelectInput from '@/Components/SelectInput'
 
     export default {
         components: {
@@ -86,6 +94,7 @@
             JetInputError,
             JetLabel,
             JetSecondaryButton,
+            SelectInput,
         },
 
         props: ['user'],
@@ -97,6 +106,7 @@
                     name: this.user.name,
                     email: this.user.email,
                     photo: null,
+                    theme: this.user.theme,
                 }, {
                     bag: 'updateProfileInformation',
                     resetOnSuccess: false,
@@ -115,6 +125,12 @@
                 this.form.post(route('user-profile-information.update'), {
                     preserveScroll: true
                 });
+                if(this.user.theme != this.form.theme) {
+                    let root = document.querySelector("html");
+                    root.classList.remove('dark');
+                    root.classList.remove('light');
+                    root.classList.add(this.form.theme);
+                }
             },
 
             selectNewPhoto() {
