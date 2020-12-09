@@ -5,12 +5,16 @@
         </template>
 
         <div>
-            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
-                <div class="card" v-for="project in projects">
-                    <inertia-link :href="route('projects.show', {id: project.id})">
-                        <h2>{{ project.name }}</h2>
-                    </inertia-link>
-                    <p>{{ project.description }}</p>
+            <div class="lg:flex lg:flex-wrap -mx-3">
+                <div class="lg:w-1/3 px-3 pb-6" v-for="project in projects">
+                    <card>
+                        <template #title>
+                            <inertia-link :href="route('projects.show', {id: project.id})">
+                                {{ project.name }}
+                            </inertia-link>
+                        </template>
+                        <p>{{ project.description }}</p>
+                    </card>
                 </div>
             </div>
         </div>
@@ -19,12 +23,14 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
+    import Card from '@/Components/Card'
 
     export default {
         props: ['projects'],
 
         components: {
             AppLayout,
+            Card,
         },
     }
 </script>
