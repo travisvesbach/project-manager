@@ -15,7 +15,7 @@
                         <!-- Header -->
                         <div class="sm:-my-px ml-5">
                             <div class="py-6">
-                                <h2 class="font-semibold text-xl text-gray-800 leading-tight dark:text-yellow-500">
+                                <h2 class="font-semibold text-xl leading-tight heading-color">
                                     <slot name="header"></slot>
                                 </h2>
                             </div>
@@ -44,18 +44,21 @@
                         <div class="ml-3 relative">
                             <jet-dropdown align="right" width="48">
                                 <template #trigger>
-                                    <button class="flex-link" title="Add">
-                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <button class="flex link link-color" title="Add">
+                                        <svg class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                                         </svg>
                                     </button>
                                 </template>
 
                                 <template #content>
+                                    <div class="block px-4 py-2 text-xs dropdown-title-color">
+                                        Create New
+                                    </div>
                                     <jet-dropdown-link :href="route('projects.create')">
                                         <svg class="h-5 w-5 inline-block align-bottom" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
-                                        </svg> New Project
+                                        </svg> Project
                                     </jet-dropdown-link>
                                 </template>
                             </jet-dropdown>
@@ -84,7 +87,7 @@
 
                                 <template #content>
                                     <!-- Account Management -->
-                                    <div class="block px-4 py-2 text-xs text-gray-400">
+                                    <div class="block px-4 py-2 text-xs dropdown-title-color">
                                         Manage Account
                                     </div>
 
@@ -96,11 +99,11 @@
                                         API Tokens
                                     </jet-dropdown-link>
 
-                                    <div class="border-t border-gray-100"></div>
+                                    <div class="border-t dropdown-divider-color"></div>
 
                                     <!-- Team Management -->
                                     <template v-if="$page.jetstream.hasTeamFeatures">
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                        <div class="block px-4 py-2 text-xs dropdown-title-color">
                                             Manage Team
                                         </div>
 
@@ -113,10 +116,10 @@
                                             Create New Team
                                         </jet-dropdown-link>
 
-                                        <div class="border-t border-gray-100"></div>
+                                        <div class="border-t dropdown-divider-color"></div>
 
                                         <!-- Team Switcher -->
-                                        <div class="block px-4 py-2 text-xs text-gray-400">
+                                        <div class="block px-4 py-2 text-xs dropdown-title-color">
                                             Switch Teams
                                         </div>
 

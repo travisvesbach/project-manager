@@ -8,7 +8,7 @@
                 <div class="ml-3 relative">
                     <jet-dropdown align="left" width="48">
                         <template #trigger>
-                            <button class="flex items-center text-sm font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300 focus:outline-none focus:text-gray-700 focus:border-gray-300 transition duration-150 ease-in-out">
+                            <button class="flex link link-color">
                                 <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                     <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
@@ -44,8 +44,8 @@
                         <jet-input id="name" class="mt-1 block w-full" v-model="form.name" autocomplete="new-name" />
                         <jet-input-error :message="form.error('name')" class="mt-2" />
 
-                        <jet-label for="description" value="Description" />
-                        <textarea id="description" v-model="form.description" class="form-input rounded-md shadow-sm mt-1 block w-full" />
+                        <jet-label for="description" value="Description" class="mt-4" />
+                        <textarea-input id="description" v-model="form.description" />
                         <jet-input-error :message="form.error('description')" class="mt-2" />
                 </template>
 
@@ -85,6 +85,7 @@
 <script>
     import AppLayout from '@/Layouts/AppLayout'
     import ModalForm from '@/Components/ModalForm'
+    import TextareaInput from '@/Components/TextareaInput'
     import JetDropdown from '@/Jetstream/Dropdown'
     import JetDropdownLink from '@/Jetstream/DropdownLink'
     import JetButton from '@/Jetstream/Button'
@@ -102,6 +103,7 @@
         components: {
             AppLayout,
             ModalForm,
+            TextareaInput,
             JetDropdown,
             JetDropdownLink,
             JetButton,

@@ -10,8 +10,8 @@
             <jet-input id="name" class="mt-1 block w-full" v-model="form.name" autocomplete="new-name" />
             <jet-input-error :message="form.error('name')" class="mt-2" />
 
-            <jet-label for="description" value="Description" />
-            <textarea id="description" v-model="form.description" class="form-input rounded-md shadow-sm mt-1 block w-full" />
+            <jet-label for="description" value="Description" class="mt-4" />
+            <textarea-input id="description" v-model="form.description"/>
             <jet-input-error :message="form.error('description')" class="mt-2" />
 
             <template #actions>
@@ -36,6 +36,7 @@
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
     import CenteredForm from '@/Components/CenteredForm'
+    import TextareaInput from '@/Components/TextareaInput'
 
     export default {
         components: {
@@ -46,6 +47,7 @@
             JetInputError,
             JetLabel,
             CenteredForm,
+            TextareaInput,
         },
         data() {
             return {
