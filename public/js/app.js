@@ -45696,7 +45696,7 @@ var render = function() {
             [
               _c(
                 "h3",
-                { staticClass: "text-lg heading-text" },
+                { staticClass: "text-lg heading-color" },
                 [_vm._t("title")],
                 2
               ),
@@ -50109,41 +50109,43 @@ var render = function() {
               { staticClass: "lg:w-1/3 px-3 pb-6" },
               [
                 _c(
-                  "card",
+                  "inertia-link",
                   {
-                    scopedSlots: _vm._u(
-                      [
-                        {
-                          key: "title",
-                          fn: function() {
-                            return [
-                              _c(
-                                "inertia-link",
-                                {
-                                  attrs: {
-                                    href: _vm.route("projects.show", {
-                                      id: project.id
-                                    })
-                                  }
-                                },
-                                [
+                    attrs: {
+                      href: _vm.route("projects.show", { id: project.id })
+                    }
+                  },
+                  [
+                    _c(
+                      "card",
+                      {
+                        scopedSlots: _vm._u(
+                          [
+                            {
+                              key: "title",
+                              fn: function() {
+                                return [
                                   _vm._v(
                                     "\n                            " +
                                       _vm._s(project.name) +
                                       "\n                        "
                                   )
                                 ]
-                              )
-                            ]
-                          },
-                          proxy: true
-                        }
-                      ],
-                      null,
-                      true
+                              },
+                              proxy: true
+                            }
+                          ],
+                          null,
+                          true
+                        )
+                      },
+                      [
+                        _vm._v(" "),
+                        _c("p", [_vm._v(_vm._s(project.description))])
+                      ]
                     )
-                  },
-                  [_vm._v(" "), _c("p", [_vm._v(_vm._s(project.description))])]
+                  ],
+                  1
                 )
               ],
               1

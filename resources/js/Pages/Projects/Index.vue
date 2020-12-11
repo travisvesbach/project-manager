@@ -7,14 +7,14 @@
         <div>
             <div class="lg:flex lg:flex-wrap -mx-3">
                 <div class="lg:w-1/3 px-3 pb-6" v-for="project in projects">
-                    <card>
-                        <template #title>
-                            <inertia-link :href="route('projects.show', {id: project.id})">
+                    <inertia-link :href="route('projects.show', {id: project.id})">
+                        <card>
+                            <template #title>
                                 {{ project.name }}
-                            </inertia-link>
-                        </template>
-                        <p>{{ project.description }}</p>
-                    </card>
+                            </template>
+                            <p>{{ project.description }}</p>
+                        </card>
+                    </inertia-link>
                 </div>
             </div>
         </div>
