@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\TasksController;
 
 /*
 |--------------------------------------------------------------------------
@@ -32,5 +33,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
     Route::post('/projects', [ProjectsController::class, 'store'])->name('projects.store');
     Route::patch('/projects/{project}', [ProjectsController::class, 'update'])->name('projects.update');
     Route::delete('/projects/{project}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
+
+    Route::post('/projects/{project}/tasks', [TasksController::class, 'store']);
+    Route::patch('/projects/{project}/tasks/{task}', [TasksController::class, 'update']);
 
 });

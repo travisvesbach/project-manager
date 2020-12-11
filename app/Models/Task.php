@@ -4,37 +4,32 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\User;
-use App\Models\Task;
+use App\Models\Project;
 
-class Project extends Model
+class Task extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'name',
         'description',
-        'owner_id'
+        'completed',
+        'project_id'
     ];
 
     protected $appends = [
         'path'
     ];
 
-    public function owner() {
-        return $this->belongsTo(User::class);
-    }
+    // updates the project's updated_at time wheneever this is updated
+    protected $touches = ['project'];
 
-    public function tasks() {
-        return $this->hasMany(Task::class);
-    }
-
-    public function addTask($name) {
-        return $this->tasks()->create(compact('name'));
+    public function project() {
+        return $this->belongsTo(Project::class);
     }
 
     public function path() {
-        return "/projects/{$this->id}";
+        return "/projects/{$this->project->id}/tasks/{$this->id}";
     }
 
     public function getPathAttribute() {

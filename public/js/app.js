@@ -4717,6 +4717,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -4760,11 +4766,11 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     updateProject: function updateProject() {
-      this.$inertia.patch('/projects/' + this.form.id, this.form);
+      this.$inertia.patch(this.project.path, this.form);
       this.editingProject = false;
     },
     deleteProject: function deleteProject() {
-      this.$inertia["delete"]('/projects/' + this.form.id);
+      this.$inertia["delete"](this.project.path);
     }
   }
 });
@@ -50293,6 +50299,18 @@ var render = function() {
           )
         ])
       ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        _vm._l(_vm.project.tasks, function(task) {
+          return _c(
+            "div",
+            { staticClass: "max-w-7xl mx-auto py-10 sm:px-6 lg:px-8" },
+            [_vm._v("\n            " + _vm._s(task.name) + "\n        ")]
+          )
+        }),
+        0
+      ),
       _vm._v(" "),
       _c("modal-form", {
         attrs: { show: _vm.editingProject },

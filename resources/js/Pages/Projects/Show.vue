@@ -34,6 +34,12 @@
             </div>
         </div>
 
+        <div>
+            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8" v-for="task in project.tasks">
+                {{ task.name }}
+            </div>
+        </div>
+
             <modal-form :show="editingProject" @close="editingProject = false" @submitted="updateProject">
                 <template #title>
                     Edit Project
@@ -128,11 +134,11 @@
         },
         methods: {
             updateProject() {
-                this.$inertia.patch('/projects/' + this.form.id, this.form);
+                this.$inertia.patch(this.project.path, this.form);
                 this.editingProject = false;
             },
             deleteProject() {
-                this.$inertia.delete('/projects/' + this.form.id);
+                this.$inertia.delete(this.project.path);
             }
         }
     }

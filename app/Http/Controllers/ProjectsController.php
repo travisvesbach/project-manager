@@ -9,13 +9,17 @@ use Inertia\Inertia;
 class ProjectsController extends Controller
 {
     public function index() {
-        $projects = auth()->user()->projects()->orderBy('updated_at', 'desc')->get();
+        $projects = auth()->user()->projects()->orderBy('updated_at', 'desc')->with('tasks')->get();
+
+        // $project->load('tasks')->get();
 
         return Inertia::render('Projects/Index', compact('projects'));
     }
 
     public function show(Project $project) {
         $this->authorize('update', $project);
+
+        $project->load('tasks')->get();
 
         return Inertia::render('Projects/Show', compact('project'));
     }

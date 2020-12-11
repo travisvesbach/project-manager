@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Project;
+use Facades\Tests\Setup\ProjectFactory;
 
 class ManageProjectsTest extends TestCase
 {
@@ -13,7 +14,7 @@ class ManageProjectsTest extends TestCase
 
     /** @test **/
     public function guests_cannot_manage_projects() {
-        $project = Project::factory()->create();
+        $project = ProjectFactory::create();
 
         $this->get('/projects')->assertRedirect('login');
         $this->get('/projects/create')->assertRedirect('login');
@@ -47,7 +48,7 @@ class ManageProjectsTest extends TestCase
 
     /** @test **/
     public function a_user_can_update_a_project() {
-        $project = Project::factory()->create();
+        $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
             ->patch($project->path(), $attributes = ['description' => 'Changed'])
@@ -58,7 +59,7 @@ class ManageProjectsTest extends TestCase
 
     /** @test **/
     public function a_user_can_view_their_project() {
-        $project = Project::factory()->create();
+        $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
             ->get($project->path())
@@ -68,7 +69,7 @@ class ManageProjectsTest extends TestCase
 
     /** @test **/
     public function a_user_can_delete_their_project() {
-        $project = Project::factory()->create();
+        $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
             ->delete($project->path())
@@ -85,7 +86,7 @@ class ManageProjectsTest extends TestCase
     public function an_authenticated_user_cannot_view_the_projects_of_others() {
         $this->signIn();
 
-        $project = Project::factory()->create();
+        $project = ProjectFactory::create();
 
         $this->get($project->path())->assertStatus(403);
     }
@@ -94,7 +95,7 @@ class ManageProjectsTest extends TestCase
     public function an_authenticated_user_cannot_update_the_projects_of_others() {
         $this->signIn();
 
-        $project = Project::factory()->create();
+        $project = ProjectFactory::create();
 
         $this->patch($project->path())->assertStatus(403);
     }
@@ -103,7 +104,7 @@ class ManageProjectsTest extends TestCase
     public function an_authenticated_user_cannot_delete_the_projects_of_others() {
         $this->signIn();
 
-        $project = Project::factory()->create();
+        $project = ProjectFactory::create();
 
         $this->delete($project->path())->assertStatus(403);
     }
