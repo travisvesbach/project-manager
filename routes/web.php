@@ -34,7 +34,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
     Route::patch('/projects/{project}', [ProjectsController::class, 'update'])->name('projects.update');
     Route::delete('/projects/{project}', [ProjectsController::class, 'destroy'])->name('projects.destroy');
 
-    Route::post('/projects/{project}/tasks', [TasksController::class, 'store']);
-    Route::patch('/projects/{project}/tasks/{task}', [TasksController::class, 'update']);
+    Route::get('/tasks/create', [TasksController::class, 'create'])->name('tasks.create');
+    Route::post('/projects/{project}/tasks', [TasksController::class, 'store'])->name('tasks.store');
+    Route::patch('/projects/{project}/tasks/{task}', [TasksController::class, 'update'])->name('tasks.update');
 
 });

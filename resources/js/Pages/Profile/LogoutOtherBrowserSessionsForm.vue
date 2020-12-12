@@ -32,7 +32,7 @@
                         </div>
 
                         <div>
-                            <div class="text-xs text-gray-500 dark:text-gray-200">
+                            <div class="text-xs text-secondary-color">
                                 {{ session.ip_address }},
 
                                 <span class="text-green-500 font-semibold dark:text-green-400" v-if="session.is_current_device">This device</span>

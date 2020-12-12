@@ -7,7 +7,7 @@
         <centered-form @submitted="submit">
 
             <jet-label for="name" value="Project Name" />
-            <jet-input id="name" class="mt-1 block w-full" v-model="form.name" autocomplete="new-name" />
+            <jet-input id="name" class="mt-1 block w-full" v-model="form.name" autocomplete="new-name" required/>
             <jet-input-error :message="form.error('name')" class="mt-2" />
 
             <jet-label for="description" value="Description" class="mt-4" />

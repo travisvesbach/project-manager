@@ -9,7 +9,7 @@ use Inertia\Inertia;
 class ProjectsController extends Controller
 {
     public function index() {
-        $projects = auth()->user()->projects()->orderBy('updated_at', 'desc')->with('tasks')->get();
+        $projects = auth()->user()->projects()->orderByDesc('updated_at')->with('tasks')->get();
 
         // $project->load('tasks')->get();
 

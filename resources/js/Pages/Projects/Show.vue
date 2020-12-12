@@ -34,56 +34,57 @@
             </div>
         </div>
 
-        <div>
-            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8" v-for="task in project.tasks">
-                {{ task.name }}
+        <div class="border-t-2 border-color">
+            <div class="border-b-2 border-color" v-for="(task, index) in project.tasks">
+                <task-row v-bind:task="task" />
             </div>
         </div>
 
-            <modal-form :show="editingProject" @close="editingProject = false" @submitted="updateProject">
-                <template #title>
-                    Edit Project
-                </template>
+        <!-- edit modal -->
+        <modal-form :show="editingProject" @close="editingProject = false" @submitted="updateProject">
+            <template #title>
+                Edit Project
+            </template>
 
-                <template #content>
-                        <jet-label for="name" value="Project Name" />
-                        <jet-input id="name" class="mt-1 block w-full" v-model="form.name" autocomplete="new-name" />
-                        <jet-input-error :message="form.error('name')" class="mt-2" />
+            <template #content>
+                    <jet-label for="name" value="Project Name" />
+                    <jet-input id="name" class="mt-1 block w-full" v-model="form.name" autocomplete="new-name" />
+                    <jet-input-error :message="form.error('name')" class="mt-2" />
 
-                        <jet-label for="description" value="Description" class="mt-4" />
-                        <textarea-input id="description" v-model="form.description" />
-                        <jet-input-error :message="form.error('description')" class="mt-2" />
-                </template>
+                    <jet-label for="description" value="Description" class="mt-4" />
+                    <textarea-input id="description" v-model="form.description" />
+                    <jet-input-error :message="form.error('description')" class="mt-2" />
+            </template>
 
-                <template #actions>
-                    <jet-secondary-button @click.native="editingProject = false">
-                        Cancel
-                    </jet-secondary-button>
-                    <jet-button @click.native="updateProject()">
-                        Save
-                    </jet-button>
-                </template>
-            </modal-form>
+            <template #actions>
+                <jet-secondary-button @click.native="editingProject = false">
+                    Cancel
+                </jet-secondary-button>
+                <jet-button @click.native="updateProject()">
+                    Save
+                </jet-button>
+            </template>
+        </modal-form>
 
-            <jet-confirmation-modal :show="confirmingDeleteProject" @close="confirmingDeleteProject = false">
-                <template #title>
+        <!-- delete confirmation -->
+        <jet-confirmation-modal :show="confirmingDeleteProject" @close="confirmingDeleteProject = false">
+            <template #title>
+                Delete Project
+            </template>
+
+            <template #content>
+                Are you sure you want to delete this project? All of this project's tasks will be deleted as well.
+            </template>
+
+            <template #footer>
+                <jet-secondary-button @click.native="confirmingDeleteProject = false">
+                    Cancel
+                </jet-secondary-button>
+                <jet-danger-button class="ml-2" @click.native="deleteProject" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Delete Project
-                </template>
-
-                <template #content>
-                    Are you sure you want to delete this project? All of this project's tasks will be deleted as well.
-                </template>
-
-                <template #footer>
-                    <jet-secondary-button @click.native="confirmingDeleteProject = false">
-                        Cancel
-                    </jet-secondary-button>
-                    <jet-danger-button class="ml-2" @click.native="deleteProject" :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
-                        Delete Project
-                    </jet-danger-button>
-                </template>
-            </jet-confirmation-modal>
-
+                </jet-danger-button>
+            </template>
+        </jet-confirmation-modal>
 
     </app-layout>
 </template>
@@ -102,6 +103,7 @@
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
+    import TaskRow from '@/Components/TaskRow'
 
     export default {
         props: ['project'],
@@ -120,6 +122,7 @@
             JetInputError,
             JetLabel,
             JetConfirmationModal,
+            TaskRow,
         },
         data() {
             return {
