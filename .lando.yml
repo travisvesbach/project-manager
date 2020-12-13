@@ -4,7 +4,7 @@ config:
   webroot: public
 services:
   node:
-    type: node:11
+    type: node:12
     build:
       - npm install
   phpmyadmin:
