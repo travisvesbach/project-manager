@@ -36,7 +36,10 @@
 
         <div class="border-t-2 border-color">
             <div class="border-b-2 border-color" v-for="(task, index) in project.tasks">
-                <task-row v-bind:task="task" />
+                <task-row v-bind:task="task" @show="showingTask = task" />
+            </div>
+            <div class="border-b-2 border-color">
+                <task-row-new v-bind:project="project" />
             </div>
         </div>
 
@@ -104,6 +107,7 @@
     import JetLabel from '@/Jetstream/Label'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
     import TaskRow from '@/Components/TaskRow'
+    import TaskRowNew from '@/Components/TaskRowNew'
 
     export default {
         props: ['project'],
@@ -123,11 +127,13 @@
             JetLabel,
             JetConfirmationModal,
             TaskRow,
+            TaskRowNew,
         },
         data() {
             return {
                 editingProject: false,
                 confirmingDeleteProject: false,
+                showingTask: false,
                 form: this.$inertia.form({
                     id: this.project.id,
                     name: this.project.name,
@@ -142,7 +148,7 @@
             },
             deleteProject() {
                 this.$inertia.delete(this.project.path);
-            }
+            },
         }
     }
 </script>

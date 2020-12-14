@@ -1,16 +1,10 @@
 <template>
-    <input class="form-input pl-1 hidden-input-color" :value="value" @input="$emit('input', $event.target.value)" ref="input" :style="{'width': inputWidth}">
+    <input class="form-input px-1 hidden-input-color" :value="value" @input="$emit('input', $event.target.value)" ref="input" v-autowidth="{maxWidth: 'auto', minWidth: '30px', comfortZone: 0}">
 </template>
 
 <script>
     export default {
         props: ['value'],
-
-        computed: {
-            inputWidth() {
-                return ((this.value.length + 1) * 7.5) + 'px';
-            }
-        },
 
         methods: {
             focus() {

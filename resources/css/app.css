@@ -26,6 +26,11 @@
     @apply dark:text-gray-400;
 }
 
+.hover-text-secondary-color {
+    @apply hover:text-gray-500;
+    @apply dark:hover:text-gray-400;
+}
+
 .card-color {
     @apply bg-white;
     @apply dark:bg-gray-600;
