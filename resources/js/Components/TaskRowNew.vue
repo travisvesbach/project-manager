@@ -4,7 +4,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div class="inline-block ml-2">
-            <hidden-input id="name" v-model="name" @blur.native="createTask()" placeholder="New Task" @entered="createTask(true)" ref="hiddenInput"/>
+            <hidden-input id="name" v-model="name" @blur.native="createTask()" placeholder="New Task" @entered="createTask()" ref="hiddenInput"/>
         </div>
     </div>
 </template>
@@ -31,16 +31,13 @@
         },
         methods: {
             focus() {
-                this.$refs.hiddenInput.focus()
+                this.$refs.hiddenInput.focus();
             },
-            createTask(fromEnter = false) {
+            createTask() {
                 if(this.name != null && this.name.length > 0) {
                     this.form.name = this.name;
                     this.$inertia.post(this.project.path + '/tasks', this.form);
                     this.name = null;
-                }
-                if(fromEnter) {
-                    this.$refs.hiddenInput.focus();
                 }
             }
         }

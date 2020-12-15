@@ -2211,16 +2211,10 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.hiddenInput.focus();
     },
     createTask: function createTask() {
-      var fromEnter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
       if (this.name != null && this.name.length > 0) {
         this.form.name = this.name;
         this.$inertia.post(this.project.path + '/tasks', this.form);
         this.name = null;
-      }
-
-      if (fromEnter) {
-        this.$refs.hiddenInput.focus();
       }
     }
   }
@@ -46038,7 +46032,7 @@ var render = function() {
             attrs: { id: "name", placeholder: "New Task" },
             on: {
               entered: function($event) {
-                return _vm.createTask(true)
+                return _vm.createTask()
               }
             },
             nativeOn: {
