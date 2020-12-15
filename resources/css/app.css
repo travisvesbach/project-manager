@@ -64,3 +64,14 @@
     @apply border-gray-200;
     @apply dark:border-gray-600;
 }
+
+.slidein-left-leave-active,
+.slidein-left-enter-active {
+  transition: .25s;
+}
+.slidein-left-enter {
+  transform: translate(100%, 0);
+}
+.slidein-left-leave-to {
+  transform: translate(100%, 0);
+}

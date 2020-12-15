@@ -34,13 +34,19 @@
             </div>
         </div>
 
-        <div class="border-t-2 border-color">
-            <div class="border-b-2 border-color" v-for="(task, index) in project.tasks">
-                <task-row v-bind:task="task" @show="showingTask = task" @focusnew="focusNew()"/>
+        <div class="flex flex-1 relative">
+
+            <div class="flex-1 border-t-2 border-color">
+                <div class="border-b-2 border-color" v-for="(task, index) in project.tasks">
+                    <task-row v-bind:task="task" @show="showingTask = task" @focusnew="focusNew()"/>
+                </div>
+                <div class="border-b-2 border-color">
+                    <task-row-new v-bind:project="project" ref="newTaskInput"/>
+                </div>
             </div>
-            <div class="border-b-2 border-color">
-                <task-row-new v-bind:project="project" ref="newTaskInput"/>
-            </div>
+
+            <task-details v-bind:task="showingTask" @close="showingTask = false"/>
+
         </div>
 
         <!-- edit modal -->
@@ -108,6 +114,7 @@
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
     import TaskRow from '@/Components/TaskRow'
     import TaskRowNew from '@/Components/TaskRowNew'
+    import TaskDetails from '@/Components/TaskDetails'
 
     export default {
         props: ['project'],
@@ -128,6 +135,7 @@
             JetConfirmationModal,
             TaskRow,
             TaskRowNew,
+            TaskDetails,
         },
         data() {
             return {

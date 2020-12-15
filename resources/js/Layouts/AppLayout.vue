@@ -1,5 +1,5 @@
 <template>
-    <div class="min-h-screen bg-gray-100 dark:bg-gray-800">
+    <div class="min-h-screen bg-gray-100 dark:bg-gray-800 flex flex-col">
         <nav class="bg-white border-b border-gray-100 dark:bg-black dark:border-gray-800">
             <!-- Primary Navigation Menu -->
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -260,7 +260,7 @@
         </header> -->
 
         <!-- Page Content -->
-        <main class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+        <main class="pt-10 flex flex-col flex-1">
             <slot></slot>
         </main>
 
