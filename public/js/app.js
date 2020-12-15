@@ -2150,8 +2150,15 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    focus: function focus() {
+      this.$refs.hiddenInput.focus();
+    },
     updateTask: function updateTask() {
-      this.$inertia.patch(this.task.path, this.form);
+      if (this.form.name == '') {
+        this.form.name = this.task.name;
+      } else {
+        this.$inertia.patch(this.task.path, this.form);
+      }
     },
     toggleCompleted: function toggleCompleted() {
       this.task.completed = !this.task.completed ? true : false;
@@ -2200,11 +2207,20 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   methods: {
+    focus: function focus() {
+      this.$refs.hiddenInput.focus();
+    },
     createTask: function createTask() {
+      var fromEnter = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
       if (this.name != null && this.name.length > 0) {
         this.form.name = this.name;
         this.$inertia.post(this.project.path + '/tasks', this.form);
         this.name = null;
+      }
+
+      if (fromEnter) {
+        this.$refs.hiddenInput.focus();
       }
     }
   }
@@ -4931,6 +4947,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     deleteProject: function deleteProject() {
       this.$inertia["delete"](this.project.path);
+    },
+    focusNew: function focusNew() {
+      this.$refs.newTaskInput.focus();
     }
   }
 });
@@ -45679,6 +45698,15 @@ var render = function() {
     on: {
       input: function($event) {
         return _vm.$emit("input", $event.target.value)
+      },
+      keyup: function($event) {
+        if (
+          !$event.type.indexOf("key") &&
+          _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+        ) {
+          return null
+        }
+        return _vm.$emit("entered")
       }
     }
   })
@@ -45885,7 +45913,13 @@ var render = function() {
         { staticClass: "inline-block ml-2" },
         [
           _c("hidden-input", {
+            ref: "hiddenInput",
             attrs: { id: "name" },
+            on: {
+              entered: function($event) {
+                return _vm.$emit("focusnew")
+              }
+            },
             nativeOn: {
               blur: function($event) {
                 return _vm.updateTask()
@@ -46000,7 +46034,13 @@ var render = function() {
         { staticClass: "inline-block ml-2" },
         [
           _c("hidden-input", {
+            ref: "hiddenInput",
             attrs: { id: "name", placeholder: "New Task" },
+            on: {
+              entered: function($event) {
+                return _vm.createTask(true)
+              }
+            },
             nativeOn: {
               blur: function($event) {
                 return _vm.createTask()
@@ -51079,6 +51119,9 @@ var render = function() {
                   on: {
                     show: function($event) {
                       _vm.showingTask = task
+                    },
+                    focusnew: function($event) {
+                      return _vm.focusNew()
                     }
                   }
                 })
@@ -51090,7 +51133,12 @@ var render = function() {
           _c(
             "div",
             { staticClass: "border-b-2 border-color" },
-            [_c("task-row-new", { attrs: { project: _vm.project } })],
+            [
+              _c("task-row-new", {
+                ref: "newTaskInput",
+                attrs: { project: _vm.project }
+              })
+            ],
             1
           )
         ],

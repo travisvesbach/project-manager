@@ -4,7 +4,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div class="inline-block ml-2">
-            <hidden-input id="name" class="" v-model="form.name" @blur.native="updateTask()"/>
+            <hidden-input id="name" class="" v-model="form.name" @blur.native="updateTask()" @entered="$emit('focusnew')" ref="hiddenInput"/>
         </div>
         <div class="flex-1 inline-block h-full">
             <button class="h-full w-full focus:outline-none focus:border-0 text-right text-transparent hover-text-secondary-color" title="details" @click="$emit('show')">
@@ -38,8 +38,15 @@
             }
         },
         methods: {
+            focus() {
+                this.$refs.hiddenInput.focus()
+            },
             updateTask() {
-                this.$inertia.patch(this.task.path, this.form);
+                if(this.form.name == '') {
+                    this.form.name = this.task.name;
+                } else {
+                    this.$inertia.patch(this.task.path, this.form);
+                }
             },
             toggleCompleted() {
                 this.task.completed = !this.task.completed ? true : false;

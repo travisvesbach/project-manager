@@ -36,10 +36,10 @@
 
         <div class="border-t-2 border-color">
             <div class="border-b-2 border-color" v-for="(task, index) in project.tasks">
-                <task-row v-bind:task="task" @show="showingTask = task" />
+                <task-row v-bind:task="task" @show="showingTask = task" @focusnew="focusNew()"/>
             </div>
             <div class="border-b-2 border-color">
-                <task-row-new v-bind:project="project" />
+                <task-row-new v-bind:project="project" ref="newTaskInput"/>
             </div>
         </div>
 
@@ -148,6 +148,9 @@
             },
             deleteProject() {
                 this.$inertia.delete(this.project.path);
+            },
+            focusNew() {
+                this.$refs.newTaskInput.focus();
             },
         }
     }
