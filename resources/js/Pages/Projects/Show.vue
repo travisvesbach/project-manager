@@ -149,6 +149,15 @@
                 }),
             }
         },
+        watch: {
+            project: function() {
+                for(let i=0;i<this.project.tasks.length;i++) {
+                    if(this.showingTask && this.project.tasks[i].id == this.showingTask.id) {
+                        this.showingTask = this.project.tasks[i];
+                    }
+                }
+            }
+        },
         methods: {
             updateProject() {
                 this.$inertia.patch(this.project.path, this.form);

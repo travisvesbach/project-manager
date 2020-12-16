@@ -2139,6 +2139,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2170,10 +2177,23 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     completedButtonText: function completedButtonText() {
       return this.task.completed ? 'Completed' : 'Mark Complete';
+    },
+    descriptionRendered: function descriptionRendered() {
+      if (this.form.description) {
+        return marked(this.form.description);
+      } else {
+        return '';
+      }
     }
   },
   methods: {
     updateTask: function updateTask() {
+      var description = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+      if (description != false) {
+        this.form.description = description;
+      }
+
       if (this.form.name == '') {
         this.form.name = this.task.name;
       } else {
@@ -2185,8 +2205,8 @@ __webpack_require__.r(__webpack_exports__);
       this.form.completed = this.task.completed;
       this.$inertia.patch(this.task.path, this.form);
     },
-    doThing: function doThing(event) {
-      console.log(event);
+    descriptionChanged: function descriptionChanged(event) {
+      this.form.description = event.target.innerText;
     }
   }
 });
@@ -2335,9 +2355,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['value'],
+  data: function data() {
+    return {
+      minHeight: 0
+    };
+  },
+  computed: {
+    inputStyle: function inputStyle() {
+      return {
+        'min-height': this.minHeight
+      };
+    }
+  },
+  watch: {
+    value: function value() {
+      this.resize();
+    }
+  },
+  mounted: function mounted() {
+    this.resize();
+  },
   methods: {
     focus: function focus() {
-      this.$refs.input.focus();
+      this.$refs.textarea.focus();
+    },
+    resize: function resize() {
+      this.minHeight = '0px';
+      this.minHeight = this.$refs.textarea.scrollHeight + 'px';
     }
   }
 });
@@ -5040,6 +5084,15 @@ __webpack_require__.r(__webpack_exports__);
         description: this.project.description
       })
     };
+  },
+  watch: {
+    project: function project() {
+      for (var i = 0; i < this.project.tasks.length; i++) {
+        if (this.showingTask && this.project.tasks[i].id == this.showingTask.id) {
+          this.showingTask = this.project.tasks[i];
+        }
+      }
+    }
   },
   methods: {
     updateProject: function updateProject() {
@@ -45979,12 +46032,12 @@ var render = function() {
           "div",
           {
             staticClass:
-              "absolute right-0 top-0 bottom-0 max-w-xl w-1/2 card-color text-color"
+              "absolute right-0 top-0 bottom-0 max-w-xl p-2 w-1/2 card-color text-color"
           },
           [
             _c(
               "div",
-              { staticClass: "flex p-2 space-between" },
+              { staticClass: "flex space-between mb-t" },
               [
                 _c(
                   "jet-button",
@@ -46066,39 +46119,42 @@ var render = function() {
               1
             ),
             _vm._v(" "),
-            _c("input", {
-              directives: [
-                {
-                  name: "model",
-                  rawName: "v-model",
-                  value: _vm.form.name,
-                  expression: "form.name"
-                }
-              ],
-              ref: "name",
-              staticClass: "form-input px-1 hidden-input-color",
-              domProps: { value: _vm.form.name },
-              on: {
-                blur: function($event) {
-                  return _vm.updateTask()
-                },
-                keyup: function($event) {
-                  if (
-                    !$event.type.indexOf("key") &&
-                    _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-                  ) {
-                    return null
+            _c("div", {}, [
+              _c("input", {
+                directives: [
+                  {
+                    name: "model",
+                    rawName: "v-model",
+                    value: _vm.form.name,
+                    expression: "form.name"
                   }
-                  return $event.target.blur()
-                },
-                input: function($event) {
-                  if ($event.target.composing) {
-                    return
+                ],
+                ref: "name",
+                staticClass:
+                  "form-input rounded-lg px-1 w-full text-3xl hidden-input-color heading-color",
+                domProps: { value: _vm.form.name },
+                on: {
+                  blur: function($event) {
+                    return _vm.updateTask()
+                  },
+                  keyup: function($event) {
+                    if (
+                      !$event.type.indexOf("key") &&
+                      _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                    ) {
+                      return null
+                    }
+                    return $event.target.blur()
+                  },
+                  input: function($event) {
+                    if ($event.target.composing) {
+                      return
+                    }
+                    _vm.$set(_vm.form, "name", $event.target.value)
                   }
-                  _vm.$set(_vm.form, "name", $event.target.value)
                 }
-              }
-            })
+              })
+            ])
           ]
         )
       : _vm._e()
@@ -46339,7 +46395,8 @@ var render = function() {
   return _c("textarea", {
     ref: "textarea",
     staticClass:
-      "form-input rounded-md shadow-sm mt-1 block w-full pl-1 form-input-color",
+      "form-input rounded-md shadow-sm mt-1 block w-full pl-1 form-input-color h-0",
+    style: _vm.inputStyle,
     domProps: { value: _vm.value },
     on: {
       input: function($event) {
