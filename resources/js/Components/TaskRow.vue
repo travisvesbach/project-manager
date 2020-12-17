@@ -4,7 +4,7 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div class="inline-block ml-2">
-            <hidden-input id="name" class="" v-model="form.name" @blur.native="updateTask()" @keyup-enter="$emit('focusnew')" ref="hiddenInput"/>
+            <input-hidden id="name" class="" v-model="form.name" @blur.native="updateTask()" @keyup-enter="$emit('focusnew')" ref="inputHidden"/>
         </div>
         <div class="flex-1 inline-block h-full">
             <button class="h-full w-full focus:outline-none focus:border-0 text-right text-transparent hover-text-secondary-color" title="details" @click="$emit('show')">
@@ -18,13 +18,13 @@
 
 <script>
 
-    import HiddenInput from '@/Components/HiddenInput'
+    import InputHidden from '@/Components/InputHidden'
 
     export default {
         props: ['task'],
 
         components: {
-            HiddenInput,
+            InputHidden,
         },
 
         data() {
@@ -49,7 +49,7 @@
         },
         methods: {
             focus() {
-                this.$refs.hiddenInput.focus()
+                this.$refs.inputHidden.focus()
             },
             updateTask() {
                 if(this.form.name == '') {

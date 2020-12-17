@@ -4,20 +4,20 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div class="inline-block ml-2">
-            <hidden-input id="name" v-model="name" @blur.native="createTask()" placeholder="New Task" @keyup-enter="createTask()" ref="hiddenInput"/>
+            <input-hidden id="name" v-model="name" @blur.native="createTask()" placeholder="New Task" @keyup-enter="createTask()" ref="inputHidden"/>
         </div>
     </div>
 </template>
 
 <script>
 
-    import HiddenInput from '@/Components/HiddenInput'
+    import InputHidden from '@/Components/InputHidden'
 
     export default {
         props: ['project'],
 
         components: {
-            HiddenInput,
+            InputHidden,
         },
 
         data() {
@@ -31,7 +31,7 @@
         },
         methods: {
             focus() {
-                this.$refs.hiddenInput.focus();
+                this.$refs.inputHidden.focus();
             },
             createTask() {
                 if(this.name != null && this.name.length > 0) {

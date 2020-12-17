@@ -1,42 +1,39 @@
 <template>
-    <textarea class="form-input rounded-md shadow-sm mt-1 block w-full pl-1 form-input-color h-0" :style="inputStyle" :value="value" @input="$emit('input', $event.target.value)" ref="textarea"></textarea>
+    <textarea class="form-input rounded-md shadow-sm mt-1 block w-full pl-1 h-0" :class="classes" :value="value" @input="$emit('input', $event.target.value)" ref="textarea"></textarea>
 </template>
 
 <script>
     export default {
-        props: ['value'],
+        props: ['value', 'hidden'],
 
-        data() {
-            return {
-                minHeight: 0,
-            }
-        },
-
-        computed: {
-            inputStyle() {
-                return {
-                    'min-height': this.minHeight,
-                }
-            }
-        },
-
-        watch: {
-            value: function() {
-                this.resize();
-            }
+        updated: function() {
+            this.resize();
         },
 
         mounted() {
             this.resize();
         },
 
+        computed: {
+            classes() {
+                if(this.hidden) {
+                    return 'hidden-input-color';
+                }
+                return 'form-input-color';
+            },
+        },
+
         methods: {
             focus() {
-                this.$refs.textarea.focus()
+                this.$refs.textarea.focus();
             },
             resize() {
-                this.minHeight = '0px';
-                this.minHeight = this.$refs.textarea.scrollHeight + 'px';
+                if(this.$refs.textarea)  {
+                    this.$refs.textarea.style.minHeight = "24px";
+                    if(this.$refs.textarea.scrollHeight > 24) {
+                        this.$refs.textarea.style.minHeight = this.$refs.textarea.scrollHeight + 'px';
+                    }
+                }
             }
         }
     }

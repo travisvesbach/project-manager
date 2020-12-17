@@ -3,7 +3,7 @@
         <div class="absolute right-0 top-0 bottom-0 max-w-xl p-2 w-1/2 card-color text-color" v-if="task">
             <div class="flex space-between mb-t">
                 <jet-button :class="form.completed ? 'bg-green-500 dark:bg-green-500' : ''" @click.native="toggleCompleted()">
-                    <svg class="h-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg> {{ completedButtonText }}
                 </jet-button>
@@ -17,8 +17,9 @@
 
             <div class="">
 
-                <input class="form-input rounded-lg px-1 w-full text-3xl hidden-input-color heading-color" v-model="form.name" ref="name" @blur="updateTask()" @keyup.enter="$event.target.blur()">
+                <input-hidden class="rounded-lg text-3xl heading-color" v-model="form.name" ref="name" @blur.native="updateTask()" @keyup.enter.native="$event.target.blur()"/>
 
+                <textarea-input v-model="form.description" @blur.native="updateTask()" v-bind:hidden="true" placeholder="Add task description here ..."></textarea-input>
 
             </div>
 
@@ -31,14 +32,16 @@
 <script>
 
     import JetButton from '@/Jetstream/Button'
-    import HiddenInput from '@/Components/HiddenInput'
+    import InputHidden from '@/Components/InputHidden'
+    import TextareaInput from '@/Components/TextareaInput'
 
     export default {
         props: ['task'],
 
         components: {
             JetButton,
-            HiddenInput,
+            InputHidden,
+            TextareaInput,
         },
 
         data() {
@@ -65,13 +68,6 @@
             completedButtonText() {
                 return this.task.completed ? 'Completed' : 'Mark Complete';
             },
-            descriptionRendered() {
-                if(this.form.description) {
-                    return marked(this.form.description);
-                } else {
-                    return '';
-                }
-            }
         },
         methods: {
             updateTask(description = false) {
@@ -89,9 +85,6 @@
                 this.form.completed = this.task.completed;
                 this.$inertia.patch(this.task.path, this.form);
             },
-            descriptionChanged(event) {
-                this.form.description = event.target.innerText;
-            }
         }
     }
 </script>

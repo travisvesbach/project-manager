@@ -34,9 +34,9 @@
             </div>
         </div>
 
-        <div class="flex flex-1 relative">
+        <div class="flex-1 relative overflow-x-hidden">
 
-            <div class="flex-1 border-t-2 border-color">
+            <div class="border-t-2 border-color" v-outside-click="{ exclude: ['taskDetails'], handler: 'closeDetails'}">
                 <div class="border-b-2 border-color" v-for="(task, index) in project.tasks">
                     <task-row v-bind:task="task" @show="showingTask = task" @focusnew="focusNew()"/>
                 </div>
@@ -45,7 +45,7 @@
                 </div>
             </div>
 
-            <task-details v-bind:task="showingTask" @close="showingTask = false"/>
+            <task-details v-bind:task="showingTask" @close="showingTask = false" ref="taskDetails"/>
 
         </div>
 
@@ -115,6 +115,7 @@
     import TaskRow from '@/Components/TaskRow'
     import TaskRowNew from '@/Components/TaskRowNew'
     import TaskDetails from '@/Components/TaskDetails'
+    import OutsideClick from '@/Directives/OutsideClick'
 
     export default {
         props: ['project'],
@@ -137,6 +138,11 @@
             TaskRowNew,
             TaskDetails,
         },
+
+        directives: {
+            OutsideClick
+        },
+
         data() {
             return {
                 editingProject: false,
@@ -169,6 +175,9 @@
             focusNew() {
                 this.$refs.newTaskInput.focus();
             },
+            closeDetails() {
+                this.showingTask = false;
+            }
         }
     }
 </script>
