@@ -2148,6 +2148,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
@@ -46032,92 +46037,89 @@ var render = function() {
           "div",
           {
             staticClass:
-              "absolute right-0 top-0 bottom-0 max-w-xl p-2 w-1/2 card-color text-color"
+              "absolute right-0 top-0 bottom-0 max-w-xl p-2 w-full sm:w-1/2 card-color text-color"
           },
           [
-            _c(
-              "div",
-              { staticClass: "flex space-between mb-t" },
-              [
-                _c(
-                  "jet-button",
-                  {
-                    class: _vm.form.completed
-                      ? "bg-green-500 dark:bg-green-500"
-                      : "",
-                    nativeOn: {
-                      click: function($event) {
-                        return _vm.toggleCompleted()
-                      }
+            _c("div", { staticClass: "flex space-between mb-2" }, [
+              _c(
+                "button",
+                {
+                  staticClass:
+                    "inline-flex items-center p-1 bg-transparent border border-black rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:border-green-500 hover:ring-green-500 focus:outline-none focus:border-green-500 focus:ring-green transition duration-150 dark:text-black ",
+                  class: _vm.form.completed
+                    ? "bg-green-500 dark:bg-green-500"
+                    : "",
+                  on: {
+                    click: function($event) {
+                      return _vm.toggleCompleted()
                     }
-                  },
-                  [
-                    _c(
-                      "svg",
-                      {
-                        staticClass: "h-5",
-                        attrs: {
-                          xmlns: "http://www.w3.org/2000/svg",
-                          fill: "none",
-                          viewBox: "0 0 24 24",
-                          stroke: "currentColor"
-                        }
-                      },
-                      [
-                        _c("path", {
-                          attrs: {
-                            "stroke-linecap": "round",
-                            "stroke-linejoin": "round",
-                            "stroke-width": "2",
-                            d: "M5 13l4 4L19 7"
-                          }
-                        })
-                      ]
-                    ),
-                    _vm._v(
-                      " " + _vm._s(_vm.completedButtonText) + "\n            "
-                    )
-                  ]
-                ),
-                _vm._v(" "),
-                _c(
-                  "button",
-                  {
-                    staticClass: "ml-auto link-color",
-                    on: {
-                      click: function($event) {
-                        return _vm.$emit("close")
+                  }
+                },
+                [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "h-5",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor"
                       }
-                    }
-                  },
-                  [
-                    _c(
-                      "svg",
-                      {
-                        staticClass: "h-6",
+                    },
+                    [
+                      _c("path", {
                         attrs: {
-                          xmlns: "http://www.w3.org/2000/svg",
-                          fill: "none",
-                          viewBox: "0 0 24 24",
-                          stroke: "currentColor"
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round",
+                          "stroke-width": "2",
+                          d: "M5 13l4 4L19 7"
                         }
-                      },
-                      [
-                        _c("path", {
-                          attrs: {
-                            "stroke-linecap": "round",
-                            "stroke-linejoin": "round",
-                            "stroke-width": "2",
-                            d: "M6 18L18 6M6 6l12 12"
-                          }
-                        })
-                      ]
-                    )
-                  ]
-                )
-              ],
-              1
-            ),
+                      })
+                    ]
+                  ),
+                  _vm._v(
+                    " " + _vm._s(_vm.completedButtonText) + "\n            "
+                  )
+                ]
+              ),
+              _vm._v(" "),
+              _c(
+                "button",
+                {
+                  staticClass: "ml-auto link-color",
+                  on: {
+                    click: function($event) {
+                      return _vm.$emit("close")
+                    }
+                  }
+                },
+                [
+                  _c(
+                    "svg",
+                    {
+                      staticClass: "h-6",
+                      attrs: {
+                        xmlns: "http://www.w3.org/2000/svg",
+                        fill: "none",
+                        viewBox: "0 0 24 24",
+                        stroke: "currentColor"
+                      }
+                    },
+                    [
+                      _c("path", {
+                        attrs: {
+                          "stroke-linecap": "round",
+                          "stroke-linejoin": "round",
+                          "stroke-width": "2",
+                          d: "M6 18L18 6M6 6l12 12"
+                        }
+                      })
+                    ]
+                  )
+                ]
+              )
+            ]),
             _vm._v(" "),
             _c(
               "div",
@@ -46149,24 +46151,37 @@ var render = function() {
                   }
                 }),
                 _vm._v(" "),
-                _c("textarea-input", {
-                  attrs: {
-                    hidden: true,
-                    placeholder: "Add task description here ..."
-                  },
-                  nativeOn: {
-                    blur: function($event) {
-                      return _vm.updateTask()
-                    }
-                  },
-                  model: {
-                    value: _vm.form.description,
-                    callback: function($$v) {
-                      _vm.$set(_vm.form, "description", $$v)
-                    },
-                    expression: "form.description"
-                  }
-                })
+                _c("div", { staticClass: "sm:flex" }, [
+                  _c("label", { staticClass: "sm:w-1/4" }, [
+                    _vm._v("Description")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "div",
+                    { staticClass: "sm:w-3/4" },
+                    [
+                      _c("textarea-input", {
+                        attrs: {
+                          hidden: true,
+                          placeholder: "Add task description here ..."
+                        },
+                        nativeOn: {
+                          blur: function($event) {
+                            return _vm.updateTask()
+                          }
+                        },
+                        model: {
+                          value: _vm.form.description,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "description", $$v)
+                          },
+                          expression: "form.description"
+                        }
+                      })
+                    ],
+                    1
+                  )
+                ])
               ],
               1
             )
@@ -46409,7 +46424,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("textarea", {
     ref: "textarea",
-    staticClass: "form-input rounded-md shadow-sm mt-1 block w-full pl-1 h-0",
+    staticClass: "form-input rounded-md shadow-sm block w-full pl-1 h-0",
     class: _vm.classes,
     domProps: { value: _vm.value },
     on: {
@@ -46671,7 +46686,7 @@ var render = function() {
     "button",
     {
       staticClass:
-        "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:shadow-outline-gray transition ease-in-out duration-150 dark:bg-gray-300 dark:text-black dark:hover:bg-gray-200 dark:active:bg-gray-400 dark:focus:border-gray-400 dark:focus:shadow-outline-yellow",
+        "inline-flex items-center px-4 py-2 bg-gray-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-gray-700 active:bg-gray-900 focus:outline-none focus:border-gray-900 focus:ring-gray transition ease-in-out duration-150 dark:bg-gray-300 dark:text-black dark:hover:bg-gray-200 dark:active:bg-gray-400 dark:focus:border-gray-400 dark:focus:ring-yellow",
       attrs: { type: _vm.type }
     },
     [_vm._t("default")],
@@ -46952,7 +46967,7 @@ var render = function() {
     "button",
     {
       staticClass:
-        "inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:border-red-700 focus:shadow-outline-red active:bg-red-600 transition ease-in-out duration-150 dark:bg-red-700 dark:text-white dark:hover:bg-red-600 dark:focus:border-red-800 dark:focus:shadow-outline-red dark:active:bg-red-700",
+        "inline-flex items-center justify-center px-4 py-2 bg-red-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:border-red-700 focus:ring-red active:bg-red-600 transition ease-in-out duration-150 dark:bg-red-700 dark:text-white dark:hover:bg-red-600 dark:focus:border-red-800 dark:focus:ring-red dark:active:bg-red-700",
       attrs: { type: _vm.type }
     },
     [_vm._t("default")],
@@ -47108,7 +47123,7 @@ var render = function() {
               _c(
                 "div",
                 {
-                  staticClass: "rounded-md shadow-xs",
+                  staticClass: "rounded-md ring-1 ring-black ring-opacity-5",
                   class: _vm.contentClasses
                 },
                 [_vm._t("content")],
@@ -47596,7 +47611,7 @@ var render = function() {
     "button",
     {
       staticClass:
-        "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:text-gray-400 dark:focus:border-yellow-400 dark:focus:shadow-outline-yellow dark:active:text-gray-100 dark:active:bg-gray-900",
+        "inline-flex items-center px-4 py-2 bg-white border border-gray-300 rounded-md font-semibold text-xs text-gray-700 uppercase tracking-widest shadow-sm hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:ring-blue active:text-gray-800 active:bg-gray-50 transition ease-in-out duration-150 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-200 dark:hover:text-gray-400 dark:focus:border-yellow-400 dark:focus:ring-yellow dark:active:text-gray-100 dark:active:bg-gray-900",
       attrs: { type: _vm.type }
     },
     [_vm._t("default")],
