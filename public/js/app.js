@@ -2383,6 +2383,10 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/InputHidden */ "./resources/js/Components/InputHidden.vue");
+/* harmony import */ var _Components_DatePicker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/DatePicker */ "./resources/js/Components/DatePicker.vue");
+//
+//
+//
 //
 //
 //
@@ -2402,10 +2406,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 
+
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['task'],
   components: {
-    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__["default"]
+    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__["default"],
+    DatePicker: _Components_DatePicker__WEBPACK_IMPORTED_MODULE_1__["default"]
   },
   data: function data() {
     return {
@@ -2413,6 +2419,7 @@ __webpack_require__.r(__webpack_exports__);
         id: this.task.id,
         name: this.task.name,
         description: this.task.description,
+        due_date: this.task.due_date,
         completed: this.task.completed
       })
     };
@@ -2423,6 +2430,7 @@ __webpack_require__.r(__webpack_exports__);
         id: this.task.id,
         name: this.task.name,
         description: this.task.description,
+        due_date: this.task.due_date,
         completed: this.task.completed
       });
     }
@@ -75709,7 +75717,30 @@ var render = function() {
             )
           ]
         )
-      ])
+      ]),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "inline-block border-l-2 border-color pl-2" },
+        [
+          _c("date-picker", {
+            attrs: { id: _vm.form.id, hidden: true },
+            on: {
+              input: function($event) {
+                return _vm.updateTask()
+              }
+            },
+            model: {
+              value: _vm.form.due_date,
+              callback: function($$v) {
+                _vm.$set(_vm.form, "due_date", $$v)
+              },
+              expression: "form.due_date"
+            }
+          })
+        ],
+        1
+      )
     ]
   )
 }

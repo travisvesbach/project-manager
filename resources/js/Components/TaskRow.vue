@@ -13,18 +13,23 @@
                 </svg>
             </button>
         </div>
+        <div class="inline-block border-l-2 border-color pl-2">
+            <date-picker v-model="form.due_date" v-bind:id="form.id" v-bind:hidden="true" @input="updateTask()" />
+        </div>
     </div>
 </template>
 
 <script>
 
     import InputHidden from '@/Components/InputHidden'
+    import DatePicker from '@/Components/DatePicker'
 
     export default {
         props: ['task'],
 
         components: {
             InputHidden,
+            DatePicker,
         },
 
         data() {
@@ -33,6 +38,7 @@
                     id: this.task.id,
                     name: this.task.name,
                     description: this.task.description,
+                    due_date: this.task.due_date,
                     completed: this.task.completed,
                 }),
             }
@@ -43,6 +49,7 @@
                     id: this.task.id,
                     name: this.task.name,
                     description: this.task.description,
+                    due_date: this.task.due_date,
                     completed: this.task.completed,
                 });
             }
