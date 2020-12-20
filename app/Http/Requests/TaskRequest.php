@@ -29,7 +29,8 @@ class TaskRequest extends FormRequest
         return [
             'name' => 'required',
             'description' => 'array|nullable',
-            'completed' => 'nullable'
+            'completed' => 'nullable',
+            'due_date' => 'nullable'
         ];
     }
 }

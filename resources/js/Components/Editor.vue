@@ -2,7 +2,7 @@
     <div class="rounded-md" :class="classes">
         <editor-content :editor="editor" />
 
-        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive, focused }" :keep-in-bounds="keepInBounds" >
+        <editor-menu-bar :editor="editor" v-slot="{ commands, isActive, focused }" >
             <div class="menubar" :class="{ 'block': focused, 'hidden' : !focused }" >
                 <button type="button" class="px-2" :class="{ 'is-active': isActive.bold() }" @click="commands.bold" title="bold">
                     <strong>B</strong>
@@ -23,7 +23,7 @@
     import { Bold, Italic, Code } from 'tiptap-extensions';
 
     export default {
-        props: ['value', 'hidden', 'num'],
+        props: ['value', 'hidden', 'id'],
 
         components: {
             EditorContent,
@@ -43,7 +43,7 @@
             },
         },
         watch: {
-            num: function() {
+            id: function() {
                 this.editor.setContent(this.value);
             }
         },

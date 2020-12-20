@@ -14,7 +14,8 @@ class Task extends Model
         'name',
         'description',
         'completed',
-        'project_id'
+        'project_id',
+        'due_date'
     ];
 
     protected $appends = [
@@ -22,7 +23,14 @@ class Task extends Model
     ];
 
     protected $casts = [
-        'description' => 'array'
+        'due_date' => 'date:Y-m-d',
+        'description' => 'array',
+    ];
+
+    protected $dates = [
+        'created_at',
+        'updated_at',
+        'due_date'
     ];
 
     // updates the project's updated_at time wheneever this is updated
@@ -39,4 +47,5 @@ class Task extends Model
     public function getPathAttribute() {
         return $this->path();
     }
+
 }

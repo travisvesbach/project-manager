@@ -19,10 +19,17 @@
 
                 <input-hidden class="rounded-lg text-3xl heading-color" v-model="form.name" ref="name" @blur.native="updateTask()" @keyup.enter.native="$event.target.blur()"/>
 
-                <div class="sm:flex">
+                <div class="sm:flex mt-2">
+                    <label class="sm:w-1/4">Due Date</label>
+                    <div class="sm:w-3/4">
+                        <date-picker v-model="form.due_date" v-bind:id="task.id" v-bind:placeholder="'No Due Date'" v-bind:hidden="true" @input="updateTask()"/>
+                    </div>
+                </div>
+
+                <div class="sm:flex mt-2">
                     <label class="sm:w-1/4">Description</label>
                     <div class="sm:w-3/4">
-                        <editor v-model="form.description" v-bind:hidden="true" @blurred="updateTask()" v-bind:num="task.id"/>
+                        <editor v-model="form.description" v-bind:id="task.id" v-bind:hidden="true" @blurred="updateTask()"/>
                     </div>
                 </div>
 
@@ -40,6 +47,7 @@
     import InputHidden from '@/Components/InputHidden'
     import TextareaInput from '@/Components/TextareaInput'
     import Editor from '@/Components/Editor'
+    import DatePicker from '@/Components/DatePicker'
 
     export default {
         props: ['task'],
@@ -49,6 +57,7 @@
             InputHidden,
             TextareaInput,
             Editor,
+            DatePicker,
         },
 
         data() {
@@ -58,6 +67,7 @@
                     name: this.task.name,
                     description: this.task.description,
                     completed: this.task.completed,
+                    due_date: this.task.due_date,
                 }),
             }
         },
@@ -68,6 +78,7 @@
                     name: this.task.name,
                     description: this.task.description,
                     completed: this.task.completed,
+                    due_date: this.task.due_date,
                 });
             }
         },

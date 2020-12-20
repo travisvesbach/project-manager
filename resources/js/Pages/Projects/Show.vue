@@ -36,7 +36,7 @@
 
         <div class="flex-1 relative overflow-x-hidden">
 
-            <div class="border-t-2 border-color" v-outside-click="{ exclude: ['taskDetails'], handler: 'closeDetails'}">
+            <div class="border-t-2 border-color" v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
                 <div class="border-b-2 border-color" v-for="(task, index) in project.tasks">
                     <task-row v-bind:task="task" @show="showingTask = task" @focusnew="focusNew()"/>
                 </div>
