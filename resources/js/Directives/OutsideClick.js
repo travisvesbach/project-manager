@@ -46,7 +46,9 @@ let OutsideClick = {
             });
 
             // temp exception for flatpickr calendar
-            clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : document.getElementsByClassName('flatpickr-calendar')[0].contains(e.target);
+            if(document.getElementsByClassName('flatpickr-calendar').length > 0) {
+                clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : document.getElementsByClassName('flatpickr-calendar')[0].contains(e.target);
+            }
 
             // We check to see if the clicked element is not
             // the dialog element and not excluded

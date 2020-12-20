@@ -14,8 +14,12 @@
             <select-input id="project" class="mt-1 block w-full" v-model="form.project" v-bind:options="projects" required/>
             <jet-input-error :message="form.error('project')" class="mt-2" />
 
+            <jet-label for="due_date" value="Due Date" class="mt-4" />
+            <date-picker id="due_date" v-model="form.due_date" />
+            <jet-input-error :message="form.error('due_date')" class="mt-2" />
+
             <jet-label for="description" value="Description" class="mt-4" />
-            <editor id="description" v-model="form.description" @blurred="updateTask()" />
+            <editor id="description" v-model="form.description" />
             <jet-input-error :message="form.error('description')" class="mt-2" />
 
             <template #actions>
@@ -43,6 +47,7 @@
     import TextareaInput from '@/Components/TextareaInput'
     import SelectInput from '@/Components/SelectInput'
     import Editor from '@/Components/Editor'
+    import DatePicker from '@/Components/DatePicker'
 
     export default {
         props: ['projects'],
@@ -58,13 +63,15 @@
             TextareaInput,
             SelectInput,
             Editor,
+            DatePicker,
         },
         data() {
             return {
                 form: this.$inertia.form({
                     name: null,
+                    project: null,
+                    due_date: null,
                     description: null,
-                    project: null
                 }),
             }
         },

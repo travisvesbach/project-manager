@@ -40,7 +40,7 @@
                 <div class="border-b-2 border-color" v-for="(task, index) in project.tasks">
                     <task-row v-bind:task="task" @show="showingTask = task" @focusnew="focusNew()"/>
                 </div>
-                <div class="border-b-2 border-color">
+                <div>
                     <task-row-new v-bind:project="project" ref="newTaskInput"/>
                 </div>
             </div>

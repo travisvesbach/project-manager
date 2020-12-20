@@ -2010,6 +2010,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      currentId: this.id,
       date: this.value,
       config: {
         altInput: true,
@@ -2030,6 +2031,16 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     id: function id() {
       this.date = this.value;
+    }
+  },
+  methods: {
+    onInput: function onInput() {
+      // needed otherwise will emit when chaning between tasks
+      if (this.id == this.currentId) {
+        this.$emit('input', this.date);
+      } else {
+        this.currentId = this.id;
+      }
     }
   }
 });
@@ -5284,6 +5295,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_TextareaInput__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/TextareaInput */ "./resources/js/Components/TextareaInput.vue");
 /* harmony import */ var _Components_SelectInput__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/SelectInput */ "./resources/js/Components/SelectInput.vue");
 /* harmony import */ var _Components_Editor__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @/Components/Editor */ "./resources/js/Components/Editor.vue");
+/* harmony import */ var _Components_DatePicker__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/Components/DatePicker */ "./resources/js/Components/DatePicker.vue");
 //
 //
 //
@@ -5318,6 +5330,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+
 
 
 
@@ -5340,14 +5357,16 @@ __webpack_require__.r(__webpack_exports__);
     CenteredForm: _Components_CenteredForm__WEBPACK_IMPORTED_MODULE_6__["default"],
     TextareaInput: _Components_TextareaInput__WEBPACK_IMPORTED_MODULE_7__["default"],
     SelectInput: _Components_SelectInput__WEBPACK_IMPORTED_MODULE_8__["default"],
-    Editor: _Components_Editor__WEBPACK_IMPORTED_MODULE_9__["default"]
+    Editor: _Components_Editor__WEBPACK_IMPORTED_MODULE_9__["default"],
+    DatePicker: _Components_DatePicker__WEBPACK_IMPORTED_MODULE_10__["default"]
   },
   data: function data() {
     return {
       form: this.$inertia.form({
         name: null,
-        description: null,
-        project: null
+        project: null,
+        due_date: null,
+        description: null
       })
     };
   },
@@ -75073,6 +75092,7 @@ var render = function() {
     staticClass: "rounded-md",
     class: _vm.classes,
     attrs: { config: _vm.config, placeholder: _vm.placeholder },
+    on: { input: _vm.onInput },
     model: {
       value: _vm.date,
       callback: function($$v) {
@@ -75120,47 +75140,40 @@ var render = function() {
               var isActive = ref.isActive
               var focused = ref.focused
               return [
-                _c(
-                  "div",
-                  {
-                    staticClass: "menubar",
-                    class: { block: focused, hidden: !focused }
-                  },
-                  [
-                    _c(
-                      "button",
-                      {
-                        staticClass: "px-2",
-                        class: { "is-active": isActive.bold() },
-                        attrs: { type: "button", title: "bold" },
-                        on: { click: commands.bold }
-                      },
-                      [_c("strong", [_vm._v("B")])]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "px-2",
-                        class: { "is-active": isActive.italic() },
-                        attrs: { type: "button", title: "italic" },
-                        on: { click: commands.italic }
-                      },
-                      [_c("em", [_vm._v("I")])]
-                    ),
-                    _vm._v(" "),
-                    _c(
-                      "button",
-                      {
-                        staticClass: "px-2",
-                        class: { "is-active": isActive.code() },
-                        attrs: { type: "button", title: "code" },
-                        on: { click: commands.code }
-                      },
-                      [_vm._v("\n                < >\n            ")]
-                    )
-                  ]
-                )
+                _c("div", { class: { block: focused, hidden: !focused } }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass: "px-2",
+                      class: { "is-active": isActive.bold() },
+                      attrs: { type: "button", title: "bold" },
+                      on: { click: commands.bold }
+                    },
+                    [_c("strong", [_vm._v("B")])]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "px-2",
+                      class: { "is-active": isActive.italic() },
+                      attrs: { type: "button", title: "italic" },
+                      on: { click: commands.italic }
+                    },
+                    [_c("em", [_vm._v("I")])]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "px-2",
+                      class: { "is-active": isActive.code() },
+                      attrs: { type: "button", title: "code" },
+                      on: { click: commands.code }
+                    },
+                    [_vm._v("\n                < >\n            ")]
+                  )
+                ])
               ]
             }
           }
@@ -75755,7 +75768,7 @@ var render = function() {
         [
           _c("input-hidden", {
             ref: "inputHidden",
-            attrs: { id: "name", placeholder: "New Task" },
+            attrs: { id: "name", placeholder: "Add Task" },
             on: {
               "keyup-enter": function($event) {
                 return _vm.createTask()
@@ -80868,7 +80881,6 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "div",
-                { staticClass: "border-b-2 border-color" },
                 [
                   _c("task-row-new", {
                     ref: "newTaskInput",
@@ -81172,16 +81184,32 @@ var render = function() {
           _vm._v(" "),
           _c("jet-label", {
             staticClass: "mt-4",
+            attrs: { for: "due_date", value: "Due Date" }
+          }),
+          _vm._v(" "),
+          _c("date-picker", {
+            attrs: { id: "due_date" },
+            model: {
+              value: _vm.form.due_date,
+              callback: function($$v) {
+                _vm.$set(_vm.form, "due_date", $$v)
+              },
+              expression: "form.due_date"
+            }
+          }),
+          _vm._v(" "),
+          _c("jet-input-error", {
+            staticClass: "mt-2",
+            attrs: { message: _vm.form.error("due_date") }
+          }),
+          _vm._v(" "),
+          _c("jet-label", {
+            staticClass: "mt-4",
             attrs: { for: "description", value: "Description" }
           }),
           _vm._v(" "),
           _c("editor", {
             attrs: { id: "description" },
-            on: {
-              blurred: function($event) {
-                return _vm.updateTask()
-              }
-            },
             model: {
               value: _vm.form.description,
               callback: function($$v) {
@@ -94337,8 +94365,11 @@ var OutsideClick = {
         }
       }); // temp exception for flatpickr calendar
 
-      clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : document.getElementsByClassName('flatpickr-calendar')[0].contains(e.target); // We check to see if the clicked element is not
+      if (document.getElementsByClassName('flatpickr-calendar').length > 0) {
+        clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : document.getElementsByClassName('flatpickr-calendar')[0].contains(e.target);
+      } // We check to see if the clicked element is not
       // the dialog element and not excluded
+
 
       if (!el.contains(e.target) && !clickedOnExcludedEl) {
         // If the clicked element is outside the dialog

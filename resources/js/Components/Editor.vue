@@ -3,7 +3,7 @@
         <editor-content :editor="editor" />
 
         <editor-menu-bar :editor="editor" v-slot="{ commands, isActive, focused }" >
-            <div class="menubar" :class="{ 'block': focused, 'hidden' : !focused }" >
+            <div :class="{ 'block': focused, 'hidden' : !focused }" >
                 <button type="button" class="px-2" :class="{ 'is-active': isActive.bold() }" @click="commands.bold" title="bold">
                     <strong>B</strong>
                 </button>
@@ -56,7 +56,7 @@
                     new Code(),
                 ],
                 onUpdate: ({getJSON}) => {
-                  this.$emit('input', getJSON());
+                    this.$emit('input', getJSON());
                 },
                 onBlur: ({event}) => {
                     this.$emit('blurred');

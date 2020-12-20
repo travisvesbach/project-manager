@@ -1,5 +1,5 @@
 <template>
-    <flat-pickr class="rounded-md" :class="classes" v-model="date" :config="config" :placeholder="placeholder" ref="datePicker"></flat-pickr>
+    <flat-pickr class="rounded-md" :class="classes" v-model="date" :config="config" :placeholder="placeholder" ref="datePicker" @input="onInput"></flat-pickr>
 </template>
 
 <script>
@@ -13,6 +13,7 @@
         },
         data() {
             return {
+                currentId: this.id,
                 date: this.value,
                 config: {
                     altInput: true,
@@ -34,5 +35,15 @@
                 this.date = this.value;
             }
         },
+        methods: {
+            onInput() {
+                // needed otherwise will emit when chaning between tasks
+                if(this.id == this.currentId) {
+                    this.$emit('input', this.date);
+                } else {
+                    this.currentId = this.id;
+                }
+            }
+        }
     }
 </script>
