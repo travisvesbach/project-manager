@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Inertia\Inertia;
 use App\Models\Task;
 use App\Models\Project;
+use App\Http\Requests\TaskRequest;
 
 class TasksController extends Controller
 {
@@ -15,26 +16,14 @@ class TasksController extends Controller
         return Inertia::render('Tasks/Create', compact('projects'));
     }
 
-    public function store(Project $project) {
-        $this->authorize('update', $project);
-
-        request()->validate(['name' => 'required']);
-
-        $project->addTask(request('name'));
+    public function store(TaskRequest $request, Project $project) {
+        $project->addTask($request->validated());
 
         return redirect($project->path());
     }
 
-    public function update(Project $project, Task $task) {
-        $this->authorize('update', $project);
-
-        // request()->validate(['name' => 'required']);
-
-        $task->update([
-            'name' => request('name'),
-            'description' => request('description'),
-            'completed' => request('completed'),
-        ]);
+    public function update(TaskRequest $request, Project $project, Task $task) {
+        $task->update($request->validated());
 
         return redirect($project->path());
     }

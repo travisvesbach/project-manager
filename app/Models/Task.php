@@ -21,6 +21,10 @@ class Task extends Model
         'path'
     ];
 
+    protected $casts = [
+        'description' => 'array'
+    ];
+
     // updates the project's updated_at time wheneever this is updated
     protected $touches = ['project'];
 

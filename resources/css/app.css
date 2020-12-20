@@ -46,6 +46,19 @@
 }
 
 .hidden-input-color {
+    @apply bg-transparent border-0 hover:shadow-inner focus-within:shadow-inner hover:bg-white focus-within:bg-white;
+    @apply dark:hover:bg-gray-500 dark:focus-within:bg-gray-500 dark:hover:text-white dark:focus-within:text-white ;
+}
+
+.ProseMirror {
+    @apply rounded-md block w-full px-1;
+}
+
+.form-input-color .ProseMirror {
+    @apply dark:bg-gray-500 dark:text-white dark:placeholder-gray-100;
+}
+
+.hidden-input-color .ProseMirror {
     @apply bg-transparent border-0 hover:shadow-inner focus:shadow-inner hover:bg-white focus:bg-white;
     @apply dark:hover:bg-gray-500 dark:focus:bg-gray-500 dark:hover:text-white dark:focus:text-white;
 }
@@ -74,4 +87,9 @@
 }
 .slidein-left-leave-to {
   transform: translate(100%, 0);
+}
+
+code {
+    @apply bg-gray-300;
+    @apply dark:bg-gray-700;
 }

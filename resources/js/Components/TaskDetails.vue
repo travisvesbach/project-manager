@@ -2,7 +2,7 @@
     <transition name="slidein-left">
         <div class="absolute right-0 top-0 bottom-0 max-w-xl p-2 w-full sm:w-1/2 card-color text-color" v-if="task">
             <div class="flex space-between mb-2">
-                <button class="inline-flex items-center p-1 bg-transparent border border-black rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:border-green-500 hover:ring-green-500 focus:outline-none focus:border-green-500 focus:ring-green transition duration-150 dark:text-black " :class="form.completed ? 'bg-green-500 dark:bg-green-500' : ''" @click="toggleCompleted()">
+                <button class="inline-flex items-center p-1 bg-transparent border rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:border-green-500 hover:ring-green-500 focus:outline-none focus:border-green-500 focus:ring-green transition duration-150 dark:text-gray-300 " :class="form.completed ? 'bg-green-500 border-green-500 dark:bg-green-500' : 'border-gray-300'" @click="toggleCompleted()">
                     <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                     </svg> {{ completedButtonText }}
@@ -22,7 +22,7 @@
                 <div class="sm:flex">
                     <label class="sm:w-1/4">Description</label>
                     <div class="sm:w-3/4">
-                        <textarea-input v-model="form.description" @blur.native="updateTask()" v-bind:hidden="true" placeholder="Add task description here ..."></textarea-input>
+                        <editor v-model="form.description" v-bind:hidden="true" @blurred="updateTask()" v-bind:num="task.id"/>
                     </div>
                 </div>
 
@@ -39,6 +39,7 @@
     import JetButton from '@/Jetstream/Button'
     import InputHidden from '@/Components/InputHidden'
     import TextareaInput from '@/Components/TextareaInput'
+    import Editor from '@/Components/Editor'
 
     export default {
         props: ['task'],
@@ -47,6 +48,7 @@
             JetButton,
             InputHidden,
             TextareaInput,
+            Editor,
         },
 
         data() {

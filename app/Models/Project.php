@@ -29,8 +29,8 @@ class Project extends Model
         return $this->hasMany(Task::class);
     }
 
-    public function addTask($name) {
-        return $this->tasks()->create(compact('name'));
+    public function addTask($attributes) {
+        return $this->tasks()->create($attributes);
     }
 
     public function path() {

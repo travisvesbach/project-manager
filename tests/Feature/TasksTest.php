@@ -57,7 +57,6 @@ class TasksTest extends TestCase
         $this->actingAs($project->owner)
             ->patch($project->tasks->first()->path(), $attributes = [
                 'name' => 'changed name',
-                'description' => 'changed description',
                 'completed' => true
             ]);
 

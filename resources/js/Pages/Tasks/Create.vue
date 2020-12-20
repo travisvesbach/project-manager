@@ -15,7 +15,7 @@
             <jet-input-error :message="form.error('project')" class="mt-2" />
 
             <jet-label for="description" value="Description" class="mt-4" />
-            <textarea-input id="description" v-model="form.description"/>
+            <editor id="description" v-model="form.description" @blurred="updateTask()" />
             <jet-input-error :message="form.error('description')" class="mt-2" />
 
             <template #actions>
@@ -42,6 +42,7 @@
     import CenteredForm from '@/Components/CenteredForm'
     import TextareaInput from '@/Components/TextareaInput'
     import SelectInput from '@/Components/SelectInput'
+    import Editor from '@/Components/Editor'
 
     export default {
         props: ['projects'],
@@ -56,6 +57,7 @@
             CenteredForm,
             TextareaInput,
             SelectInput,
+            Editor,
         },
         data() {
             return {
