@@ -75097,7 +75097,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("flat-pickr", {
     ref: "datePicker",
-    staticClass: "rounded-md",
+    staticClass: "px-1",
     class: _vm.classes,
     attrs: { config: _vm.config, placeholder: _vm.placeholder },
     on: { input: _vm.onInput },
@@ -75523,7 +75523,7 @@ var render = function() {
                 }),
                 _vm._v(" "),
                 _c("div", { staticClass: "sm:flex mt-2" }, [
-                  _c("label", { staticClass: "sm:w-1/4" }, [
+                  _c("label", { staticClass: "sm:w-1/4 pl-1" }, [
                     _vm._v("Due Date")
                   ]),
                   _vm._v(" "),
@@ -75532,6 +75532,7 @@ var render = function() {
                     { staticClass: "sm:w-3/4" },
                     [
                       _c("date-picker", {
+                        staticClass: "rounded-md",
                         attrs: {
                           id: _vm.task.id,
                           placeholder: "No Due Date",
@@ -75556,7 +75557,7 @@ var render = function() {
                 ]),
                 _vm._v(" "),
                 _c("div", { staticClass: "sm:flex mt-2" }, [
-                  _c("label", { staticClass: "sm:w-1/4" }, [
+                  _c("label", { staticClass: "sm:w-1/4 pl-1" }, [
                     _vm._v("Description")
                   ]),
                   _vm._v(" "),

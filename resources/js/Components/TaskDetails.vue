@@ -20,14 +20,14 @@
                 <input-hidden class="rounded-lg text-3xl heading-color" v-model="form.name" ref="name" @blur.native="updateTask()" @keyup.enter.native="$event.target.blur()"/>
 
                 <div class="sm:flex mt-2">
-                    <label class="sm:w-1/4">Due Date</label>
+                    <label class="sm:w-1/4 pl-1">Due Date</label>
                     <div class="sm:w-3/4">
-                        <date-picker v-model="form.due_date" v-bind:id="task.id" v-bind:placeholder="'No Due Date'" v-bind:hidden="true" @input="updateTask()"/>
+                        <date-picker class="rounded-md" v-model="form.due_date" v-bind:id="task.id" v-bind:placeholder="'No Due Date'" v-bind:hidden="true" @input="updateTask()"/>
                     </div>
                 </div>
 
                 <div class="sm:flex mt-2">
-                    <label class="sm:w-1/4">Description</label>
+                    <label class="sm:w-1/4 pl-1">Description</label>
                     <div class="sm:w-3/4">
                         <editor v-model="form.description" v-bind:id="task.id" v-bind:hidden="true" @blurred="updateTask()"/>
                     </div>

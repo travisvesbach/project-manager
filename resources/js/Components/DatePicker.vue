@@ -1,5 +1,5 @@
 <template>
-    <flat-pickr class="rounded-md" :class="classes" v-model="date" :config="config" :placeholder="placeholder" ref="datePicker" @input="onInput"></flat-pickr>
+    <flat-pickr class="px-1" :class="classes" v-model="date" :config="config" :placeholder="placeholder" ref="datePicker" @input="onInput"></flat-pickr>
 </template>
 
 <script>
