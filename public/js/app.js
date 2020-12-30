@@ -2031,12 +2031,15 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     id: function id() {
       this.date = this.value;
+    },
+    value: function value() {
+      this.date = this.value;
     }
   },
   methods: {
     onInput: function onInput() {
       // needed otherwise will emit when chaning between tasks
-      if (this.id == this.currentId) {
+      if (this.id == this.currentId && this.value != this.date) {
         this.$emit('input', this.date);
       } else {
         this.currentId = this.id;
@@ -75097,7 +75100,7 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("flat-pickr", {
     ref: "datePicker",
-    staticClass: "px-1",
+    staticClass: "px-1 w-28",
     class: _vm.classes,
     attrs: { config: _vm.config, placeholder: _vm.placeholder },
     on: { input: _vm.onInput },
@@ -94397,8 +94400,12 @@ var OutsideClick = {
         }
       }); // temp exception for flatpickr calendar
 
-      if (document.getElementsByClassName('flatpickr-calendar').length > 0) {
-        clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : document.getElementsByClassName('flatpickr-calendar')[0].contains(e.target);
+      if (!clickedOnExcludedEl && document.getElementsByClassName('flatpickr-calendar').length > 0) {
+        var flatpickrs = document.getElementsByClassName('flatpickr-calendar');
+
+        for (var i = 0; i < flatpickrs.length; i++) {
+          clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : flatpickrs[i].contains(e.target);
+        }
       } // We check to see if the clicked element is not
       // the dialog element and not excluded
 

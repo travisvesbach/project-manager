@@ -64,7 +64,7 @@
 }
 
 .flatpickr-calendar {
-    @apply dark:bg-gray-600 border-0;
+    @apply dark:bg-gray-600;
 }
 
 .flatpickr-months svg {
@@ -87,7 +87,7 @@
     @apply fill-current dark:text-gray-300 dark:hover:bg-yellow-600 dark:border-yellow-600 dark:hover:border-yellow-600 dark:hover:text-gray-100;
 }
 
-.flatpickr-day.selected {
+.flatpickr-day.selected, .flatpickr-day.selected.prevMonthDay, .flatpickr-day.selected.nextMonthDay {
     @apply fill-current dark:text-gray-300 dark:bg-yellow-600 dark:hover:bg-yellow-600 dark:border-yellow-600 dark:hover:border-yellow-600 dark:hover:text-gray-100;
 }
 

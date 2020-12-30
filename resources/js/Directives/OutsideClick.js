@@ -46,8 +46,11 @@ let OutsideClick = {
             });
 
             // temp exception for flatpickr calendar
-            if(document.getElementsByClassName('flatpickr-calendar').length > 0) {
-                clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : document.getElementsByClassName('flatpickr-calendar')[0].contains(e.target);
+            if(!clickedOnExcludedEl && document.getElementsByClassName('flatpickr-calendar').length > 0) {
+                let flatpickrs = document.getElementsByClassName('flatpickr-calendar');
+                for(let i=0;i < flatpickrs.length;i++) {
+                    clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : flatpickrs[i].contains(e.target);
+                }
             }
 
             // We check to see if the clicked element is not

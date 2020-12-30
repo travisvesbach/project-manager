@@ -1,5 +1,5 @@
 <template>
-    <flat-pickr class="px-1" :class="classes" v-model="date" :config="config" :placeholder="placeholder" ref="datePicker" @input="onInput"></flat-pickr>
+    <flat-pickr class="px-1 w-28" :class="classes" v-model="date" :config="config" :placeholder="placeholder" ref="datePicker" @input="onInput"></flat-pickr>
 </template>
 
 <script>
@@ -33,12 +33,15 @@
         watch: {
             id: function() {
                 this.date = this.value;
+            },
+            value: function() {
+                this.date = this.value;
             }
         },
         methods: {
             onInput() {
                 // needed otherwise will emit when chaning between tasks
-                if(this.id == this.currentId) {
+                if(this.id == this.currentId && this.value != this.date) {
                     this.$emit('input', this.date);
                 } else {
                     this.currentId = this.id;
