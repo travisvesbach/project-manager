@@ -17,7 +17,7 @@
                 date: this.value,
                 config: {
                     altInput: true,
-                    altFormat: "F j, Y",
+                    altFormat: "M j, Y",
                     dateFormat: 'Y-m-d',
                 },
             }

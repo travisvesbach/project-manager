@@ -63,6 +63,38 @@
     @apply dark:hover:bg-gray-500 dark:focus:bg-gray-500 dark:hover:text-white dark:focus:text-white;
 }
 
+.flatpickr-calendar {
+    @apply dark:bg-gray-600 border-0;
+}
+
+.flatpickr-months svg {
+    @apply fill-current dark:text-gray-300 dark:hover:text-yellow-600;
+}
+
+.flatpickr-day {
+    @apply fill-current dark:text-gray-300 dark:hover:bg-yellow-600 dark:hover:border-yellow-600 dark:hover:text-gray-100;
+}
+
+.flatpickr-day.prevMonthDay {
+    @apply fill-current dark:text-gray-400 dark:hover:bg-yellow-600 dark:hover:border-yellow-600 dark:hover:text-gray-100;
+}
+
+.flatpickr-day.nextMonthDay {
+    @apply fill-current dark:text-gray-400 dark:hover:bg-yellow-600 dark:hover:border-yellow-600 dark:hover:text-gray-100;
+}
+
+.flatpickr-day.today {
+    @apply fill-current dark:text-gray-300 dark:hover:bg-yellow-600 dark:border-yellow-600 dark:hover:border-yellow-600 dark:hover:text-gray-100;
+}
+
+.flatpickr-day.selected {
+    @apply fill-current dark:text-gray-300 dark:bg-yellow-600 dark:hover:bg-yellow-600 dark:border-yellow-600 dark:hover:border-yellow-600 dark:hover:text-gray-100;
+}
+
+.flatpickr-current-month, .flatpickr-current-month .flatpickr-monthDropdown-months .flatpickr-monthDropdown-month, .flatpickr-weekday {
+    @apply dark:text-gray-300 dark:bg-gray-600;
+}
+
 .dropdown-title-color {
     @apply text-gray-400;
     @apply dark:text-gray-300;

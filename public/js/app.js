@@ -2014,7 +2014,7 @@ __webpack_require__.r(__webpack_exports__);
       date: this.value,
       config: {
         altInput: true,
-        altFormat: "F j, Y",
+        altFormat: "M j, Y",
         dateFormat: 'Y-m-d'
       }
     };
