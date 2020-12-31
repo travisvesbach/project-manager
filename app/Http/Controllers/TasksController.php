@@ -23,8 +23,21 @@ class TasksController extends Controller
     }
 
     public function update(TaskRequest $request, Project $project, Task $task) {
+
         $task->update($request->validated());
 
         return redirect($project->path());
+    }
+
+    public function complete(TaskRequest $request, Project $project, Task $task) {
+        if(!$task->completed) {
+            $task->complete();
+        }
+    }
+
+    public function incomplete(TaskRequest $request, Project $project, Task $task) {
+        if($task->completed) {
+            $task->incomplete();
+        }
     }
 }

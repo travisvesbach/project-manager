@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Project;
+use App\Models\Activity;
+use App\Traits\RecordsActivity;
 
 class Task extends Model
 {
-    use HasFactory;
+    use HasFactory, RecordsActivity;
 
     protected $fillable = [
         'name',
@@ -25,6 +27,7 @@ class Task extends Model
     protected $casts = [
         'due_date' => 'date:Y-m-d',
         'description' => 'array',
+        'completed' => 'boolean',
     ];
 
     protected $dates = [
@@ -48,4 +51,15 @@ class Task extends Model
         return $this->path();
     }
 
+    public function complete() {
+        $this->update(['completed' => true]);
+
+        $this->recordActivity('completed_task');
+    }
+
+    public function incomplete() {
+        $this->update(['completed' => false]);
+
+        $this->recordActivity('incompleted_task');
+    }
 }
