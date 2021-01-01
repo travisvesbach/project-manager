@@ -30,7 +30,7 @@ class Project extends Model
     }
 
     public function tasks() {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Task::class)->with('activity');
     }
 
     public function addTask($attributes) {
@@ -45,8 +45,9 @@ class Project extends Model
         return $this->path();
     }
 
+    // overwrite default from trait
     public function activity() {
-        return $this->hasMany(Activity::class);
+        return $this->hasMany(Activity::class)->with(['subject', 'user']);
     }
 
 }

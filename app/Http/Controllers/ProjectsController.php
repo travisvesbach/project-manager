@@ -9,9 +9,7 @@ use Inertia\Inertia;
 class ProjectsController extends Controller
 {
     public function index() {
-        $projects = auth()->user()->projects()->orderByDesc('updated_at')->with('tasks')->get();
-
-        // $project->load('tasks')->get();
+        $projects = auth()->user()->projects()->orderByDesc('updated_at')->with(['tasks', 'activity'])->get();
 
         return Inertia::render('Projects/Index', compact('projects'));
     }
@@ -19,7 +17,7 @@ class ProjectsController extends Controller
     public function show(Project $project) {
         $this->authorize('update', $project);
 
-        $project->load('tasks')->get();
+        $project->load(['tasks', 'activity'])->get();
 
         return Inertia::render('Projects/Show', compact('project'));
     }

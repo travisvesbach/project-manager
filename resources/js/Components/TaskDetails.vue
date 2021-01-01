@@ -33,6 +33,14 @@
                     </div>
                 </div>
 
+                <div class="mt-2">
+                    <li v-for="activity in task.activity">
+                        <img class="h-8 w-8 rounded-full object-cover inline-block" :src="activity.user.profile_photo_url" :alt="activity.user.name" v-if="activity.user.profile_photo_url"/>
+                        {{ activity.user.name }} {{ activity.descriptionFormatted }} <span :title="activity.createdAtFormatted">{{ activity.timeSince }}</span>
+                    </li>
+
+                </div>
+
             </div>
 
 

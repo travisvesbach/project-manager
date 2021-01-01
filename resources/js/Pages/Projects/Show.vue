@@ -16,6 +16,12 @@
                         </template>
 
                         <template #content>
+                            <jet-dropdown-link @click.native="showingActivity = true" as="button">
+                                Activity Log
+                            </jet-dropdown-link>
+
+                            <div class="border-t dropdown-divider-color"></div>
+
                             <jet-dropdown-link @click.native="editingProject = true" as="button">
                                 Edit Project
                             </jet-dropdown-link>
@@ -29,7 +35,7 @@
         </template>
 
         <div>
-            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8">
+            <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8 text-color">
                 {{ project.description }}
             </div>
         </div>
@@ -48,6 +54,26 @@
             <task-details v-bind:task="showingTask" @close="showingTask = false" ref="taskDetails"/>
 
         </div>
+
+        <!-- activity -->
+        <modal-form :show="showingActivity" @close="showingActivity = false" >
+            <template #title>
+                Project Activity Log
+            </template>
+
+            <template #content>
+                <p v-for="activity in project.activity.slice().reverse()" class="mt-2">
+                    <img class="h-6 w-6 rounded-full object-cover inline-block" :src="activity.user.profile_photo_url" :alt="activity.user.name" v-if="activity.user.profile_photo_url"/>
+                    {{ activity.user.name }} {{ activity.descriptionFormatted }} <span class="text-xs text-secondary-color" :title="activity.createdAtFormatted">{{ activity.timeSince }}</span>
+                </p>
+            </template>
+
+            <template #actions>
+                <jet-secondary-button @click.native="showingActivity = false">
+                    Close
+                </jet-secondary-button>
+            </template>
+        </modal-form>
 
         <!-- edit modal -->
         <modal-form :show="editingProject" @close="editingProject = false" @submitted="updateProject">
@@ -69,7 +95,7 @@
                 <jet-secondary-button @click.native="editingProject = false">
                     Cancel
                 </jet-secondary-button>
-                <jet-button @click.native="updateProject()">
+                <jet-button>
                     Save
                 </jet-button>
             </template>
@@ -112,6 +138,7 @@
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
+    import JetModal from '@/Jetstream/Modal'
     import TaskRow from '@/Components/TaskRow'
     import TaskRowNew from '@/Components/TaskRowNew'
     import TaskDetails from '@/Components/TaskDetails'
@@ -134,6 +161,7 @@
             JetInputError,
             JetLabel,
             JetConfirmationModal,
+            JetModal,
             TaskRow,
             TaskRowNew,
             TaskDetails,
@@ -145,6 +173,7 @@
 
         data() {
             return {
+                showingActivity: false,
                 editingProject: false,
                 confirmingDeleteProject: false,
                 showingTask: false,

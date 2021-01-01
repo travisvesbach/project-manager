@@ -2311,6 +2311,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -5103,10 +5111,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! @/Jetstream/InputError */ "./resources/js/Jetstream/InputError.vue");
 /* harmony import */ var _Jetstream_Label__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! @/Jetstream/Label */ "./resources/js/Jetstream/Label.vue");
 /* harmony import */ var _Jetstream_ConfirmationModal__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! @/Jetstream/ConfirmationModal */ "./resources/js/Jetstream/ConfirmationModal.vue");
-/* harmony import */ var _Components_TaskRow__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @/Components/TaskRow */ "./resources/js/Components/TaskRow.vue");
-/* harmony import */ var _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @/Components/TaskRowNew */ "./resources/js/Components/TaskRowNew.vue");
-/* harmony import */ var _Components_TaskDetails__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @/Components/TaskDetails */ "./resources/js/Components/TaskDetails.vue");
-/* harmony import */ var _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @/Directives/OutsideClick */ "./resources/js/Directives/OutsideClick.js");
+/* harmony import */ var _Jetstream_Modal__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! @/Jetstream/Modal */ "./resources/js/Jetstream/Modal.vue");
+/* harmony import */ var _Components_TaskRow__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @/Components/TaskRow */ "./resources/js/Components/TaskRow.vue");
+/* harmony import */ var _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @/Components/TaskRowNew */ "./resources/js/Components/TaskRowNew.vue");
+/* harmony import */ var _Components_TaskDetails__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @/Components/TaskDetails */ "./resources/js/Components/TaskDetails.vue");
+/* harmony import */ var _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @/Directives/OutsideClick */ "./resources/js/Directives/OutsideClick.js");
 //
 //
 //
@@ -5207,6 +5216,33 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -5240,15 +5276,17 @@ __webpack_require__.r(__webpack_exports__);
     JetInputError: _Jetstream_InputError__WEBPACK_IMPORTED_MODULE_10__["default"],
     JetLabel: _Jetstream_Label__WEBPACK_IMPORTED_MODULE_11__["default"],
     JetConfirmationModal: _Jetstream_ConfirmationModal__WEBPACK_IMPORTED_MODULE_12__["default"],
-    TaskRow: _Components_TaskRow__WEBPACK_IMPORTED_MODULE_13__["default"],
-    TaskRowNew: _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_14__["default"],
-    TaskDetails: _Components_TaskDetails__WEBPACK_IMPORTED_MODULE_15__["default"]
+    JetModal: _Jetstream_Modal__WEBPACK_IMPORTED_MODULE_13__["default"],
+    TaskRow: _Components_TaskRow__WEBPACK_IMPORTED_MODULE_14__["default"],
+    TaskRowNew: _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_15__["default"],
+    TaskDetails: _Components_TaskDetails__WEBPACK_IMPORTED_MODULE_16__["default"]
   },
   directives: {
-    OutsideClick: _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_16__["default"]
+    OutsideClick: _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_17__["default"]
   },
   data: function data() {
     return {
+      showingActivity: false,
       editingProject: false,
       confirmingDeleteProject: false,
       showingTask: false,
@@ -75586,7 +75624,39 @@ var render = function() {
                     ],
                     1
                   )
-                ])
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "mt-2" },
+                  _vm._l(_vm.task.activity, function(activity) {
+                    return _c("li", [
+                      activity.user.profile_photo_url
+                        ? _c("img", {
+                            staticClass:
+                              "h-8 w-8 rounded-full object-cover inline-block",
+                            attrs: {
+                              src: activity.user.profile_photo_url,
+                              alt: activity.user.name
+                            }
+                          })
+                        : _vm._e(),
+                      _vm._v(
+                        "\n                    " +
+                          _vm._s(activity.user.name) +
+                          " " +
+                          _vm._s(activity.descriptionFormatted) +
+                          " "
+                      ),
+                      _c(
+                        "span",
+                        { attrs: { title: activity.createdAtFormatted } },
+                        [_vm._v(_vm._s(activity.timeSince))]
+                      )
+                    ])
+                  }),
+                  0
+                )
               ],
               1
             )
@@ -80818,6 +80888,27 @@ var render = function() {
                                   attrs: { as: "button" },
                                   nativeOn: {
                                     click: function($event) {
+                                      _vm.showingActivity = true
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                            Activity Log\n                        "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c("div", {
+                                staticClass: "border-t dropdown-divider-color"
+                              }),
+                              _vm._v(" "),
+                              _c(
+                                "jet-dropdown-link",
+                                {
+                                  attrs: { as: "button" },
+                                  nativeOn: {
+                                    click: function($event) {
                                       _vm.editingProject = true
                                     }
                                   }
@@ -80864,11 +80955,15 @@ var render = function() {
     [
       _vm._v(" "),
       _c("div", [
-        _c("div", { staticClass: "max-w-7xl mx-auto py-10 sm:px-6 lg:px-8" }, [
-          _vm._v(
-            "\n            " + _vm._s(_vm.project.description) + "\n        "
-          )
-        ])
+        _c(
+          "div",
+          { staticClass: "max-w-7xl mx-auto py-10 sm:px-6 lg:px-8 text-color" },
+          [
+            _vm._v(
+              "\n            " + _vm._s(_vm.project.description) + "\n        "
+            )
+          ]
+        )
       ]),
       _vm._v(" "),
       _c(
@@ -80940,6 +81035,80 @@ var render = function() {
         ],
         1
       ),
+      _vm._v(" "),
+      _c("modal-form", {
+        attrs: { show: _vm.showingActivity },
+        on: {
+          close: function($event) {
+            _vm.showingActivity = false
+          }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("\n            Project Activity Log\n        ")]
+            },
+            proxy: true
+          },
+          {
+            key: "content",
+            fn: function() {
+              return _vm._l(_vm.project.activity.slice().reverse(), function(
+                activity
+              ) {
+                return _c("p", { staticClass: "mt-2" }, [
+                  activity.user.profile_photo_url
+                    ? _c("img", {
+                        staticClass:
+                          "h-6 w-6 rounded-full object-cover inline-block",
+                        attrs: {
+                          src: activity.user.profile_photo_url,
+                          alt: activity.user.name
+                        }
+                      })
+                    : _vm._e(),
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(activity.user.name) +
+                      " " +
+                      _vm._s(activity.descriptionFormatted) +
+                      " "
+                  ),
+                  _c(
+                    "span",
+                    {
+                      staticClass: "text-xs text-secondary-color",
+                      attrs: { title: activity.createdAtFormatted }
+                    },
+                    [_vm._v(_vm._s(activity.timeSince))]
+                  )
+                ])
+              })
+            },
+            proxy: true
+          },
+          {
+            key: "actions",
+            fn: function() {
+              return [
+                _c(
+                  "jet-secondary-button",
+                  {
+                    nativeOn: {
+                      click: function($event) {
+                        _vm.showingActivity = false
+                      }
+                    }
+                  },
+                  [_vm._v("\n                Close\n            ")]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      }),
       _vm._v(" "),
       _c("modal-form", {
         attrs: { show: _vm.editingProject },
@@ -81022,17 +81191,9 @@ var render = function() {
                   [_vm._v("\n                Cancel\n            ")]
                 ),
                 _vm._v(" "),
-                _c(
-                  "jet-button",
-                  {
-                    nativeOn: {
-                      click: function($event) {
-                        return _vm.updateProject()
-                      }
-                    }
-                  },
-                  [_vm._v("\n                Save\n            ")]
-                )
+                _c("jet-button", [
+                  _vm._v("\n                Save\n            ")
+                ])
               ]
             },
             proxy: true

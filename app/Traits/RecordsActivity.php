@@ -37,7 +37,7 @@ trait RecordsActivity
     }
 
     public function activity() {
-        return $this->morphMany(Activity::class, 'subject')->latest();
+        return $this->morphMany(Activity::class, 'subject')->with(['project', 'subject', 'user']);
     }
 
     public function recordActivity($description) {
