@@ -17,7 +17,7 @@ trait RecordsActivity
 
             if($event === 'updated') {
                 static::updating(function($model) {
-                    $model->oldAttributes = $model->getOriginal();
+                    $model->oldAttributes = $model->getRawOriginal();
                 });
             }
         }

@@ -62,9 +62,8 @@
             </template>
 
             <template #content>
-                <p v-for="activity in project.activity.slice().reverse()" class="mt-2">
-                    <img class="h-6 w-6 rounded-full object-cover inline-block" :src="activity.user.profile_photo_url" :alt="activity.user.name" v-if="activity.user.profile_photo_url"/>
-                    {{ activity.user.name }} {{ activity.descriptionFormatted }} <span class="text-xs text-secondary-color" :title="activity.createdAtFormatted">{{ activity.timeSince }}</span>
+                <p v-for="activity in project.activity.slice().reverse()" class="mt-3">
+                    <activity-item v-bind:activity="activity" />
                 </p>
             </template>
 
@@ -142,6 +141,7 @@
     import TaskRow from '@/Components/TaskRow'
     import TaskRowNew from '@/Components/TaskRowNew'
     import TaskDetails from '@/Components/TaskDetails'
+    import ActivityItem from '@/Components/ActivityItem'
     import OutsideClick from '@/Directives/OutsideClick'
 
     export default {
@@ -165,6 +165,7 @@
             TaskRow,
             TaskRowNew,
             TaskDetails,
+            ActivityItem,
         },
 
         directives: {

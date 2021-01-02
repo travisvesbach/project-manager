@@ -34,10 +34,9 @@
                 </div>
 
                 <div class="mt-2">
-                    <li v-for="activity in task.activity">
-                        <img class="h-8 w-8 rounded-full object-cover inline-block" :src="activity.user.profile_photo_url" :alt="activity.user.name" v-if="activity.user.profile_photo_url"/>
-                        {{ activity.user.name }} {{ activity.descriptionFormatted }} <span :title="activity.createdAtFormatted">{{ activity.timeSince }}</span>
-                    </li>
+                    <p class="mt-2" v-for="activity in task.activity">
+                        <activity-item v-bind:activity="activity" v-bind:for="'task'"/>
+                    </p>
 
                 </div>
 
@@ -56,6 +55,7 @@
     import TextareaInput from '@/Components/TextareaInput'
     import Editor from '@/Components/Editor'
     import DatePicker from '@/Components/DatePicker'
+    import ActivityItem from '@/Components/ActivityItem'
 
     export default {
         props: ['task'],
@@ -66,6 +66,7 @@
             TextareaInput,
             Editor,
             DatePicker,
+            ActivityItem,
         },
 
         data() {
