@@ -59,7 +59,10 @@
                     this.$emit('input', getJSON());
                 },
                 onBlur: ({event}) => {
-                    this.$emit('blurred');
+                    //only emit if content has changed
+                    if(this.editor.options.content != this.value) {
+                        this.$emit('blurred');
+                    }
                 },
             })
         },

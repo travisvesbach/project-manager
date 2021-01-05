@@ -47,7 +47,7 @@
 
 .hidden-input-color {
     @apply bg-transparent border-0 hover:shadow-inner focus-within:shadow-inner hover:bg-white focus-within:bg-white;
-    @apply dark:hover:bg-gray-500 dark:focus-within:bg-gray-500 dark:hover:text-white dark:focus-within:text-white ;
+    @apply dark:hover:bg-gray-500 dark:focus-within:bg-gray-500 dark:hover:text-white dark:focus-within:text-white;
 }
 
 .ProseMirror {

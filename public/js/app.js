@@ -2192,7 +2192,10 @@ __webpack_require__.r(__webpack_exports__);
       onBlur: function onBlur(_ref2) {
         var event = _ref2.event;
 
-        _this.$emit('blurred');
+        //only emit if content has changed
+        if (_this.editor.options.content != _this.value) {
+          _this.$emit('blurred');
+        }
       }
     });
   },
@@ -2255,11 +2258,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -2284,6 +2282,11 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     close: function close() {
       this.$emit('close');
+    }
+  },
+  watch: {
+    show: function show() {
+      this.$refs['scrollable'].scrollTop = 0;
     }
   }
 });
@@ -2389,6 +2392,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
 
 
 
@@ -2442,7 +2446,7 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.form.name == '') {
         this.form.name = this.task.name;
-      } else {
+      } else if (this.form.name != this.task.name || this.form.description != this.task.description || this.form.completed != this.task.completed || this.form.due_date != this.task.due_date) {
         this.$inertia.patch(this.task.path, this.form);
       }
     },
@@ -5187,7 +5191,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_TaskRow__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! @/Components/TaskRow */ "./resources/js/Components/TaskRow.vue");
 /* harmony import */ var _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @/Components/TaskRowNew */ "./resources/js/Components/TaskRowNew.vue");
 /* harmony import */ var _Components_TaskDetails__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @/Components/TaskDetails */ "./resources/js/Components/TaskDetails.vue");
-/* harmony import */ var _Components_ActivityItem__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @/Components/ActivityItem */ "./resources/js/Components/ActivityItem.vue");
+/* harmony import */ var _Components_ActivityItem__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @/Components/ActivityItem */ "./resources/js/Components/ActivityItem.vue");
 /* harmony import */ var _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @/Directives/OutsideClick */ "./resources/js/Directives/OutsideClick.js");
 //
 //
@@ -5353,7 +5357,7 @@ __webpack_require__.r(__webpack_exports__);
     TaskRow: _Components_TaskRow__WEBPACK_IMPORTED_MODULE_14__["default"],
     TaskRowNew: _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_15__["default"],
     TaskDetails: _Components_TaskDetails__WEBPACK_IMPORTED_MODULE_16__["default"],
-    ActivityItem: _Components_ActivityItem__WEBPACK_IMPORTED_MODULE_19__["default"]
+    ActivityItem: _Components_ActivityItem__WEBPACK_IMPORTED_MODULE_17__["default"]
   },
   directives: {
     OutsideClick: _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_18__["default"]
@@ -75437,6 +75441,7 @@ var render = function() {
       _c(
         "form",
         {
+          staticClass: "flex flex-col max-h-full",
           on: {
             submit: function($event) {
               $event.preventDefault()
@@ -75445,21 +75450,26 @@ var render = function() {
           }
         },
         [
-          _c("div", { staticClass: "px-6 py-4 card-color" }, [
-            _c(
-              "div",
-              { staticClass: "text-lg heading-color" },
-              [_vm._t("title")],
-              2
-            ),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "mt-4 text-color" },
-              [_vm._t("content")],
-              2
-            )
-          ]),
+          _c(
+            "div",
+            {
+              staticClass:
+                "px-6 py-4 text-lg heading-color card-header-footer-color"
+            },
+            [_vm._t("title")],
+            2
+          ),
+          _vm._v(" "),
+          _c(
+            "div",
+            {
+              ref: "scrollable",
+              staticClass:
+                "px-6 py-4 flex-1 overflow-y-auto card-color text-color"
+            },
+            [_vm._t("content")],
+            2
+          ),
           _vm._v(" "),
           _c(
             "div",
@@ -75568,94 +75578,95 @@ var render = function() {
           "div",
           {
             staticClass:
-              "absolute right-0 top-0 bottom-0 max-w-xl p-2 w-full sm:w-1/2 card-color text-color"
+              "fixed right-0 top-16 bottom-0 max-w-xl p-2 w-full sm:w-1/2 flex flex-col card-color text-color"
           },
           [
-            _c("div", { staticClass: "flex space-between mb-2" }, [
-              _c(
-                "button",
-                {
-                  staticClass:
-                    "inline-flex items-center p-1 bg-transparent border rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:border-green-500 hover:ring-green-500 focus:outline-none focus:border-green-500 focus:ring-green transition duration-150 dark:text-gray-300 ",
-                  class: _vm.form.completed
-                    ? "bg-green-500 border-green-500 dark:bg-green-500"
-                    : "border-gray-300",
-                  on: {
-                    click: function($event) {
-                      return _vm.toggleCompleted()
-                    }
-                  }
-                },
-                [
-                  _c(
-                    "svg",
-                    {
-                      staticClass: "h-5",
-                      attrs: {
-                        xmlns: "http://www.w3.org/2000/svg",
-                        fill: "none",
-                        viewBox: "0 0 24 24",
-                        stroke: "currentColor"
-                      }
-                    },
-                    [
-                      _c("path", {
-                        attrs: {
-                          "stroke-linecap": "round",
-                          "stroke-linejoin": "round",
-                          "stroke-width": "2",
-                          d: "M5 13l4 4L19 7"
-                        }
-                      })
-                    ]
-                  ),
-                  _vm._v(
-                    " " + _vm._s(_vm.completedButtonText) + "\n            "
-                  )
-                ]
-              ),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "ml-auto link-color",
-                  on: {
-                    click: function($event) {
-                      return _vm.$emit("close")
-                    }
-                  }
-                },
-                [
-                  _c(
-                    "svg",
-                    {
-                      staticClass: "h-6",
-                      attrs: {
-                        xmlns: "http://www.w3.org/2000/svg",
-                        fill: "none",
-                        viewBox: "0 0 24 24",
-                        stroke: "currentColor"
-                      }
-                    },
-                    [
-                      _c("path", {
-                        attrs: {
-                          "stroke-linecap": "round",
-                          "stroke-linejoin": "round",
-                          "stroke-width": "2",
-                          d: "M6 18L18 6M6 6l12 12"
-                        }
-                      })
-                    ]
-                  )
-                ]
-              )
-            ]),
-            _vm._v(" "),
             _c(
               "div",
-              {},
               [
+                _c("div", { staticClass: "flex space-between mb-2" }, [
+                  _c(
+                    "button",
+                    {
+                      staticClass:
+                        "inline-flex items-center p-1 bg-transparent border rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:border-green-500 hover:ring-green-500 focus:outline-none focus:border-green-500 focus:ring-green transition duration-150 dark:text-gray-300 ",
+                      class: _vm.form.completed
+                        ? "bg-green-500 border-green-500 dark:bg-green-500"
+                        : "border-gray-300",
+                      on: {
+                        click: function($event) {
+                          return _vm.toggleCompleted()
+                        }
+                      }
+                    },
+                    [
+                      _c(
+                        "svg",
+                        {
+                          staticClass: "h-5",
+                          attrs: {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            fill: "none",
+                            viewBox: "0 0 24 24",
+                            stroke: "currentColor"
+                          }
+                        },
+                        [
+                          _c("path", {
+                            attrs: {
+                              "stroke-linecap": "round",
+                              "stroke-linejoin": "round",
+                              "stroke-width": "2",
+                              d: "M5 13l4 4L19 7"
+                            }
+                          })
+                        ]
+                      ),
+                      _vm._v(
+                        " " +
+                          _vm._s(_vm.completedButtonText) +
+                          "\n                "
+                      )
+                    ]
+                  ),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "ml-auto link-color",
+                      on: {
+                        click: function($event) {
+                          return _vm.$emit("close")
+                        }
+                      }
+                    },
+                    [
+                      _c(
+                        "svg",
+                        {
+                          staticClass: "h-6",
+                          attrs: {
+                            xmlns: "http://www.w3.org/2000/svg",
+                            fill: "none",
+                            viewBox: "0 0 24 24",
+                            stroke: "currentColor"
+                          }
+                        },
+                        [
+                          _c("path", {
+                            attrs: {
+                              "stroke-linecap": "round",
+                              "stroke-linejoin": "round",
+                              "stroke-width": "2",
+                              d: "M6 18L18 6M6 6l12 12"
+                            }
+                          })
+                        ]
+                      )
+                    ]
+                  )
+                ]),
+                _vm._v(" "),
                 _c("input-hidden", {
                   ref: "name",
                   staticClass: "rounded-lg text-3xl heading-color",
@@ -75680,91 +75691,93 @@ var render = function() {
                     },
                     expression: "form.name"
                   }
-                }),
-                _vm._v(" "),
-                _c("div", { staticClass: "sm:flex mt-2" }, [
-                  _c("label", { staticClass: "sm:w-1/4 pl-1" }, [
-                    _vm._v("Due Date")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "sm:w-3/4" },
-                    [
-                      _c("date-picker", {
-                        staticClass: "rounded-md",
-                        attrs: {
-                          id: _vm.task.id,
-                          placeholder: "No Due Date",
-                          hidden: true
-                        },
-                        on: {
-                          input: function($event) {
-                            return _vm.updateTask()
-                          }
-                        },
-                        model: {
-                          value: _vm.form.due_date,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "due_date", $$v)
-                          },
-                          expression: "form.due_date"
-                        }
-                      })
-                    ],
-                    1
-                  )
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "sm:flex mt-2" }, [
-                  _c("label", { staticClass: "sm:w-1/4 pl-1" }, [
-                    _vm._v("Description")
-                  ]),
-                  _vm._v(" "),
-                  _c(
-                    "div",
-                    { staticClass: "sm:w-3/4" },
-                    [
-                      _c("editor", {
-                        attrs: { id: _vm.task.id, hidden: true },
-                        on: {
-                          blurred: function($event) {
-                            return _vm.updateTask()
-                          }
-                        },
-                        model: {
-                          value: _vm.form.description,
-                          callback: function($$v) {
-                            _vm.$set(_vm.form, "description", $$v)
-                          },
-                          expression: "form.description"
-                        }
-                      })
-                    ],
-                    1
-                  )
+                })
+              ],
+              1
+            ),
+            _vm._v(" "),
+            _c("div", { staticClass: "flex-1 overflow-y-auto" }, [
+              _c("div", { staticClass: "sm:flex mt-2" }, [
+                _c("label", { staticClass: "sm:w-1/4 pl-1" }, [
+                  _vm._v("Due Date")
                 ]),
                 _vm._v(" "),
                 _c(
                   "div",
-                  { staticClass: "mt-2" },
-                  _vm._l(_vm.task.activity, function(activity) {
-                    return _c(
-                      "p",
-                      { staticClass: "mt-2" },
-                      [
-                        _c("activity-item", {
-                          attrs: { activity: activity, for: "task" }
-                        })
-                      ],
-                      1
-                    )
-                  }),
-                  0
+                  { staticClass: "sm:w-3/4" },
+                  [
+                    _c("date-picker", {
+                      staticClass: "rounded-md",
+                      attrs: {
+                        id: _vm.task.id,
+                        placeholder: "No Due Date",
+                        hidden: true
+                      },
+                      on: {
+                        input: function($event) {
+                          return _vm.updateTask()
+                        }
+                      },
+                      model: {
+                        value: _vm.form.due_date,
+                        callback: function($$v) {
+                          _vm.$set(_vm.form, "due_date", $$v)
+                        },
+                        expression: "form.due_date"
+                      }
+                    })
+                  ],
+                  1
                 )
-              ],
-              1
-            )
+              ]),
+              _vm._v(" "),
+              _c("div", { staticClass: "sm:flex mt-2" }, [
+                _c("label", { staticClass: "sm:w-1/4 pl-1" }, [
+                  _vm._v("Description")
+                ]),
+                _vm._v(" "),
+                _c(
+                  "div",
+                  { staticClass: "sm:w-3/4" },
+                  [
+                    _c("editor", {
+                      attrs: { id: _vm.task.id, hidden: true },
+                      on: {
+                        blurred: function($event) {
+                          return _vm.updateTask()
+                        }
+                      },
+                      model: {
+                        value: _vm.form.description,
+                        callback: function($$v) {
+                          _vm.$set(_vm.form, "description", $$v)
+                        },
+                        expression: "form.description"
+                      }
+                    })
+                  ],
+                  1
+                )
+              ]),
+              _vm._v(" "),
+              _c(
+                "div",
+                {},
+                _vm._l(_vm.task.activity, function(activity) {
+                  return _c(
+                    "p",
+                    { staticClass: "my-3" },
+                    [
+                      _c("activity-item", {
+                        attrs: { activity: activity, for: "task" }
+                      })
+                    ],
+                    1
+                  )
+                }),
+                0
+              )
+            ])
           ]
         )
       : _vm._e()
@@ -77029,7 +77042,7 @@ var render = function() {
               }
             ],
             staticClass:
-              "fixed top-0 inset-x-0 px-4 pt-6 sm:px-0 sm:flex sm:items-top sm:justify-center"
+              "fixed top-0 inset-x-0 px-4 py-6 sm:px-0 sm:flex sm:items-top sm:justify-center max-h-full"
           },
           [
             _c(
@@ -77096,7 +77109,7 @@ var render = function() {
                       }
                     ],
                     staticClass:
-                      "bg-white rounded-lg overflow-hidden shadow-xl transform transition-all sm:w-full",
+                      "bg-white rounded-lg shadow-xl transform transition-all sm:w-full",
                     class: _vm.maxWidthClass
                   },
                   [_vm._t("default")],
@@ -81164,7 +81177,7 @@ var render = function() {
               ) {
                 return _c(
                   "p",
-                  { staticClass: "mt-3" },
+                  { staticClass: "my-3" },
                   [_c("activity-item", { attrs: { activity: activity } })],
                   1
                 )

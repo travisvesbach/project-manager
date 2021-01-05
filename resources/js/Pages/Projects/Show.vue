@@ -62,7 +62,7 @@
             </template>
 
             <template #content>
-                <p v-for="activity in project.activity.slice().reverse()" class="mt-3">
+                <p v-for="activity in project.activity.slice().reverse()" class="my-3">
                     <activity-item v-bind:activity="activity" />
                 </p>
             </template>
