@@ -9,7 +9,7 @@ use App\Models\Project;
 use App\Models\User;
 use Facades\Tests\Setup\ProjectFactory;
 
-class ManageProjectsTest extends TestCase
+class ProjectsTest extends TestCase
 {
     use WithFaker, RefreshDatabase;
 
@@ -141,18 +141,5 @@ class ManageProjectsTest extends TestCase
         $attributes = Project::factory()->raw(['description' => '']);
 
         $this->post('/projects', $attributes)->assertSessionHasErrors('description');
-    }
-
-    /** @test **/
-    public function a_project_can_invite_a_user() {
-        $project = ProjectFactory::create();
-
-        $project->invite($user = User::factory()->create());
-
-        $this->signIn($user);
-        $this->patch($project->path(), $attributes = ['description' => 'changed'])
-            ->assertRedirect($project->path());;
-
-        $this->assertDatabaseHas('projects', $attributes);
     }
 }

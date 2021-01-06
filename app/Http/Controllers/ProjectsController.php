@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Project;
+use App\Models\User;
 use Inertia\Inertia;
 
 class ProjectsController extends Controller
@@ -17,9 +18,21 @@ class ProjectsController extends Controller
     public function show(Project $project) {
         $this->authorize('update', $project);
 
-        $project->load(['tasks', 'activity'])->get();
+        $project->load(['tasks', 'activity', 'users'])->get();
 
-        return Inertia::render('Projects/Show', compact('project'));
+        $users = null;
+        if(auth()->user()->id == $project->owner->id) {
+            $users = User::select([
+                    'users.id',
+                    'users.name',
+                    'users.email'
+                ])
+                ->where('users.id', '!=', $project->owner_id)
+                ->orderBy('name', 'ASC')
+                ->get();
+        }
+
+        return Inertia::render('Projects/Show', compact(['project', 'users']));
     }
 
     public function create() {

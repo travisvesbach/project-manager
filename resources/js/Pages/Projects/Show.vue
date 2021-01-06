@@ -20,6 +20,10 @@
                                 Activity Log
                             </jet-dropdown-link>
 
+                            <jet-dropdown-link @click.native="showingUsers = true" as="button">
+                                Users
+                            </jet-dropdown-link>
+
                             <div class="border-t dropdown-divider-color"></div>
 
                             <jet-dropdown-link @click.native="editingProject = true" as="button">
@@ -69,6 +73,48 @@
 
             <template #actions>
                 <jet-secondary-button @click.native="showingActivity = false">
+                    Close
+                </jet-secondary-button>
+            </template>
+        </modal-form>
+
+        <!-- users -->
+        <modal-form :show="showingUsers" @close="showingUsers = false" >
+            <template #title>
+                Users
+            </template>
+
+            <template #content>
+                <div v-if="filteredUsers && filteredUsers.length > 0">
+                    <select-input id="user" class="mt-1 inline-block" v-model="userForm.id" v-bind:options="filteredUsers" v-bind:placeholder="'-- select user --'" required/>
+                    <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click.native="addUser">
+                        Add User
+                    </jet-button>
+                </div>
+
+
+
+
+
+                <p class="my-3">
+                    Owner
+                </p>
+                <p class="my-3">
+                    {{ project.owner.name }} <span class="text-secondary-color">({{ project.owner.email }})</span>
+                </p>
+                <div v-if="project.users.length > 0">
+                    <hr>
+                    <p class="my-3">
+                        Members
+                    </p>
+                    <p v-for="user in project.users" class="my-3">
+                        {{ user.name }} <span v-if="user.email" class="text-secondary-color">({{ user.email }})</span>
+                    </p>
+                </div>
+            </template>
+
+            <template #actions>
+                <jet-secondary-button @click.native="showingUsers = false">
                     Close
                 </jet-secondary-button>
             </template>
@@ -142,10 +188,11 @@
     import TaskRowNew from '@/Components/TaskRowNew'
     import TaskDetails from '@/Components/TaskDetails'
     import ActivityItem from '@/Components/ActivityItem'
+    import SelectInput from '@/Components/SelectInput'
     import OutsideClick from '@/Directives/OutsideClick'
 
     export default {
-        props: ['project'],
+        props: ['project', 'users'],
 
         components: {
             AppLayout,
@@ -166,6 +213,7 @@
             TaskRowNew,
             TaskDetails,
             ActivityItem,
+            SelectInput,
         },
 
         directives: {
@@ -178,11 +226,28 @@
                 editingProject: false,
                 confirmingDeleteProject: false,
                 showingTask: false,
+                showingUsers: false,
                 form: this.$inertia.form({
                     id: this.project.id,
                     name: this.project.name,
                     description: this.project.description,
                 }),
+                userForm: this.$inertia.form({
+                    id: null,
+                }),
+            }
+        },
+        computed: {
+            filteredUsers() {
+                if(!this.users) {
+                    return false
+                } else if(this.users.length == this.project.users.length ) {
+                    return false;
+                } else if(this.users.length > 0 && this.project.users.length > 0) {
+                    return this.users.filter(x => this.project.users.some(y => x.id != y.id));
+                } else {
+                    return this.users;
+                }
             }
         },
         watch: {
@@ -192,6 +257,7 @@
                         this.showingTask = this.project.tasks[i];
                     }
                 }
+                this.userForm.id = null;
             }
         },
         methods: {
@@ -207,6 +273,9 @@
             },
             closeDetails() {
                 this.showingTask = false;
+            },
+            addUser() {
+                this.$inertia.post(this.project.path + '/invitations', this.userForm);
             }
         }
     }

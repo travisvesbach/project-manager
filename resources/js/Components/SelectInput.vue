@@ -1,7 +1,7 @@
 <template>
     <select class="form-input rounded-md shadow-sm form-input-color" @input="$emit('input', $event.target.value)" >
         <option :selected="value == null" disabled class="text-secondary-color">
-            -- select an option --
+            {{ computedPlaceholder }}
         </option>
         <option v-for="option in options" :selected="option == value" :value="isObject(option) ?  option.id : option">
             {{ isObject(option) ?  option.name : option }}
@@ -11,7 +11,13 @@
 
 <script>
     export default {
-        props: ['value', 'options'],
+        props: ['value', 'options', 'placeholder'],
+
+        computed: {
+            computedPlaceholder() {
+                return this.placeholder ?? '-- select an option --';
+            }
+        },
 
         methods: {
             focus() {

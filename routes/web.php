@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ProjectsController;
+use App\Http\Controllers\ProjectInvitationsController;
 use App\Http\Controllers\TasksController;
 
 /*
@@ -38,4 +39,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
     Route::post('/projects/{project}/tasks', [TasksController::class, 'store'])->name('tasks.store');
     Route::patch('/projects/{project}/tasks/{task}', [TasksController::class, 'update'])->name('tasks.update');
 
+    Route::post('/projects/{project}/invitations', [ProjectInvitationsController::class, 'store'])->name('invitations.store');
 });

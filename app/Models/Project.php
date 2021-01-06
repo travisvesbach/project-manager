@@ -51,11 +51,14 @@ class Project extends Model
     }
 
     public function invite(User $user) {
+        if($this->users->contains($user)) {
+            return false;
+        }
         return $this->users()->attach($user);
     }
 
     public function users() {
-        return $this->belongsToMany(User::class)->withTimestamps();
+        return $this->belongsToMany(User::class)->withTimestamps()->orderBy('name', 'ASC');
     }
 
 }

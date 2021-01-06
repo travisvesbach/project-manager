@@ -2314,7 +2314,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['value', 'options'],
+  props: ['value', 'options', 'placeholder'],
+  computed: {
+    computedPlaceholder: function computedPlaceholder() {
+      var _this$placeholder;
+
+      return (_this$placeholder = this.placeholder) !== null && _this$placeholder !== void 0 ? _this$placeholder : '-- select an option --';
+    }
+  },
   methods: {
     focus: function focus() {
       this.$refs.input.focus();
@@ -5192,7 +5199,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! @/Components/TaskRowNew */ "./resources/js/Components/TaskRowNew.vue");
 /* harmony import */ var _Components_TaskDetails__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! @/Components/TaskDetails */ "./resources/js/Components/TaskDetails.vue");
 /* harmony import */ var _Components_ActivityItem__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! @/Components/ActivityItem */ "./resources/js/Components/ActivityItem.vue");
-/* harmony import */ var _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @/Directives/OutsideClick */ "./resources/js/Directives/OutsideClick.js");
+/* harmony import */ var _Components_SelectInput__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! @/Components/SelectInput */ "./resources/js/Components/SelectInput.vue");
+/* harmony import */ var _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! @/Directives/OutsideClick */ "./resources/js/Directives/OutsideClick.js");
 //
 //
 //
@@ -5318,6 +5326,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -5338,7 +5393,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['project'],
+  props: ['project', 'users'],
   components: {
     AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
     ModalForm: _Components_ModalForm__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -5357,10 +5412,11 @@ __webpack_require__.r(__webpack_exports__);
     TaskRow: _Components_TaskRow__WEBPACK_IMPORTED_MODULE_14__["default"],
     TaskRowNew: _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_15__["default"],
     TaskDetails: _Components_TaskDetails__WEBPACK_IMPORTED_MODULE_16__["default"],
-    ActivityItem: _Components_ActivityItem__WEBPACK_IMPORTED_MODULE_17__["default"]
+    ActivityItem: _Components_ActivityItem__WEBPACK_IMPORTED_MODULE_17__["default"],
+    SelectInput: _Components_SelectInput__WEBPACK_IMPORTED_MODULE_18__["default"]
   },
   directives: {
-    OutsideClick: _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_18__["default"]
+    OutsideClick: _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_19__["default"]
   },
   data: function data() {
     return {
@@ -5368,12 +5424,35 @@ __webpack_require__.r(__webpack_exports__);
       editingProject: false,
       confirmingDeleteProject: false,
       showingTask: false,
+      showingUsers: false,
       form: this.$inertia.form({
         id: this.project.id,
         name: this.project.name,
         description: this.project.description
+      }),
+      userForm: this.$inertia.form({
+        id: null
       })
     };
+  },
+  computed: {
+    filteredUsers: function filteredUsers() {
+      var _this = this;
+
+      if (!this.users) {
+        return false;
+      } else if (this.users.length == this.project.users.length) {
+        return false;
+      } else if (this.users.length > 0 && this.project.users.length > 0) {
+        return this.users.filter(function (x) {
+          return _this.project.users.some(function (y) {
+            return x.id != y.id;
+          });
+        });
+      } else {
+        return this.users;
+      }
+    }
   },
   watch: {
     project: function project() {
@@ -5382,6 +5461,8 @@ __webpack_require__.r(__webpack_exports__);
           this.showingTask = this.project.tasks[i];
         }
       }
+
+      this.userForm.id = null;
     }
   },
   methods: {
@@ -5397,6 +5478,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     closeDetails: function closeDetails() {
       this.showingTask = false;
+    },
+    addUser: function addUser() {
+      this.$inertia.post(this.project.path + '/invitations', this.userForm);
     }
   }
 });
@@ -75525,7 +75609,7 @@ var render = function() {
           attrs: { disabled: "" },
           domProps: { selected: _vm.value == null }
         },
-        [_vm._v("\n        -- select an option --\n    ")]
+        [_vm._v("\n        " + _vm._s(_vm.computedPlaceholder) + "\n    ")]
       ),
       _vm._v(" "),
       _vm._l(_vm.options, function(option) {
@@ -81017,6 +81101,23 @@ var render = function() {
                                 ]
                               ),
                               _vm._v(" "),
+                              _c(
+                                "jet-dropdown-link",
+                                {
+                                  attrs: { as: "button" },
+                                  nativeOn: {
+                                    click: function($event) {
+                                      _vm.showingUsers = true
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                            Users\n                        "
+                                  )
+                                ]
+                              ),
+                              _vm._v(" "),
                               _c("div", {
                                 staticClass: "border-t dropdown-divider-color"
                               }),
@@ -81195,6 +81296,137 @@ var render = function() {
                     nativeOn: {
                       click: function($event) {
                         _vm.showingActivity = false
+                      }
+                    }
+                  },
+                  [_vm._v("\n                Close\n            ")]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      }),
+      _vm._v(" "),
+      _c("modal-form", {
+        attrs: { show: _vm.showingUsers },
+        on: {
+          close: function($event) {
+            _vm.showingUsers = false
+          }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("\n            Users\n        ")]
+            },
+            proxy: true
+          },
+          {
+            key: "content",
+            fn: function() {
+              return [
+                _vm.filteredUsers && _vm.filteredUsers.length > 0
+                  ? _c(
+                      "div",
+                      [
+                        _c("select-input", {
+                          staticClass: "mt-1 inline-block",
+                          attrs: {
+                            id: "user",
+                            options: _vm.filteredUsers,
+                            placeholder: "-- select user --",
+                            required: ""
+                          },
+                          model: {
+                            value: _vm.userForm.id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.userForm, "id", $$v)
+                            },
+                            expression: "userForm.id"
+                          }
+                        }),
+                        _vm._v(" "),
+                        _c(
+                          "jet-button",
+                          {
+                            class: { "opacity-25": _vm.form.processing },
+                            attrs: { disabled: _vm.form.processing },
+                            nativeOn: {
+                              click: function($event) {
+                                return _vm.addUser($event)
+                              }
+                            }
+                          },
+                          [
+                            _vm._v(
+                              "\n                    Add User\n                "
+                            )
+                          ]
+                        )
+                      ],
+                      1
+                    )
+                  : _vm._e(),
+                _vm._v(" "),
+                _c("p", { staticClass: "my-3" }, [
+                  _vm._v("\n                Owner\n            ")
+                ]),
+                _vm._v(" "),
+                _c("p", { staticClass: "my-3" }, [
+                  _vm._v(
+                    "\n                " + _vm._s(_vm.project.owner.name) + " "
+                  ),
+                  _c("span", { staticClass: "text-secondary-color" }, [
+                    _vm._v("(" + _vm._s(_vm.project.owner.email) + ")")
+                  ])
+                ]),
+                _vm._v(" "),
+                _vm.project.users.length > 0
+                  ? _c(
+                      "div",
+                      [
+                        _c("hr"),
+                        _vm._v(" "),
+                        _c("p", { staticClass: "my-3" }, [
+                          _vm._v(
+                            "\n                    Members\n                "
+                          )
+                        ]),
+                        _vm._v(" "),
+                        _vm._l(_vm.project.users, function(user) {
+                          return _c("p", { staticClass: "my-3" }, [
+                            _vm._v(
+                              "\n                    " + _vm._s(user.name) + " "
+                            ),
+                            user.email
+                              ? _c(
+                                  "span",
+                                  { staticClass: "text-secondary-color" },
+                                  [_vm._v("(" + _vm._s(user.email) + ")")]
+                                )
+                              : _vm._e()
+                          ])
+                        })
+                      ],
+                      2
+                    )
+                  : _vm._e()
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "actions",
+            fn: function() {
+              return [
+                _c(
+                  "jet-secondary-button",
+                  {
+                    nativeOn: {
+                      click: function($event) {
+                        _vm.showingUsers = false
                       }
                     }
                   },
