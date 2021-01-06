@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Project;
+use App\Models\User;
 use Facades\Tests\Setup\ProjectFactory;
 
 class ManageProjectsTest extends TestCase
@@ -68,18 +69,33 @@ class ManageProjectsTest extends TestCase
     }
 
     /** @test **/
-    public function a_user_can_delete_their_project() {
+    public function a_user_can_view_all_projects_they_have_been_invited_to_on_their_dashboard() {
+        $project = tap(ProjectFactory::create())->invite($this->signIn());
+
+        $this->get('/projects')->assertSee($project->name);
+    }
+
+    /** @test **/
+    public function unauthorized_users_cannot_delete_projects() {
+        $project = ProjectFactory::create();
+
+        $this->delete($project->path())
+            ->assertRedirect('/login');
+
+        $this->signIn();
+
+        $this->delete($project->path())->assertStatus(403);
+    }
+
+    /** @test **/
+    public function a_user_can_delete_a_project() {
         $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
             ->delete($project->path())
             ->assertRedirect('/projects');
 
-        $this->assertDatabaseMissing('projects', [
-            'id' => $project->id,
-            'name' => $project->name,
-            'description' => $project->description
-        ]);
+        $this->assertDatabaseMissing('projects', $project->only('id'));
     }
 
     /** @test **/
@@ -125,5 +141,18 @@ class ManageProjectsTest extends TestCase
         $attributes = Project::factory()->raw(['description' => '']);
 
         $this->post('/projects', $attributes)->assertSessionHasErrors('description');
+    }
+
+    /** @test **/
+    public function a_project_can_invite_a_user() {
+        $project = ProjectFactory::create();
+
+        $project->invite($user = User::factory()->create());
+
+        $this->signIn($user);
+        $this->patch($project->path(), $attributes = ['description' => 'changed'])
+            ->assertRedirect($project->path());;
+
+        $this->assertDatabaseHas('projects', $attributes);
     }
 }

@@ -50,4 +50,12 @@ class Project extends Model
         return $this->hasMany(Activity::class)->with(['subject', 'user']);
     }
 
+    public function invite(User $user) {
+        return $this->users()->attach($user);
+    }
+
+    public function users() {
+        return $this->belongsToMany(User::class)->withTimestamps();
+    }
+
 }
