@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Facades\Tests\Setup\ProjectFactory;
 use App\Models\Task;
+use App\Models\User;
 
 class RecordActivityTest extends TestCase
 {
@@ -131,5 +132,24 @@ class RecordActivityTest extends TestCase
 
         $this->assertCount(3, $project->activity);
         $this->assertEquals('deleted_task', $project->activity->last()->description);
+    }
+
+    /** @test **/
+    public function inviting_a_user() {
+        $project = ProjectFactory::create();
+
+        $project->invite(User::factory()->create());
+        $this->assertCount(2, $project->activity);
+    }
+
+    /** @test **/
+    public function uninviting_a_user() {
+        $project = ProjectFactory::create();
+
+        $project->invite($user = User::factory()->create());
+        $this->assertCount(2, $project->activity);
+
+        $project->uninvite($user);
+        $this->assertCount(3, $project->fresh()->activity);
     }
 }

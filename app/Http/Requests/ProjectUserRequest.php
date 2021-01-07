@@ -5,7 +5,7 @@ namespace App\Http\Requests;
 use Illuminate\Foundation\Http\FormRequest;
 use App\Models\Project;
 
-class ProjectInvitationRequest extends FormRequest
+class ProjectUserRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -16,7 +16,7 @@ class ProjectInvitationRequest extends FormRequest
     {
         $project = $this->route('project');
 
-        return $project && $this->user()->can('update', $project);
+        return $project && $this->user()->can('delete', $project);
     }
 
     /**
@@ -28,12 +28,6 @@ class ProjectInvitationRequest extends FormRequest
     {
         return [
             'id' => 'required|exists:users,id',
-        ];
-    }
-
-    public function messages() {
-        return [
-            'email.exists' => 'The user you are inviting must have an account.',
         ];
     }
 }

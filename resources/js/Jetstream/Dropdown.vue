@@ -16,8 +16,8 @@
             leave-class="transform opacity-100 scale-100"
             leave-to-class="transform opacity-0 scale-95">
             <div v-show="open"
-                    class="absolute z-50 mt-2 rounded-md shadow-lg"
-                    :class="[widthClass, alignmentClasses]"
+                    class="z-50 mt-2 rounded-md shadow-lg"
+                    :class="[widthClass, alignmentClasses, position]"
                     style="display: none;"
                     @click="open = false">
                 <div class="rounded-md ring-1 ring-black ring-opacity-5" :class="contentClasses">
@@ -36,6 +36,9 @@
             },
             width: {
                 default: '48'
+            },
+            position: {
+                default: 'absolute'
             },
             contentClasses: {
                 default: () => ['py-1', 'bg-white', 'dark:bg-gray-700']

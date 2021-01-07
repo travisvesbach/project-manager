@@ -10,7 +10,7 @@ use Inertia\Inertia;
 class ProjectsController extends Controller
 {
     public function index() {
-        $projects = auth()->user()->allProjects()->orderByDesc('updated_at')->with(['tasks', 'activity'])->get();
+        $projects = auth()->user()->allProjects();
 
         return Inertia::render('Projects/Index', compact('projects'));
     }

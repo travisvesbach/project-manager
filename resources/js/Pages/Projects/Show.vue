@@ -3,7 +3,7 @@
         <template #header>
             {{ project.name }}
 
-            <!-- Create Dropdown -->
+            <!-- dropdown -->
             <div class="items-center inline-block">
                 <div class="ml-3 relative">
                     <jet-dropdown align="left" width="48">
@@ -60,7 +60,7 @@
         </div>
 
         <!-- activity -->
-        <modal-form :show="showingActivity" @close="showingActivity = false" >
+        <jet-dialog-modal :show="showingActivity" @close="showingActivity = false" >
             <template #title>
                 Project Activity Log
             </template>
@@ -71,54 +71,71 @@
                 </p>
             </template>
 
-            <template #actions>
+            <template #footer>
                 <jet-secondary-button @click.native="showingActivity = false">
                     Close
                 </jet-secondary-button>
             </template>
-        </modal-form>
+        </jet-dialog-modal>
 
         <!-- users -->
-        <modal-form :show="showingUsers" @close="showingUsers = false" >
+        <jet-dialog-modal :show="showingUsers" @close="showingUsers = false" >
             <template #title>
-                Users
+                Project Users
             </template>
 
             <template #content>
-                <div v-if="filteredUsers && filteredUsers.length > 0">
-                    <select-input id="user" class="mt-1 inline-block" v-model="userForm.id" v-bind:options="filteredUsers" v-bind:placeholder="'-- select user --'" required/>
-                    <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing" @click.native="addUser">
+                <div v-if="filteredUsers && filteredUsers.length > 0 && $page.user.id == project.owner.id" class="flex items-center">
+                    <select-input id="user" class="mr-4" v-model="userForm.id" v-bind:options="filteredUsers" v-bind:placeholder="'-- select user --'" required/>
+                    <jet-button type="submit" size="small" :class="{ 'opacity-25': userForm.processing }" :disabled="userForm.processing" @click.native="addUser">
                         Add User
                     </jet-button>
                 </div>
-
-
-
-
-
-                <p class="my-3">
+                <p class="my-3 text-lg heading-color">
                     Owner
                 </p>
                 <p class="my-3">
-                    {{ project.owner.name }} <span class="text-secondary-color">({{ project.owner.email }})</span>
+                    <span>{{ project.owner.name }}</span>
+                    <span class="text-secondary-color ml-1">({{ project.owner.email }})</span>
                 </p>
                 <div v-if="project.users.length > 0">
                     <hr>
-                    <p class="my-3">
+                    <p class="my-3 text-lg heading-color">
                         Members
                     </p>
-                    <p v-for="user in project.users" class="my-3">
-                        {{ user.name }} <span v-if="user.email" class="text-secondary-color">({{ user.email }})</span>
-                    </p>
+                    <div v-for="user in project.users" class="my-3">
+                        <p class="flex items-center" :class="{ 'opacity-25': removeUserForm.processing && removeUserForm.id == user.id }">
+                            <span>{{ user.name }}</span>
+                            <span v-if="user.email" class="text-secondary-color ml-1">({{ user.email }})</span>
+
+                            <span v-if="$page.user.id == project.owner.id" class="inline-block ml-2">
+                                <jet-dropdown align="center" width="48" position="fixed">
+                                    <template #trigger>
+                                        <button class="flex link link-color">
+                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </template>
+
+                                    <template #content >
+                                        <jet-dropdown-link :disabled="removeUserForm.processing" @click.native="removeUser(user)" as="button">
+                                            Remove from project
+                                        </jet-dropdown-link>
+                                    </template>
+                                </jet-dropdown>
+                            </span>
+                        </p>
+                    </div>
                 </div>
             </template>
 
-            <template #actions>
+            <template #footer>
                 <jet-secondary-button @click.native="showingUsers = false">
                     Close
                 </jet-secondary-button>
             </template>
-        </modal-form>
+        </jet-dialog-modal>
 
         <!-- edit modal -->
         <modal-form :show="editingProject" @close="editingProject = false" @submitted="updateProject">
@@ -183,7 +200,7 @@
     import JetInputError from '@/Jetstream/InputError'
     import JetLabel from '@/Jetstream/Label'
     import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
-    import JetModal from '@/Jetstream/Modal'
+    import JetDialogModal from '@/Jetstream/DialogModal'
     import TaskRow from '@/Components/TaskRow'
     import TaskRowNew from '@/Components/TaskRowNew'
     import TaskDetails from '@/Components/TaskDetails'
@@ -208,7 +225,7 @@
             JetInputError,
             JetLabel,
             JetConfirmationModal,
-            JetModal,
+            JetDialogModal,
             TaskRow,
             TaskRowNew,
             TaskDetails,
@@ -233,6 +250,9 @@
                     description: this.project.description,
                 }),
                 userForm: this.$inertia.form({
+                    id: null,
+                }),
+                removeUserForm: this.$inertia.form({
                     id: null,
                 }),
             }
@@ -262,7 +282,7 @@
         },
         methods: {
             updateProject() {
-                this.$inertia.patch(this.project.path, this.form);
+                this.form.patch(this.project.path);
                 this.editingProject = false;
             },
             deleteProject() {
@@ -275,7 +295,13 @@
                 this.showingTask = false;
             },
             addUser() {
-                this.$inertia.post(this.project.path + '/invitations', this.userForm);
+                this.userForm.post(this.project.path + '/users');
+            },
+            removeUser(user) {
+                this.removeUserForm.id = user.id;
+                this.removeUserForm.delete(this.project.path + '/users/' + user.id, {
+                    preserveState: true,
+                });
             }
         }
     }

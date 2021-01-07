@@ -1,20 +1,17 @@
 <template>
     <modal :show="show" :max-width="maxWidth" :closeable="closeable" @close="close">
-        <div class="px-6 py-4 card-color">
-            <div class="text-lg heading-color">
-                <slot name="title">
-                </slot>
+        <div class="flex flex-col max-h-full">
+            <div class="px-6 py-4 text-lg heading-color card-header-footer-color">
+                <slot name="title"></slot>
             </div>
 
-            <div class="mt-4 text-color">
-                <slot name="content">
-                </slot>
+            <div class="px-6 py-4 flex-1 overflow-y-auto card-color text-color" ref="scrollable">
+                <slot name="content"></slot>
             </div>
-        </div>
 
-        <div class="px-6 py-4 bg-gray-100 text-right card-header-footer-color">
-            <slot name="footer">
-            </slot>
+            <div class="px-6 py-4 bg-gray-100 text-right card-header-footer-color">
+                <slot name="footer"></slot>
+            </div>
         </div>
     </modal>
 </template>
@@ -37,6 +34,12 @@
             closeable: {
                 default: true
             },
+        },
+
+        watch: {
+            show: function() {
+                this.$refs['scrollable'].scrollTop = 0;
+            }
         },
 
         methods: {

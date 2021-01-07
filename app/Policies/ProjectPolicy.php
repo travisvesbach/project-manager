@@ -13,4 +13,8 @@ class ProjectPolicy
     public function update(User $user, Project $project) {
         return $user->is($project->owner) || $project->users->contains($user);
     }
+
+    public function delete(User $user, Project $project) {
+        return $user->is($project->owner);
+    }
 }

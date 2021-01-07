@@ -34,4 +34,17 @@ class ProjectTest extends TestCase
 
         $this->assertTrue($project->users->contains($user));
     }
+
+    /** @test **/
+    public function it_can_uninvite_a_user() {
+        $project = Project::factory()->create();
+
+        $project->invite($user = User::factory()->create());
+
+        $this->assertTrue($project->users->contains($user));
+
+        $project->uninvite($user);
+
+        $this->assertFalse($project->fresh()->users->contains($user));
+    }
 }

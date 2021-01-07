@@ -49,6 +49,14 @@
                         description += 'deleted <strong>' + this.activity.subject.name + '</strong>';
                         break;
 
+                    case 'joined_project':
+                        description += 'joined the project';
+                        break;
+
+                    case 'left_project':
+                        description += 'left the project';
+                        break;
+
                     default:
                 }
                 return description;

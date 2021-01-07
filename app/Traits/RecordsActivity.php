@@ -40,9 +40,9 @@ trait RecordsActivity
         return $this->morphMany(Activity::class, 'subject')->with(['project', 'subject', 'user']);
     }
 
-    public function recordActivity($description) {
+    public function recordActivity($description, $user_id = null) {
         $this->activity()->create([
-            'user_id' => $this->activityOwner()->id,
+            'user_id' => $user_id ?? $this->activityOwner()->id,
             'description' => $description,
             'changes' => $this->activityChanges(),
             'project_id' => class_basename($this) === 'Project' ? $this->id : $this->project_id,

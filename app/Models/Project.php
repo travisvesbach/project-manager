@@ -51,10 +51,13 @@ class Project extends Model
     }
 
     public function invite(User $user) {
-        if($this->users->contains($user)) {
-            return false;
-        }
-        return $this->users()->attach($user);
+        $this->users()->attach($user);
+        $this->recordActivity('joined_project', $user->id);
+    }
+
+    public function uninvite(User $user) {
+        $this->users()->detach($user->id);
+        $this->recordActivity('left_project', $user->id);
     }
 
     public function users() {
