@@ -19,7 +19,7 @@
                 <input-hidden class="rounded-lg text-3xl heading-color" v-model="form.name" ref="name" @blur.native="updateTask()" @keyup.enter.native="$event.target.blur()"/>
 
             </div>
-            <div class="flex-1 overflow-y-auto">
+            <div class="flex-1 flex flex-col overflow-y-auto">
                 <div class="sm:flex mt-2">
                     <label class="sm:w-1/4 pl-1">Due Date</label>
                     <div class="sm:w-3/4">
@@ -34,7 +34,7 @@
                     </div>
                 </div>
 
-                <div class="">
+                <div class="mt-auto">
                     <p class="my-3" v-for="activity in task.activity">
                         <activity-item v-bind:activity="activity" v-bind:for="'task'"/>
                     </p>

@@ -44,10 +44,10 @@
             },
             value: function() {
                 if(this.value && this.value != this.date) {
-                    console.log('in if');
+                    this.date = this.value;
+                } else if(this.id != this.currentId) {
                     this.date = this.value;
                 } else {
-                    console.log('in else');
                     this.date = '';
                 }
             }
