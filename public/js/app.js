@@ -2079,6 +2079,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2093,7 +2100,8 @@ __webpack_require__.r(__webpack_exports__);
       config: {
         altInput: true,
         altFormat: "M j, Y",
-        dateFormat: 'Y-m-d'
+        dateFormat: 'Y-m-d',
+        wrap: true
       }
     };
   },
@@ -2111,7 +2119,13 @@ __webpack_require__.r(__webpack_exports__);
       this.date = this.value;
     },
     value: function value() {
-      this.date = this.value;
+      if (this.value && this.value != this.date) {
+        console.log('in if');
+        this.date = this.value;
+      } else {
+        console.log('in else');
+        this.date = '';
+      }
     }
   },
   methods: {
@@ -2544,14 +2558,14 @@ __webpack_require__.r(__webpack_exports__);
     updateTask: function updateTask() {
       if (this.form.name == '') {
         this.form.name = this.task.name;
-      } else {
-        this.$inertia.patch(this.task.path, this.form);
+      } else if (this.form.name != this.task.name || this.form.description != this.task.description || this.form.completed != this.task.completed || this.form.due_date != this.task.due_date) {
+        this.form.patch(this.task.path);
       }
     },
     toggleCompleted: function toggleCompleted() {
       this.task.completed = !this.task.completed ? true : false;
       this.form.completed = this.task.completed;
-      this.$inertia.patch(this.task.path, this.form);
+      this.form.patch(this.task.path);
     }
   }
 });
@@ -75394,20 +75408,67 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("flat-pickr", {
-    ref: "datePicker",
-    staticClass: "px-1 w-28",
-    class: _vm.classes,
-    attrs: { config: _vm.config, placeholder: _vm.placeholder },
-    on: { input: _vm.onInput },
-    model: {
-      value: _vm.date,
-      callback: function($$v) {
-        _vm.date = $$v
-      },
-      expression: "date"
-    }
-  })
+  return _c(
+    "div",
+    { staticClass: "input-group flex items-center w-36" },
+    [
+      _c("flat-pickr", {
+        ref: "datePicker",
+        staticClass: "px-1 w-28",
+        class: _vm.classes,
+        attrs: { config: _vm.config, placeholder: _vm.placeholder },
+        on: { input: _vm.onInput },
+        model: {
+          value: _vm.date,
+          callback: function($$v) {
+            _vm.date = $$v
+          },
+          expression: "date"
+        }
+      }),
+      _vm._v(" "),
+      _vm.date
+        ? _c(
+            "button",
+            {
+              staticClass: "btn btn-default ml-1",
+              attrs: { type: "button", title: "Clear", "data-clear": "" },
+              on: {
+                click: function($event) {
+                  _vm.date = ""
+                }
+              }
+            },
+            [
+              _c(
+                "svg",
+                {
+                  staticClass: "h-5 w-5 text-color",
+                  attrs: {
+                    xmlns: "http://www.w3.org/2000/svg",
+                    fill: "none",
+                    viewBox: "0 0 24 24",
+                    stroke: "currentColor"
+                  }
+                },
+                [
+                  _c("path", {
+                    attrs: {
+                      "stroke-linecap": "round",
+                      "stroke-linejoin": "round",
+                      "stroke-width": "2",
+                      d:
+                        "M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"
+                    }
+                  })
+                ]
+              )
+            ]
+          )
+        : _vm._e()
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -94468,14 +94529,15 @@ __webpack_require__.r(__webpack_exports__);
 /*!************************************************!*\
   !*** ./resources/js/Components/DatePicker.vue ***!
   \************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DatePicker_vue_vue_type_template_id_0694af32___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DatePicker.vue?vue&type=template&id=0694af32& */ "./resources/js/Components/DatePicker.vue?vue&type=template&id=0694af32&");
 /* harmony import */ var _DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DatePicker.vue?vue&type=script&lang=js& */ "./resources/js/Components/DatePicker.vue?vue&type=script&lang=js&");
-/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _DatePicker_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
+/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -94505,7 +94567,7 @@ component.options.__file = "resources/js/Components/DatePicker.vue"
 /*!*************************************************************************!*\
   !*** ./resources/js/Components/DatePicker.vue?vue&type=script&lang=js& ***!
   \*************************************************************************/
-/*! exports provided: default */
+/*! no static exports found */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";

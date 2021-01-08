@@ -61,14 +61,18 @@
             updateTask() {
                 if(this.form.name == '') {
                     this.form.name = this.task.name;
-                } else {
-                    this.$inertia.patch(this.task.path, this.form);
+                } else if( this.form.name != this.task.name ||
+                        this.form.description != this.task.description ||
+                        this.form.completed != this.task.completed ||
+                        this.form.due_date != this.task.due_date
+                    ) {
+                    this.form.patch(this.task.path);
                 }
             },
             toggleCompleted() {
                 this.task.completed = !this.task.completed ? true : false;
                 this.form.completed = this.task.completed;
-                this.$inertia.patch(this.task.path, this.form);
+                this.form.patch(this.task.path);
             }
         }
     }
