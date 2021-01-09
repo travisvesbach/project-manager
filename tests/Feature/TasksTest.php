@@ -116,4 +116,22 @@ class TasksTest extends TestCase
             ->post($project->path() . '/tasks', $attributes)
             ->assertSessionHasErrors('name');
     }
+
+    /** @test **/
+    // public function a_section_can_have_tasks() {
+    //     $this->withoutExceptionHandling();
+
+    //     $this->signIn();
+
+    //     $project = ProjectFactory::withSections(1)->create();
+
+    //     $section = $project->sections->first();
+
+    //     $attributes = ['name' => 'Test task', 'section_id' => $section->id];
+
+    //     $this->actingAs($project->owner)
+    //         ->post($project->path() . '/tasks', $attributes);
+
+    //     $this->assertCount(1, $section->fresh()->tasks);
+    // }
 }

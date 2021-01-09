@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\ProjectUsersController;
 use App\Http\Controllers\TasksController;
+use App\Http\Controllers\SectionsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -41,4 +42,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
 
     Route::post('/projects/{project}/users', [ProjectUsersController::class, 'store']);
     Route::delete('/projects/{project}/users/{user}', [ProjectUsersController::class, 'destroy']);
+
+    Route::post('/projects/{project}/sections', [SectionsController::class, 'store'])->name('sections.store');
+    Route::patch('/projects/{project}/sections/{section}', [SectionsController::class, 'update'])->name('sections.update');
 });

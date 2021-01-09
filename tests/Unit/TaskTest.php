@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Task;
 use App\Models\Project;
+use App\Models\Section;
 
 class TaskTest extends TestCase
 {
@@ -16,6 +17,12 @@ class TaskTest extends TestCase
         $task = Task::factory()->create();
 
         $this->assertInstanceOf(Project::class, $task->project);
+    }
+    /** @test **/
+    public function a_task_belongs_to_a_section() {
+        $task = Task::factory()->create();
+
+        $this->assertInstanceOf(Section::class, $task->section);
     }
 
     /** @test **/

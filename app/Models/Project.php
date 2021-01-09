@@ -25,6 +25,18 @@ class Project extends Model
 
     protected static $recordableEvents = ['created', 'updated'];
 
+    protected static function booted()
+    {
+        static::created(function ($project) {
+            $project->addSection([
+                'name' => 'Default Section',
+                'weight' => 1,
+            ]);
+            // remove default section's created activity
+            $project->sections->first()->activity->first()->delete();
+        });
+    }
+
     public function owner() {
         return $this->belongsTo(User::class);
     }
@@ -35,6 +47,14 @@ class Project extends Model
 
     public function addTask($attributes) {
         return $this->tasks()->create($attributes);
+    }
+
+    public function sections() {
+        return $this->hasMany(Section::class);
+    }
+
+    public function addSection($attributes) {
+        return $this->sections()->create($attributes);
     }
 
     public function path() {

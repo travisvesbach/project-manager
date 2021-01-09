@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use Facades\Tests\Setup\ProjectFactory;
 use App\Models\Task;
+use App\Models\Section;
 use App\Models\User;
 
 class RecordActivityTest extends TestCase
@@ -151,5 +152,61 @@ class RecordActivityTest extends TestCase
 
         $project->uninvite($user);
         $this->assertCount(3, $project->fresh()->activity);
+    }
+
+    /** @test **/
+    public function project_default_section_does_not_have_created_activity() {
+        $project = ProjectFactory::create();
+
+        $this->assertCount(1, $project->activity);
+
+        tap($project->activity->last(), function($activity) {
+            $this->assertNotEquals('created_section', $activity->description);
+            $this->assertNotInstanceOf(Section::class, $activity->subject);
+        });
+
+    }
+
+    /** @test **/
+    public function creating_a_section() {
+        $project = ProjectFactory::create();
+
+        $project->addSection(['name' => 'Some section']);
+
+        $this->assertCount(2, $project->activity);
+
+        tap($project->activity->last(), function($activity) {
+            $this->assertEquals('created_section', $activity->description);
+            $this->assertInstanceOf(Section::class, $activity->subject);
+            $this->assertEquals('Some section', $activity->subject->name);
+        });
+    }
+
+    /** @test **/
+    public function updating_a_section() {
+        $project = ProjectFactory::create();
+
+        $this->actingAs($project->owner)
+            ->patch($project->sections[0]->path(), [
+                'name' => 'changed'
+            ]);
+
+        $this->assertCount(2, $project->activity);
+
+        tap($project->activity->last(), function($activity) {
+            $this->assertEquals('updated_section', $activity->description);
+            $this->assertInstanceOf(Section::class, $activity->subject);
+            $this->assertEquals('changed', $activity->subject->name);
+        });
+    }
+
+    /** @test **/
+    public function deleting_a_section() {
+        $project = ProjectFactory::withSections(1)->create();
+
+        $project->sections->last()->delete();
+
+        $this->assertCount(3, $project->activity);
+        $this->assertEquals('deleted_section', $project->activity->last()->description);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Project;
+use App\Models\Section;
 use App\Models\Activity;
 use App\Traits\RecordsActivity;
 
@@ -17,6 +18,7 @@ class Task extends Model
         'description',
         'completed',
         'project_id',
+        'section_id',
         'due_date'
     ];
 
@@ -39,8 +41,21 @@ class Task extends Model
     // updates the project's updated_at time wheneever this is updated
     protected $touches = ['project'];
 
+    protected static function booted()
+    {
+        static::creating(function ($task) {
+            if(!$task->section_id) {
+                $task->section_id = $task->project->sections->where('weight', 1)->first()->id;
+            }
+        });
+    }
+
     public function project() {
         return $this->belongsTo(Project::class);
+    }
+
+    public function section() {
+        return $this->belongsTo(Section::class);
     }
 
     public function path() {

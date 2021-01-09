@@ -2,13 +2,12 @@
 
 namespace Database\Factories;
 
-use App\Models\Project;
-use App\Models\User;
 use App\Models\Section;
+use App\Models\Project;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Foundation\Testing\WithFaker;
 
-class ProjectFactory extends Factory
+class SectionFactory extends Factory
 {
     use WithFaker;
     /**
@@ -16,7 +15,7 @@ class ProjectFactory extends Factory
      *
      * @var string
      */
-    protected $model = Project::class;
+    protected $model = Section::class;
 
     /**
      * Define the model's default state.
@@ -26,9 +25,8 @@ class ProjectFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->sentence(4),
-            'description' => $this->faker->sentence(4),
-            'owner_id' => User::factory()->create(),
+            'name' => $this->faker->sentence,
+            'project_id' => Project::factory()->create(),
         ];
     }
 }
