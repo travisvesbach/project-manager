@@ -118,20 +118,26 @@ class TasksTest extends TestCase
     }
 
     /** @test **/
-    // public function a_section_can_have_tasks() {
-    //     $this->withoutExceptionHandling();
+    public function a_section_can_have_tasks() {
+        $this->signIn();
 
-    //     $this->signIn();
+        $project = ProjectFactory::create();
 
-    //     $project = ProjectFactory::withSections(1)->create();
+        $attributes = ['name' => 'Test task', 'section_id' => $project->sections[0]->id];
 
-    //     $section = $project->sections->first();
+        $this->actingAs($project->owner)
+            ->post($project->path() . '/tasks', $attributes);
 
-    //     $attributes = ['name' => 'Test task', 'section_id' => $section->id];
+        $this->assertCount(1, $project->sections[0]->tasks);
+    }
 
-    //     $this->actingAs($project->owner)
-    //         ->post($project->path() . '/tasks', $attributes);
+    /** @test **/
+    public function a_task_is_assigned_to_the_first_section_in_the_project_if_a_section_is_not_specified() {
+        $project = ProjectFactory::create();
 
-    //     $this->assertCount(1, $section->fresh()->tasks);
-    // }
+        $project->addTask(['name' => 'some task']);
+
+        $this->assertNotNull($project->tasks[0]->section);
+        $this->assertEquals(1, $project->tasks[0]->section->weight);
+    }
 }
