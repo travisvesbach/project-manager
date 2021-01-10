@@ -61,6 +61,14 @@ class ProjectsController extends Controller
         return redirect($project->path());
     }
 
+    public function updateWeights(Request $request, Project $project) {
+        $this->authorize('update', $project);
+
+        $project->updateSectionWeights($request->input('ids_by_weight'));
+
+        return redirect($project->path());
+    }
+
     public function destroy(Project $project) {
         $this->authorize('update', $project);
 

@@ -6,6 +6,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Project;
+use App\Models\Section;
 use App\Models\User;
 use Facades\Tests\Setup\ProjectFactory;
 
@@ -141,5 +142,27 @@ class ProjectsTest extends TestCase
         $attributes = Project::factory()->raw(['description' => '']);
 
         $this->post('/projects', $attributes)->assertSessionHasErrors('description');
+    }
+
+    /** @test **/
+    public function a_user_can_update_a_project_sections_weights() {
+        $this->withoutExceptionHandling();
+        $project = ProjectFactory::create();
+
+        $section1 = $project->sections->first();
+        $section2 = Section::factory(['project_id' => $project->id])->create();
+        $section3 = Section::factory(['project_id' => $project->id])->create();
+
+        $this->assertEquals(1, $section1->weight);
+        $this->assertEquals(2, $section2->weight);
+        $this->assertEquals(3, $section3->weight);
+
+        $this->actingAs($project->owner)
+            ->patch($project->path() . '/updateweights', ['ids_by_weight' => [$section2->id, $section3->id, $section1->id]])
+            ->assertRedirect($project->path());
+
+        $this->assertEquals(1, $section2->fresh()->weight);
+        $this->assertEquals(2, $section3->fresh()->weight);
+        $this->assertEquals(3, $section1->fresh()->weight);
     }
 }

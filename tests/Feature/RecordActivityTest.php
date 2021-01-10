@@ -126,13 +126,14 @@ class RecordActivityTest extends TestCase
     }
 
     /** @test **/
-    public function deleting_a_task() {
+    public function deleting_a_task_removes_task_activity() {
         $project = ProjectFactory::withTasks(1)->create();
+
+        $this->assertCount(2, $project->activity);
 
         $project->tasks[0]->delete();
 
-        $this->assertCount(3, $project->activity);
-        $this->assertEquals('deleted_task', $project->activity->last()->description);
+        $this->assertCount(1, $project->fresh()->activity);
     }
 
     /** @test **/
@@ -201,12 +202,13 @@ class RecordActivityTest extends TestCase
     }
 
     /** @test **/
-    public function deleting_a_section() {
+    public function deleting_a_section_removes_activity() {
         $project = ProjectFactory::withSections(1)->create();
+
+        $this->assertCount(2, $project->activity);
 
         $project->sections->last()->delete();
 
-        $this->assertCount(3, $project->activity);
-        $this->assertEquals('deleted_section', $project->activity->last()->description);
+        $this->assertCount(1, $project->fresh()->activity);
     }
 }

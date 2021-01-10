@@ -47,9 +47,11 @@
         <div class="flex-1 relative overflow-x-hidden">
 
             <div v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
-                <div v-for="section in project.sections" class="mt-5">
-                    <project-section v-bind:section="section" @show="showTask" />
-                </div>
+                <draggable v-model="project.sections" @change="updateWeights">
+                    <div v-for="section in project.sections" class="mt-5">
+                        <project-section v-bind:section="section" @show="showTask" class="mt-5"/>
+                    </div>
+                </draggable>
             </div>
 
             <project-section-new v-bind:project="project" class="mt-12" />
@@ -208,6 +210,8 @@
     import ProjectSection from '@/Components/ProjectSection'
     import ProjectSectionNew from '@/Components/ProjectSectionNew'
 
+    import draggable  from 'vuedraggable'
+
     import OutsideClick from '@/Directives/OutsideClick'
 
     export default {
@@ -235,6 +239,7 @@
             SelectInput,
             ProjectSection,
             ProjectSectionNew,
+            draggable,
         },
 
         directives: {
@@ -306,6 +311,30 @@
                 this.removeUserForm.delete(this.project.path + '/users/' + user.id, {
                     preserveState: true,
                 });
+            },
+            updateWeights(target) {
+                let newIndex = target.moved.newIndex + 1;
+                this.project.sections.forEach(function(section, i) {
+                    if(section.id == target.moved.element.id) {
+                        section.weight = newIndex;
+                    } else if(section.weight == newIndex && section.weight < i+1) {
+                        section.weight++;
+                    } else {
+                        section.weight = i + 1;
+                    }
+                });
+                let weightForm = this.$inertia.form({
+                    ids_by_weight: this.project.sections.map(function (obj) {
+                            return obj.id;
+                        }),
+                });
+
+                weightForm.patch(this.project.path + '/updateweights', {
+                    preserveState: true,
+                });
+
+
+
             }
         }
     }

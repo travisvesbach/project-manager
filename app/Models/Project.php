@@ -55,10 +55,19 @@ class Project extends Model
         return $this->sections()->create($attributes);
     }
 
-    public function updateSectionWeights() {
-        foreach($this->sections as $index => $section) {
-            $section->weight = $index + 1;
-            $section->save();
+    public function updateSectionWeights($order = false) {
+        if($order) {
+            foreach($order as $index => $id) {
+                $section = $this->sections->where('id', $id)->first();
+                $section->weight = $index + 1;
+                $section->save();
+            }
+        } else {
+            // used when a project is deleted
+            foreach($this->sections as $index => $section) {
+                $section->weight = $index + 1;
+                $section->save();
+            }
         }
     }
 
