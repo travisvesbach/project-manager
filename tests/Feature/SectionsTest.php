@@ -51,7 +51,7 @@ class SectionsTest extends TestCase
 
     /** @test **/
     public function a_section_can_be_updated() {
-        $project = ProjectFactory::withSections(1)->create();
+        $project = ProjectFactory::create();
 
         $this->actingAs($project->owner)
             ->patch($project->sections->first()->path(), $attributes = [
@@ -63,12 +63,41 @@ class SectionsTest extends TestCase
 
     /** @test **/
     public function a_section_requires_a_name() {
-        $project = ProjectFactory::withSections(1)->create();
+        $project = ProjectFactory::create();
 
         $attributes = Section::factory()->raw(['name' => '']);
 
         $this->actingAs($project->owner)
             ->post($project->path() . '/sections', $attributes)
             ->assertSessionHasErrors('name');
+    }
+
+    /** @test **/
+    public function a_section_is_assigned_the_next_available_weight() {
+        $project = ProjectFactory::create();
+
+        $this->assertEquals(1, $project->sections->last()->weight);
+
+        $project->addSection(['name' => 'Some Section']);
+
+        $this->assertEquals(2, $project->fresh()->sections->last()->weight);
+
+    }
+
+    /** @test **/
+    public function section_weights_are_updated_when_a_section_is_deleted() {
+        $project = ProjectFactory::withSections(2)->create();
+
+        $this->assertCount(3, $project->sections);
+        $this->assertEquals(3, $project->sections->last()->weight);
+
+        $this->actingAs($project->owner)
+            ->delete($project->sections->where('weight', 2)->first()->path())
+            ->assertRedirect($project->path());
+
+        $project->refresh();
+
+        $this->assertCount(2, $project->sections);
+        $this->assertEquals(2, $project->sections->last()->weight);
     }
 }

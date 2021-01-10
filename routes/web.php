@@ -45,4 +45,5 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
 
     Route::post('/projects/{project}/sections', [SectionsController::class, 'store'])->name('sections.store');
     Route::patch('/projects/{project}/sections/{section}', [SectionsController::class, 'update'])->name('sections.update');
+    Route::delete('/projects/{project}/sections/{section}', [SectionsController::class, 'destroy'])->name('sections.destroy');
 });

@@ -50,11 +50,18 @@ class Project extends Model
     }
 
     public function sections() {
-        return $this->hasMany(Section::class);
+        return $this->hasMany(Section::class)->orderBy('weight', 'ASC');
     }
 
     public function addSection($attributes) {
         return $this->sections()->create($attributes);
+    }
+
+    public function updateSectionWeights() {
+        foreach($this->sections as $index => $section) {
+            $section->weight = $index + 1;
+            $section->save();
+        }
     }
 
     public function path() {

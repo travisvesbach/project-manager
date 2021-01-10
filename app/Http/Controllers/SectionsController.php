@@ -21,4 +21,14 @@ class SectionsController extends Controller
 
         return redirect($project->path());
     }
+
+    public function destroy(Project $project, Section $section) {
+        $this->authorize('update', $project);
+
+        $section->delete();
+
+        $project->updateSectionWeights();
+
+        return redirect($project->path());
+    }
 }

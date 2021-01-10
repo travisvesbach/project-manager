@@ -41,6 +41,6 @@ class ProjectFactory
             'project_id' => $project->id
         ]);
 
-        return $project;
+        return $project->refresh();
     }
 }
