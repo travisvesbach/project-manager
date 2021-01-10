@@ -18,7 +18,7 @@ class ProjectsController extends Controller
     public function show(Project $project) {
         $this->authorize('update', $project);
 
-        $project->load(['tasks', 'activity', 'users'])->get();
+        $project->load(['tasks', 'activity', 'users', 'sections'])->get();
 
         $users = null;
         if(auth()->user()->id == $project->owner->id) {

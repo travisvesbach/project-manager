@@ -128,7 +128,7 @@ class TasksTest extends TestCase
         $this->actingAs($project->owner)
             ->post($project->path() . '/tasks', $attributes);
 
-        $this->assertCount(1, $project->sections[0]->tasks);
+        $this->assertCount(1, $project->fresh()->sections[0]->tasks);
     }
 
     /** @test **/
@@ -139,5 +139,19 @@ class TasksTest extends TestCase
 
         $this->assertNotNull($project->tasks[0]->section);
         $this->assertEquals(1, $project->tasks[0]->section->weight);
+    }
+
+    /** @test **/
+    public function a_user_can_delete_a_task() {
+        $this->withoutExceptionHandling();
+        $project = ProjectFactory::withTasks(1)->create();
+
+        $task = $project->tasks->first();
+
+        $this->actingAs($project->owner)
+            ->delete($task->path())
+            ->assertRedirect($project->path());
+
+        $this->assertDatabaseMissing('tasks', $task->only('id'));
     }
 }

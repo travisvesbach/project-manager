@@ -19,7 +19,7 @@ class Section extends Model
     ];
 
     protected $appends = [
-        'path'
+        'path',
     ];
 
     // updates the project's updated_at time wheneever this is updated

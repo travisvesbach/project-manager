@@ -39,4 +39,12 @@ class TasksController extends Controller
             $task->incomplete();
         }
     }
+
+    public function destroy(Project $project, Task $task) {
+        $this->authorize('update', $project);
+
+        $task->delete();
+
+        return redirect($project->path());
+    }
 }

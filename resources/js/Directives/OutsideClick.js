@@ -70,8 +70,10 @@ let OutsideClick = {
     unbind () {
         // If the element that has v-closable is removed, then
         // unbind click/touchstart listeners from the whole page
-        document.removeEventListener('click', OutsideClick)
-        document.removeEventListener('touchstart', OutsideClick)
+
+        // commenting out because removing a task causes this to trigger
+        // document.removeEventListener('click', OutsideClick)
+        // document.removeEventListener('touchstart', OutsideClick)
     }
 }
 

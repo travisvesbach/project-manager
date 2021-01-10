@@ -41,12 +41,20 @@
                                 description += 'updated ' + identifier + '\'s ' + Object.keys(this.activity.changes.after)[0];
                             }
                         } else {
-                            description += 'updatd ' + identifier;
+                            description += 'updated ' + identifier;
                         }
                         break;
 
-                    case 'deleted_task':
-                        description += 'deleted <strong>' + this.activity.subject.name + '</strong>';
+                    case 'created_section':
+                        description += 'created <strong>' + this.activity.subject.name + '</strong>';
+                        break;
+
+                    case 'updated_section':
+                        if(Object.keys(this.activity.changes.after).length == 1) {
+                            description += 'updated <strong>' + this.activity.subject.name + '</strong>\'s ' + Object.keys(this.activity.changes.after)[0];
+                        } else {
+                            description += 'updated <strong>' + this.activity.subject.name + '</strong>';
+                        }
                         break;
 
                     case 'joined_project':

@@ -21,6 +21,10 @@ trait RecordsActivity
                 });
             }
         }
+
+        static::deleting(function($model) {
+            $model->activity()->delete();
+        });
     }
 
     // allows events to be overwritten using `protected static $recordableEvents = [];` in model
@@ -29,7 +33,7 @@ trait RecordsActivity
             return static::$recordableEvents;
         }
 
-        return ['created', 'updated', 'deleted'];
+        return ['created', 'updated'];
     }
 
     protected function activityDescription($description) {

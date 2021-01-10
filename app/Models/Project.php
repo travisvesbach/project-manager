@@ -23,8 +23,6 @@ class Project extends Model
         'path'
     ];
 
-    protected static $recordableEvents = ['created', 'updated'];
-
     protected static function booted()
     {
         static::created(function ($project) {
@@ -50,7 +48,7 @@ class Project extends Model
     }
 
     public function sections() {
-        return $this->hasMany(Section::class)->orderBy('weight', 'ASC');
+        return $this->hasMany(Section::class)->orderBy('weight', 'ASC')->with('tasks');
     }
 
     public function addSection($attributes) {

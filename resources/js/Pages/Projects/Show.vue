@@ -46,14 +46,13 @@
 
         <div class="flex-1 relative overflow-x-hidden">
 
-            <div class="border-t-2 border-color" v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
-                <div class="border-b-2 border-color" v-for="(task, index) in project.tasks">
-                    <task-row v-bind:task="task" @show="showingTask = task" @focusnew="focusNew()"/>
-                </div>
-                <div>
-                    <task-row-new v-bind:project="project" ref="newTaskInput"/>
+            <div v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
+                <div v-for="section in project.sections" class="mt-5">
+                    <project-section v-bind:section="section" @show="showTask" />
                 </div>
             </div>
+
+            <project-section-new v-bind:project="project" class="mt-12" />
 
             <task-details v-bind:task="showingTask" @close="showingTask = false" ref="taskDetails"/>
 
@@ -206,6 +205,9 @@
     import TaskDetails from '@/Components/TaskDetails'
     import ActivityItem from '@/Components/ActivityItem'
     import SelectInput from '@/Components/SelectInput'
+    import ProjectSection from '@/Components/ProjectSection'
+    import ProjectSectionNew from '@/Components/ProjectSectionNew'
+
     import OutsideClick from '@/Directives/OutsideClick'
 
     export default {
@@ -231,6 +233,8 @@
             TaskDetails,
             ActivityItem,
             SelectInput,
+            ProjectSection,
+            ProjectSectionNew,
         },
 
         directives: {
@@ -281,15 +285,15 @@
             }
         },
         methods: {
+            showTask(task) {
+                this.showingTask = task;
+            },
             updateProject() {
                 this.form.patch(this.project.path);
                 this.editingProject = false;
             },
             deleteProject() {
                 this.$inertia.delete(this.project.path);
-            },
-            focusNew() {
-                this.$refs.newTaskInput.focus();
             },
             closeDetails() {
                 this.showingTask = false;

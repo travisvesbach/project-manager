@@ -4,7 +4,16 @@
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
         <div class="inline-block ml-2">
-            <input-hidden id="name" v-model="name" @blur.native="createTask()" placeholder="Add Task" @keyup-enter="createTask()" ref="inputHidden"/>
+            <input-hidden
+                id="name"
+                v-model="name"
+                placeholder="Add Task"
+                ref="inputHidden"
+                @blur.native="createTask()"
+                @keyup-enter="createTask()"
+                :class="{ 'opacity-25': form.processing }"
+                :disabled="form.processing"
+            />
         </div>
     </div>
 </template>
@@ -14,7 +23,7 @@
     import InputHidden from '@/Components/InputHidden'
 
     export default {
-        props: ['project'],
+        props: ['section'],
 
         components: {
             InputHidden,
@@ -26,6 +35,7 @@
                 form: this.$inertia.form({
                     name: null,
                     completed: false,
+                    section_id: this.section.id
                 }),
             }
         },
@@ -36,7 +46,7 @@
             createTask() {
                 if(this.name != null && this.name.length > 0) {
                     this.form.name = this.name;
-                    this.$inertia.post(this.project.path + '/tasks', this.form);
+                    this.form.post(this.section.project.path + '/tasks');
                     this.name = null;
                 }
             }
