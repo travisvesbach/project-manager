@@ -43,7 +43,11 @@ class TasksController extends Controller
     public function destroy(Project $project, Task $task) {
         $this->authorize('update', $project);
 
+        $section = $task->section;
+
         $task->delete();
+
+        $section->updateTaskWeights();
 
         return redirect($project->path());
     }

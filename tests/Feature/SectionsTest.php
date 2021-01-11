@@ -81,7 +81,6 @@ class SectionsTest extends TestCase
         $project->addSection(['name' => 'Some Section']);
 
         $this->assertEquals(2, $project->fresh()->sections->last()->weight);
-
     }
 
     /** @test **/

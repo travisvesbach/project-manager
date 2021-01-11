@@ -43,6 +43,19 @@ class Project extends Model
         return $this->hasMany(Task::class)->with('activity');
     }
 
+    public function updateTaskWeights($order = false) {
+        if($order) {
+            foreach($this->sections as $sectionIndex => $section) {
+                foreach($order[$sectionIndex] as $index => $id) {
+                    $task = $this->tasks->where('id', $id)->first();
+                    $task->section_id = $section->id;
+                    $task->weight = $index + 1;
+                    $task->save();
+                }
+            }
+        }
+    }
+
     public function addTask($attributes) {
         return $this->tasks()->create($attributes);
     }
@@ -63,7 +76,7 @@ class Project extends Model
                 $section->save();
             }
         } else {
-            // used when a project is deleted
+            // used when a section is deleted
             foreach($this->sections as $index => $section) {
                 $section->weight = $index + 1;
                 $section->save();

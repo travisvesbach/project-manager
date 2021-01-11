@@ -1,9 +1,12 @@
 <template>
     <div class="ml-4 my-1 flex items-center h-7" :class="this.task.completed ? 'text-secondary-color' : 'text-color'">
-        <svg class="h-5 inline-block hover:text-green-500" :class="task.completed ? 'text-green-500' : ''" @click="toggleCompleted()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="ml-3 h-4 inline-block text-secondary-color drag-task cursor-move" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
+        </svg>
+        <svg class="h-5 ml-3 inline-block hover:text-green-500" :class="task.completed ? 'text-green-500' : ''" @click="toggleCompleted()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
         </svg>
-        <div class="inline-block ml-2">
+        <div class="inline-block ml-1">
             <input-hidden id="name" class="" v-model="form.name" @blur.native="updateTask()" @keyup-enter="$emit('focusnew')" ref="inputHidden"/>
         </div>
         <div class="flex-1 inline-block h-full">

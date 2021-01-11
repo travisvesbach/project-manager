@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Project;
 use App\Models\Section;
+use App\Models\Task;
 use App\Models\User;
 use Facades\Tests\Setup\ProjectFactory;
 
@@ -145,7 +146,7 @@ class ProjectsTest extends TestCase
     }
 
     /** @test **/
-    public function a_user_can_update_a_project_sections_weights() {
+    public function a_user_can_update_a_project_section_weights() {
         $this->withoutExceptionHandling();
         $project = ProjectFactory::create();
 
@@ -158,11 +159,39 @@ class ProjectsTest extends TestCase
         $this->assertEquals(3, $section3->weight);
 
         $this->actingAs($project->owner)
-            ->patch($project->path() . '/updateweights', ['ids_by_weight' => [$section2->id, $section3->id, $section1->id]])
+            ->patch($project->path() . '/updatesectionweights', ['ids_by_weight' => [$section2->id, $section3->id, $section1->id]])
             ->assertRedirect($project->path());
 
         $this->assertEquals(1, $section2->fresh()->weight);
         $this->assertEquals(2, $section3->fresh()->weight);
         $this->assertEquals(3, $section1->fresh()->weight);
+    }
+
+    /** @test **/
+    public function a_user_can_update_a_project_task_weights() {
+        $this->withoutExceptionHandling();
+        $project = ProjectFactory::create();
+        $section = $project->sections->first();
+
+        $task1 = Task::factory(['project_id' => $project->id, 'section_id' => $section->id])->create();
+        $task2 = Task::factory(['project_id' => $project->id, 'section_id' => $section->id])->create();
+        $task3 = Task::factory(['project_id' => $project->id, 'section_id' => $section->id])->create();
+
+        $this->assertEquals(1, $task1->weight);
+        $this->assertEquals(2, $task2->weight);
+        $this->assertEquals(3, $task3->weight);
+
+        $this->actingAs($project->owner)
+            ->patch($project->path() . '/updatetaskweights', ['ids_by_weight' => [$task2->id, $task3->id, $task1->id]])
+            ->assertRedirect($project->path());
+
+        $this->assertEquals(1, $task2->fresh()->weight);
+        $this->assertEquals(2, $task3->fresh()->weight);
+        $this->assertEquals(3, $task1->fresh()->weight);
+    }
+
+    /** @test **/
+    public function a_user_can_move_tasks_between_project_sections() {
+
     }
 }

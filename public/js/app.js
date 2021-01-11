@@ -2336,6 +2336,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_TaskRow__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/TaskRow */ "./resources/js/Components/TaskRow.vue");
 /* harmony import */ var _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/TaskRowNew */ "./resources/js/Components/TaskRowNew.vue");
 /* harmony import */ var _Components_InputHidden__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/InputHidden */ "./resources/js/Components/InputHidden.vue");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.umd.js");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_3__);
 //
 //
 //
@@ -2350,6 +2352,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 
 
 
@@ -2358,7 +2370,8 @@ __webpack_require__.r(__webpack_exports__);
   components: {
     TaskRow: _Components_TaskRow__WEBPACK_IMPORTED_MODULE_0__["default"],
     TaskRowNew: _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_1__["default"],
-    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_2__["default"]
+    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_2__["default"],
+    draggable: vuedraggable__WEBPACK_IMPORTED_MODULE_3___default.a
   },
   data: function data() {
     return {
@@ -2386,6 +2399,9 @@ __webpack_require__.r(__webpack_exports__);
       } else if (this.form.name != this.section.name) {
         this.form.patch(this.section.path);
       }
+    },
+    updateTaskWeights: function updateTaskWeights(target) {
+      this.$emit('updateTaskWeights', target);
     }
   }
 });
@@ -2655,6 +2671,9 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/InputHidden */ "./resources/js/Components/InputHidden.vue");
 /* harmony import */ var _Components_DatePicker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/DatePicker */ "./resources/js/Components/DatePicker.vue");
+//
+//
+//
 //
 //
 //
@@ -5723,7 +5742,7 @@ __webpack_require__.r(__webpack_exports__);
         preserveState: true
       });
     },
-    updateWeights: function updateWeights(target) {
+    updateSectionWeights: function updateSectionWeights(target) {
       var newIndex = target.moved.newIndex + 1;
       this.project.sections.forEach(function (section, i) {
         if (section.id == target.moved.element.id) {
@@ -5739,9 +5758,47 @@ __webpack_require__.r(__webpack_exports__);
           return obj.id;
         })
       });
-      weightForm.patch(this.project.path + '/updateweights', {
+      weightForm.patch(this.project.path + '/updatesectionweights', {
         preserveState: true
       });
+    },
+    updateTaskWeights: function updateTaskWeights(target) {
+      var newIndex = null;
+      var targetId = null;
+
+      if (target.added) {
+        newIndex = target.added.newIndex + 1;
+        targetId = target.added.element.id;
+      } else if (target.moved) {
+        newIndex = target.moved.newIndex + 1;
+        targetId = target.moved.element.id;
+      }
+
+      if (newIndex && targetId) {
+        this.project.sections.forEach(function (section, sectionIndex) {
+          section.tasks.forEach(function (task, taskIndex) {
+            task.section_id = section.id;
+
+            if (task.id == targetId) {
+              task.weight = newIndex;
+            } else if (task.weight == newIndex && task.weight < taskIndex + 1) {
+              task.weight++;
+            } else {
+              task.weight = taskIndex + 1;
+            }
+          });
+        });
+        var weightForm = this.$inertia.form({
+          ids_by_weight: this.project.sections.map(function (section) {
+            return section.tasks.map(function (task) {
+              return task.id;
+            });
+          })
+        });
+        weightForm.patch(this.project.path + '/updatetaskweights', {
+          preserveState: true
+        });
+      }
     }
   }
 });
@@ -79614,38 +79671,77 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c(
-    "div",
-    [
-      _c("input-hidden", {
-        staticClass: "ml-3 text-lg heading-color",
-        nativeOn: {
-          blur: function($event) {
-            return _vm.updateSection()
-          },
-          keyup: function($event) {
-            if (
-              !$event.type.indexOf("key") &&
-              _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-            ) {
-              return null
+  return _c("div", [
+    _c(
+      "div",
+      { staticClass: "flex items-center" },
+      [
+        _c(
+          "svg",
+          {
+            staticClass:
+              "ml-3 h-4 inline-block text-secondary-color drag-section cursor-move",
+            attrs: {
+              xmlns: "http://www.w3.org/2000/svg",
+              fill: "none",
+              viewBox: "0 0 24 24",
+              stroke: "currentColor"
             }
-            return $event.target.blur()
-          }
-        },
-        model: {
-          value: _vm.form.name,
-          callback: function($$v) {
-            _vm.$set(_vm.form, "name", $$v)
           },
-          expression: "form.name"
-        }
-      }),
-      _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "border-t-2 border-color" },
-        [
+          [
+            _c("path", {
+              attrs: {
+                "stroke-linecap": "round",
+                "stroke-linejoin": "round",
+                "stroke-width": "2",
+                d: "M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+              }
+            })
+          ]
+        ),
+        _vm._v(" "),
+        _c("input-hidden", {
+          staticClass: "ml-1 text-lg heading-color",
+          nativeOn: {
+            blur: function($event) {
+              return _vm.updateSection()
+            },
+            keyup: function($event) {
+              if (
+                !$event.type.indexOf("key") &&
+                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+              ) {
+                return null
+              }
+              return $event.target.blur()
+            }
+          },
+          model: {
+            value: _vm.form.name,
+            callback: function($$v) {
+              _vm.$set(_vm.form, "name", $$v)
+            },
+            expression: "form.name"
+          }
+        })
+      ],
+      1
+    ),
+    _vm._v(" "),
+    _c(
+      "div",
+      { staticClass: "border-t-2 border-color" },
+      [
+        _c(
+          "draggable",
+          {
+            attrs: {
+              list: _vm.section.tasks,
+              handle: ".drag-task",
+              group: "tasks"
+            },
+            on: { change: _vm.updateTaskWeights }
+          },
           _vm._l(_vm.section.tasks, function(task, index) {
             return _c(
               "div",
@@ -79666,23 +79762,23 @@ var render = function() {
               1
             )
           }),
-          _vm._v(" "),
-          _c(
-            "div",
-            [
-              _c("task-row-new", {
-                ref: "newTaskInput",
-                attrs: { section: _vm.section }
-              })
-            ],
-            1
-          )
-        ],
-        2
-      )
-    ],
-    1
-  )
+          0
+        ),
+        _vm._v(" "),
+        _c(
+          "div",
+          [
+            _c("task-row-new", {
+              ref: "newTaskInput",
+              attrs: { section: _vm.section }
+            })
+          ],
+          1
+        )
+      ],
+      1
+    )
+  ])
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -80172,7 +80268,31 @@ var render = function() {
       _c(
         "svg",
         {
-          staticClass: "h-5 inline-block hover:text-green-500",
+          staticClass:
+            "ml-3 h-4 inline-block text-secondary-color drag-task cursor-move",
+          attrs: {
+            xmlns: "http://www.w3.org/2000/svg",
+            fill: "none",
+            viewBox: "0 0 24 24",
+            stroke: "currentColor"
+          }
+        },
+        [
+          _c("path", {
+            attrs: {
+              "stroke-linecap": "round",
+              "stroke-linejoin": "round",
+              "stroke-width": "2",
+              d: "M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+            }
+          })
+        ]
+      ),
+      _vm._v(" "),
+      _c(
+        "svg",
+        {
+          staticClass: "h-5 ml-3 inline-block hover:text-green-500",
           class: _vm.task.completed ? "text-green-500" : "",
           attrs: {
             xmlns: "http://www.w3.org/2000/svg",
@@ -80200,7 +80320,7 @@ var render = function() {
       _vm._v(" "),
       _c(
         "div",
-        { staticClass: "inline-block ml-2" },
+        { staticClass: "inline-block ml-1" },
         [
           _c("input-hidden", {
             ref: "inputHidden",
@@ -85500,7 +85620,8 @@ var render = function() {
               _c(
                 "draggable",
                 {
-                  on: { change: _vm.updateWeights },
+                  attrs: { handle: ".drag-section" },
+                  on: { change: _vm.updateSectionWeights },
                   model: {
                     value: _vm.project.sections,
                     callback: function($$v) {
@@ -85517,7 +85638,10 @@ var render = function() {
                       _c("project-section", {
                         staticClass: "mt-5",
                         attrs: { section: section },
-                        on: { show: _vm.showTask }
+                        on: {
+                          show: _vm.showTask,
+                          updateTaskWeights: _vm.updateTaskWeights
+                        }
                       })
                     ],
                     1

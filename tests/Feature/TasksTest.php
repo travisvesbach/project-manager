@@ -154,4 +154,33 @@ class TasksTest extends TestCase
 
         $this->assertDatabaseMissing('tasks', $task->only('id'));
     }
+
+    /** @test **/
+    public function a_task_is_assigned_the_next_available_weight() {
+        $project = ProjectFactory::withTasks(1)->create();
+
+        $this->assertEquals(1, $project->tasks->last()->weight);
+
+        $project->addTask(['name' => 'Some Task']);
+
+        $this->assertEquals(2, $project->fresh()->tasks->last()->weight);
+    }
+
+    /** @test **/
+    public function task_weights_are_updated_in_section_when_a_task_is_deleted() {
+        $this->withoutExceptionHandling();
+        $project = ProjectFactory::withTasks(3)->create();
+
+        $this->assertCount(3, $project->tasks);
+        $this->assertEquals(3, $project->tasks->last()->weight);
+
+        $this->actingAs($project->owner)
+            ->delete($project->tasks->where('weight', 2)->first()->path())
+            ->assertRedirect($project->path());
+
+        $project->refresh();
+
+        $this->assertCount(2, $project->tasks);
+        $this->assertEquals(2, $project->tasks->last()->weight);
+    }
 }

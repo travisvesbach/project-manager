@@ -47,9 +47,9 @@
         <div class="flex-1 relative overflow-x-hidden">
 
             <div v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
-                <draggable v-model="project.sections" @change="updateWeights">
+                <draggable v-model="project.sections" @change="updateSectionWeights" handle=".drag-section">
                     <div v-for="section in project.sections" class="mt-5">
-                        <project-section v-bind:section="section" @show="showTask" class="mt-5"/>
+                        <project-section v-bind:section="section" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
                     </div>
                 </draggable>
             </div>
@@ -312,12 +312,12 @@
                     preserveState: true,
                 });
             },
-            updateWeights(target) {
+            updateSectionWeights(target) {
                 let newIndex = target.moved.newIndex + 1;
                 this.project.sections.forEach(function(section, i) {
                     if(section.id == target.moved.element.id) {
                         section.weight = newIndex;
-                    } else if(section.weight == newIndex && section.weight < i+1) {
+                    } else if(section.weight == newIndex && section.weight < i + 1) {
                         section.weight++;
                     } else {
                         section.weight = i + 1;
@@ -329,9 +329,48 @@
                         }),
                 });
 
-                weightForm.patch(this.project.path + '/updateweights', {
+                weightForm.patch(this.project.path + '/updatesectionweights', {
                     preserveState: true,
                 });
+            },
+            updateTaskWeights(target) {
+                let newIndex = null;
+                let targetId = null;
+                if(target.added) {
+                    newIndex = target.added.newIndex + 1;
+                    targetId = target.added.element.id;
+                } else if(target.moved) {
+                    newIndex = target.moved.newIndex + 1;
+                    targetId = target.moved.element.id;
+                }
+
+                if(newIndex && targetId) {
+                    this.project.sections.forEach(function(section, sectionIndex) {
+                        section.tasks.forEach(function(task, taskIndex) {
+                            task.section_id = section.id;
+                            if(task.id == targetId) {
+                                task.weight = newIndex;
+                            } else if(task.weight == newIndex && task.weight < taskIndex + 1) {
+                                task.weight++;
+                            } else {
+                                task.weight = taskIndex + 1;
+                            }
+                        });
+                    });
+
+                    let weightForm = this.$inertia.form({
+                        ids_by_weight: this.project.sections.map(function (section) {
+                                return section.tasks.map(function (task) {
+                                    return task.id;
+                                });
+                            }),
+                    });
+
+                    weightForm.patch(this.project.path + '/updatetaskweights', {
+                        preserveState: true,
+                    });
+
+                }
 
 
 

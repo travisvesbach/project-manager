@@ -19,7 +19,8 @@ class Task extends Model
         'completed',
         'project_id',
         'section_id',
-        'due_date'
+        'due_date',
+        'weight'
     ];
 
     protected $appends = [
@@ -44,8 +45,13 @@ class Task extends Model
     protected static function booted()
     {
         static::creating(function ($task) {
+            // default to project's first section
             if(!$task->section_id) {
                 $task->section_id = $task->project->sections->where('weight', 1)->first()->id;
+            }
+            // default weight to 1 or next available
+            if(!$task->weight) {
+                $task->weight = count($task->section->tasks) > 0 ? $task->section->tasks->sortByDesc('weight')->first()->weight + 1 : 1;
             }
         });
     }

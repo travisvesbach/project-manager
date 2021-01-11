@@ -29,7 +29,7 @@ class Section extends Model
     {
         static::creating(function ($section) {
             if(!$section->weight) {
-                $section->weight = $section->project->sections->sortByDesc('weight')->first()->weight + 1;
+                $section->weight = count($section->project->sections) > 0 ? $section->project->sections->sortByDesc('weight')->first()->weight + 1 : 1;
             }
         });
     }
@@ -39,7 +39,15 @@ class Section extends Model
     }
 
     public function tasks() {
-        return $this->hasMany(Task::class);
+        return $this->hasMany(Task::class)->orderBy('weight', 'ASC')->with('activity');
+    }
+
+    public function updateTaskWeights() {
+        // used when a task is deleted
+        foreach($this->tasks as $index => $task) {
+            $task->weight = $index + 1;
+            $task->save();
+        }
     }
 
     public function path() {
