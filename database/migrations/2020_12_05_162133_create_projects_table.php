@@ -19,6 +19,7 @@ class CreateProjectsTable extends Migration
             $table->bigInteger('owner_id')->unsigned();
             $table->string('name');
             $table->text('description');
+            $table->string('layout');
 
             $table->foreign('owner_id')->references('id')->on('users')->onDelete('cascade');
         });

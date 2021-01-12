@@ -145,13 +145,7 @@
             </template>
 
             <template #content>
-                    <jet-label for="name" value="Project Name" />
-                    <jet-input id="name" class="mt-1 block w-full" v-model="form.name" autocomplete="new-name" />
-                    <jet-input-error :message="form.error('name')" class="mt-2" />
-
-                    <jet-label for="description" value="Description" class="mt-4" />
-                    <textarea-input id="description" v-model="form.description" />
-                    <jet-input-error :message="form.error('description')" class="mt-2" />
+                <project-form v-model="form" />
             </template>
 
             <template #actions>
@@ -209,6 +203,7 @@
     import SelectInput from '@/Components/SelectInput'
     import ProjectSection from '@/Components/ProjectSection'
     import ProjectSectionNew from '@/Components/ProjectSectionNew'
+    import ProjectForm from '@/Components/ProjectForm'
 
     import draggable  from 'vuedraggable'
 
@@ -240,6 +235,7 @@
             ProjectSection,
             ProjectSectionNew,
             draggable,
+            ProjectForm,
         },
 
         directives: {
@@ -257,6 +253,7 @@
                     id: this.project.id,
                     name: this.project.name,
                     description: this.project.description,
+                    layout: this.project.layout,
                 }),
                 userForm: this.$inertia.form({
                     id: null,
@@ -287,7 +284,7 @@
                     }
                 }
                 this.userForm.id = null;
-            }
+            },
         },
         methods: {
             showTask(task) {
@@ -295,7 +292,7 @@
             },
             updateProject() {
                 this.form.patch(this.project.path);
-                this.editingProject = false;
+                // this.editingProject = false;
             },
             deleteProject() {
                 this.$inertia.delete(this.project.path);

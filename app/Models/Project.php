@@ -16,7 +16,8 @@ class Project extends Model
     protected $fillable = [
         'name',
         'description',
-        'owner_id'
+        'owner_id',
+        'layout'
     ];
 
     protected $appends = [

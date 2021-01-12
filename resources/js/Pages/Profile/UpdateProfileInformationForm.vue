@@ -61,6 +61,13 @@
                 <select-input id="theme" class="mt=1 block w-full" v-model="form.theme" v-bind:options="['light', 'dark']" />
                 <jet-input-error :message="form.error('theme')" class="mt-2" />
             </div>
+
+            <!-- Project Layout -->
+            <div class="col-span-6 sm:col-span-4">
+                <jet-label for="project_layout" value="Project Layout" />
+                <select-input id="project_layout" class="mt=1 block w-full" v-model="form.project_layout" v-bind:options="['project default', 'list', 'board']" />
+                <jet-input-error :message="form.error('project_layout')" class="mt-2" />
+            </div>
         </template>
 
         <template #actions>
@@ -107,6 +114,7 @@
                     email: this.user.email,
                     photo: null,
                     theme: this.user.theme,
+                    project_layout: this.user.project_layout,
                 }, {
                     bag: 'updateProfileInformation',
                     resetOnSuccess: false,

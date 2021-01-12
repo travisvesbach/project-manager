@@ -23,6 +23,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'email' => ['required', 'email', 'max:255', Rule::unique('users')->ignore($user->id)],
             'photo' => ['nullable', 'image', 'max:1024'],
             'theme' => ['string', 'max:255'],
+            'project_layout' => ['string', 'max:255'],
         ])->validateWithBag('updateProfileInformation');
 
         if (isset($input['photo'])) {
@@ -37,6 +38,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
                 'name' => $input['name'],
                 'email' => $input['email'],
                 'theme' => $input['theme'],
+                'project_layout' => $input['project_layout'],
             ])->save();
         }
     }
@@ -55,6 +57,7 @@ class UpdateUserProfileInformation implements UpdatesUserProfileInformation
             'email' => $input['email'],
             'email_verified_at' => null,
             'theme' => $input['theme'],
+            'project_layout' => $input['project_layout'],
         ])->save();
 
         $user->sendEmailVerificationNotification();

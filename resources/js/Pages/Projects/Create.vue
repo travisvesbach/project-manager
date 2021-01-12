@@ -6,13 +6,7 @@
 
         <centered-form @submitted="submit">
 
-            <jet-label for="name" value="Project Name" />
-            <jet-input id="name" class="mt-1 block w-full" v-model="form.name" autocomplete="new-name" required/>
-            <jet-input-error :message="form.error('name')" class="mt-2" />
-
-            <jet-label for="description" value="Description" class="mt-4" />
-            <textarea-input id="description" v-model="form.description"/>
-            <jet-input-error :message="form.error('description')" class="mt-2" />
+            <project-form v-model="form" />
 
             <template #actions>
                 <jet-action-message :on="form.recentlySuccessful" class="mr-3">
@@ -32,28 +26,23 @@
     import AppLayout from '@/Layouts/AppLayout'
     import JetActionMessage from '@/Jetstream/ActionMessage'
     import JetButton from '@/Jetstream/Button'
-    import JetInput from '@/Jetstream/Input'
-    import JetInputError from '@/Jetstream/InputError'
-    import JetLabel from '@/Jetstream/Label'
     import CenteredForm from '@/Components/CenteredForm'
-    import TextareaInput from '@/Components/TextareaInput'
+    import ProjectForm from '@/Components/ProjectForm'
 
     export default {
         components: {
             AppLayout,
             JetActionMessage,
             JetButton,
-            JetInput,
-            JetInputError,
-            JetLabel,
             CenteredForm,
-            TextareaInput,
+            ProjectForm,
         },
         data() {
             return {
                 form: this.$inertia.form({
                     name: null,
                     description: null,
+                    layout: 'list',
                 }),
             }
         },

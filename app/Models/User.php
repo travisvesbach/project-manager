@@ -28,6 +28,7 @@ class User extends Authenticatable
         'email',
         'password',
         'theme',
+        'project_layout'
     ];
 
     /**
