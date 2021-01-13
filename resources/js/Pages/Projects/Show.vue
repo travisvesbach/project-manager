@@ -46,15 +46,25 @@
 
         <div class="flex-1 relative overflow-x-hidden">
 
-            <div v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
-                <draggable v-model="project.sections" @change="updateSectionWeights" handle=".drag-section">
-                    <div v-for="section in project.sections" class="mt-5">
-                        <project-section v-bind:section="section" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
-                    </div>
-                </draggable>
+            <div v-if="layout == 'list'">
+                <div v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
+                    <draggable v-model="project.sections" @change="updateSectionWeights" handle=".drag-section">
+                        <div v-for="section in project.sections" class="mt-5">
+                            <list-section v-bind:section="section" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
+                        </div>
+                    </draggable>
+                </div>
+
+                <list-section-new v-bind:project="project" class="mt-12" />
             </div>
 
-            <project-section-new v-bind:project="project" class="mt-12" />
+            <div v-if="layout == 'board'">
+                <draggable v-model="project.sections" @change="updateSectionWeights" handle=".drag-section" v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
+                    <board-section v-for="(section, index) in project.sections" v-bind:section="section" v-bind:key="index" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
+                </draggable>
+
+                <!-- <list-section-new v-bind:project="project" class="mt-12" /> -->
+            </div>
 
             <task-details v-bind:task="showingTask" @close="showingTask = false" ref="taskDetails"/>
 
@@ -152,7 +162,7 @@
                 <jet-secondary-button @click.native="editingProject = false">
                     Cancel
                 </jet-secondary-button>
-                <jet-button>
+                <jet-button :class="{ 'opacity-25': form.processing }" :disabled="form.processing">
                     Save
                 </jet-button>
             </template>
@@ -201,9 +211,10 @@
     import TaskDetails from '@/Components/TaskDetails'
     import ActivityItem from '@/Components/ActivityItem'
     import SelectInput from '@/Components/SelectInput'
-    import ProjectSection from '@/Components/ProjectSection'
-    import ProjectSectionNew from '@/Components/ProjectSectionNew'
+    import ListSection from '@/Components/ListSection'
+    import ListSectionNew from '@/Components/ListSectionNew'
     import ProjectForm from '@/Components/ProjectForm'
+    import BoardSection from '@/Components/BoardSection'
 
     import draggable  from 'vuedraggable'
 
@@ -232,10 +243,11 @@
             TaskDetails,
             ActivityItem,
             SelectInput,
-            ProjectSection,
-            ProjectSectionNew,
+            ListSection,
+            ListSectionNew,
             draggable,
             ProjectForm,
+            BoardSection,
         },
 
         directives: {
@@ -274,6 +286,13 @@
                 } else {
                     return this.users;
                 }
+            },
+            layout() {
+                if(this.$page.user.project_layout != "project default") {
+                    return this.$page.user.project_layout;
+                } else {
+                    return this.project.layout;
+                }
             }
         },
         watch: {
@@ -284,6 +303,13 @@
                     }
                 }
                 this.userForm.id = null;
+
+                this.form =  this.$inertia.form({
+                    id: this.project.id,
+                    name: this.project.name,
+                    description: this.project.description,
+                    layout: this.project.layout,
+                });
             },
         },
         methods: {
@@ -292,7 +318,7 @@
             },
             updateProject() {
                 this.form.patch(this.project.path);
-                // this.editingProject = false;
+                this.editingProject = false;
             },
             deleteProject() {
                 this.$inertia.delete(this.project.path);
