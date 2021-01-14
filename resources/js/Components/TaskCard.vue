@@ -13,10 +13,12 @@
             </p>
         </div>
         <div class="mt-8 flex items-center">
-            <svg class="h-5 inline-block text-color" :class="due_date ? '' : 'text-secondary-color'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-            </svg>
-            <span class="ml-1" v-if="due_date">{{ due_date }}</span>
+            <div class="flex items-center" v-if="due_date">
+                <svg class="h-5 inline-block text-color" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span class="ml-1">{{ due_date }}</span>
+            </div>
         </div>
     </button>
 </template>

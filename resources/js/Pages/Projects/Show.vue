@@ -38,37 +38,49 @@
             </div>
         </template>
 
-        <div>
+        <template #subheader>
+            <div class="dark:bg-gray-900 flex items-center px-10">
+                <nav-button class="mx-4 pb-1 text-base" :active="layout == 'list'" title="List" @click.native="layoutButton = 'list'">
+                    List
+                </nav-button>
+                <nav-button class="mx-4 pb-1 text-base" :active="layout == 'board'" title="Board" @click.native="layoutButton = 'board'">
+                    Board
+                </nav-button>
+            </div>
+        </template>
+
+<!--         <div>
             <div class="max-w-7xl mx-auto py-10 sm:px-6 lg:px-8 text-color">
                 {{ project.description }}
             </div>
-        </div>
+        </div> -->
 
         <div class="flex-1 relative overflow-x-hidden">
+            <div v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
 
-            <div v-if="layout == 'list'">
-                <div v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
+                <div v-if="layout == 'list'" >
                     <draggable v-model="project.sections" @change="updateSectionWeights" handle=".drag-section">
-                        <div v-for="section in project.sections" class="mt-5">
+                        <div v-for="section in project.sections">
                             <list-section v-bind:section="section" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
                         </div>
                     </draggable>
+
+                    <list-section-new v-bind:project="project" class="mt-12" />
                 </div>
 
-                <list-section-new v-bind:project="project" class="mt-12" />
+                <div v-if="layout == 'board'" class="flex overflow-x-auto">
+                    <draggable class="inline-block flex">
+                        <board-section v-for="(section, index) in project.sections" v-bind:section="section" v-bind:key="index" @show="showTask" @updateTaskWeights="updateTaskWeights"/>
+                    </draggable>
+
+                    <board-section-new v-bind:project="project" />
+                </div>
+
+                <task-details v-bind:task="showingTask" @close="showingTask = false" ref="taskDetails"/>
             </div>
-
-            <div v-if="layout == 'board'">
-                <draggable v-model="project.sections" @change="updateSectionWeights" handle=".drag-section" v-outside-click="{ exclude: ['taskDetails', 'datePicker'], handler: 'closeDetails'}">
-                    <board-section v-for="(section, index) in project.sections" v-bind:section="section" v-bind:key="index" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
-                </draggable>
-
-                <!-- <list-section-new v-bind:project="project" class="mt-12" /> -->
-            </div>
-
-            <task-details v-bind:task="showingTask" @close="showingTask = false" ref="taskDetails"/>
 
         </div>
+
 
         <!-- activity -->
         <jet-dialog-modal :show="showingActivity" @close="showingActivity = false" >
@@ -215,6 +227,8 @@
     import ListSectionNew from '@/Components/ListSectionNew'
     import ProjectForm from '@/Components/ProjectForm'
     import BoardSection from '@/Components/BoardSection'
+    import BoardSectionNew from '@/Components/BoardSectionNew'
+    import NavButton from '@/Components/NavButton'
 
     import draggable  from 'vuedraggable'
 
@@ -248,6 +262,8 @@
             draggable,
             ProjectForm,
             BoardSection,
+            BoardSectionNew,
+            NavButton,
         },
 
         directives: {
@@ -261,6 +277,7 @@
                 confirmingDeleteProject: false,
                 showingTask: false,
                 showingUsers: false,
+                layoutButton: false,
                 form: this.$inertia.form({
                     id: this.project.id,
                     name: this.project.name,
@@ -288,7 +305,9 @@
                 }
             },
             layout() {
-                if(this.$page.user.project_layout != "project default") {
+                if(this.layoutButton) {
+                    return this.layoutButton;
+                }else if(this.$page.user.project_layout != "project default") {
                     return this.$page.user.project_layout;
                 } else {
                     return this.project.layout;

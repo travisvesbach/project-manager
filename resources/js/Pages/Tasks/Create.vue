@@ -77,7 +77,7 @@
         },
         methods: {
             submit() {
-                this.$inertia.post('/projects/' + this.form.project + '/tasks', this.form);
+                this.form.post('/projects/' + this.form.project + '/tasks');
             },
         },
     }

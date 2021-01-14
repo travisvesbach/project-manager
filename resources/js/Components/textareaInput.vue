@@ -17,7 +17,7 @@
         computed: {
             classes() {
                 if(this.hidden) {
-                    return 'hidden-input-color';
+                    return 'hidden-input-color resize-none';
                 }
                 return 'form-input-color';
             },

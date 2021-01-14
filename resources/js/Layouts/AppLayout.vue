@@ -259,6 +259,11 @@
             </div>
         </header> -->
 
+        <!-- subheader -->
+        <div>
+            <slot name="subheader"></slot>
+        </div>
+
         <!-- Page Content -->
         <main class="pt-10 flex flex-col flex-1">
             <slot></slot>
