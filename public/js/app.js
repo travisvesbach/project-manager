@@ -86603,7 +86603,18 @@ var render = function() {
                   [
                     _c(
                       "draggable",
-                      { staticClass: "inline-block flex" },
+                      {
+                        staticClass: "inline-block flex",
+                        attrs: { handle: ".drag-section" },
+                        on: { change: _vm.updateSectionWeights },
+                        model: {
+                          value: _vm.project.sections,
+                          callback: function($$v) {
+                            _vm.$set(_vm.project, "sections", $$v)
+                          },
+                          expression: "project.sections"
+                        }
+                      },
                       _vm._l(_vm.project.sections, function(section, index) {
                         return _c("board-section", {
                           key: index,

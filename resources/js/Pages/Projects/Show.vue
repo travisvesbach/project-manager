@@ -69,7 +69,7 @@
                 </div>
 
                 <div v-if="layout == 'board'" class="flex overflow-x-auto">
-                    <draggable class="inline-block flex">
+                    <draggable class="inline-block flex" v-model="project.sections" @change="updateSectionWeights"  handle=".drag-section">
                         <board-section v-for="(section, index) in project.sections" v-bind:section="section" v-bind:key="index" @show="showTask" @updateTaskWeights="updateTaskWeights"/>
                     </draggable>
 
