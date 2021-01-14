@@ -6,7 +6,7 @@
         <div class="inline-block ml-2">
             <input-hidden
                 id="name"
-                v-model="name"
+                v-model="form.name"
                 placeholder="Add Task"
                 ref="inputHidden"
                 @blur.native="createTask()"
@@ -31,7 +31,6 @@
 
         data() {
             return {
-                name: null,
                 form: this.$inertia.form({
                     name: null,
                     completed: false,
@@ -44,10 +43,8 @@
                 this.$refs.inputHidden.focus();
             },
             createTask() {
-                if(this.name != null && this.name.length > 0) {
-                    this.form.name = this.name;
+                if(this.form.name != null && this.form.name.length > 0) {
                     this.form.post(this.section.project.path + '/tasks');
-                    this.name = null;
                 }
             }
         }

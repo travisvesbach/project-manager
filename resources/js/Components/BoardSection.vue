@@ -15,7 +15,8 @@
             </draggable>
 
             <div>
-                <task-row-new v-bind:section="section" ref="newTaskInput"/>
+                <!-- <task-row-new v-bind:section="section" ref="newTaskInput"/> -->
+                <task-card-new v-bind:section="section" ref="newTaskInput"/>
             </div>
         </div>
     </div>
@@ -24,7 +25,7 @@
 <script>
 
     import TaskCard from '@/Components/TaskCard'
-    import TaskRowNew from '@/Components/TaskRowNew'
+    import TaskCardNew from '@/Components/TaskCardNew'
     import InputHidden from '@/Components/InputHidden'
 
     import draggable  from 'vuedraggable'
@@ -34,7 +35,7 @@
 
         components: {
             TaskCard,
-            TaskRowNew,
+            TaskCardNew,
             InputHidden,
             draggable,
         },

@@ -31,7 +31,7 @@ class TaskRequest extends FormRequest
             'description' => 'array|nullable',
             'completed' => 'nullable',
             'due_date' => 'nullable',
-            'section_id' => 'integer|exists:users,id'
+            'section_id' => 'integer|exists:sections,id'
         ];
     }
 }
