@@ -8,9 +8,9 @@
         </div>
         <div class="border-t-2 border-color">
 
-            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks">
-                <div class="border-b-2 border-color" v-for="(task, index) in section.tasks">
-                    <task-row v-bind:task="task" @show="$emit('show', task)" @focusnew="focusNew()"/>
+            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks" :disabled="sort != null">
+                <div class="border-b-2 border-color" v-for="(task, index) in sortedTasks">
+                    <task-row v-bind:task="task" v-bind:draggable="sort != null ? false : true" @show="$emit('show', task)" @focusnew="focusNew()"/>
                 </div>
             </draggable>
 
@@ -30,7 +30,7 @@
     import draggable  from 'vuedraggable'
 
     export default {
-        props: ['section'],
+        props: ['section', 'sort'],
 
         components: {
             TaskRow,
@@ -45,6 +45,21 @@
                     id: this.section.id,
                     name: this.section.name,
                 }),
+            }
+        },
+        computed: {
+            sortedTasks() {
+                let output = this.section.tasks;
+                if(this.sort == 'due date') {
+                    output.sort(function(a, b) {
+                        return (a.due_date === null) - (b.due_date === null) || + (a.due_date > b.due_date) || - (a.due_date < b.due_date);
+                    });
+                } else if(this.sort == 'alphabetical') {
+                    output.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
+                } else {
+                    output.sort((a, b) => (a.weight > b.weight) ? 1 : -1);
+                }
+                return output;
             }
         },
         watch: {

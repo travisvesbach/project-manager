@@ -2049,13 +2049,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['section'],
+  props: ['section', 'sort'],
   components: {
     TaskCard: _Components_TaskCard__WEBPACK_IMPORTED_MODULE_0__["default"],
     TaskCardNew: _Components_TaskCardNew__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -2069,6 +2068,27 @@ __webpack_require__.r(__webpack_exports__);
         name: this.section.name
       })
     };
+  },
+  computed: {
+    sortedTasks: function sortedTasks() {
+      var output = this.section.tasks;
+
+      if (this.sort == 'due date') {
+        output.sort(function (a, b) {
+          return (a.due_date === null) - (b.due_date === null) || +(a.due_date > b.due_date) || -(a.due_date < b.due_date);
+        });
+      } else if (this.sort == 'alphabetical') {
+        output.sort(function (a, b) {
+          return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+        });
+      } else {
+        output.sort(function (a, b) {
+          return a.weight > b.weight ? 1 : -1;
+        });
+      }
+
+      return output;
+    }
   },
   watch: {
     section: function section() {
@@ -2090,6 +2110,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     updateTaskWeights: function updateTaskWeights(target) {
+      console.log('here 2');
       this.$emit('updateTaskWeights', target);
     }
   }
@@ -2257,20 +2278,11 @@ __webpack_require__.r(__webpack_exports__);
   watch: {
     id: function id() {
       this.date = this.value;
-    },
-    value: function value() {
-      if (this.value && this.value != this.date) {
-        this.date = this.value;
-      } else if (this.id != this.currentId) {
-        this.date = this.value;
-      } else {
-        this.date = '';
-      }
     }
   },
   methods: {
     onInput: function onInput() {
-      // needed otherwise will emit when chaning between tasks
+      // needed otherwise will emit when changing between tasks
       if (this.id == this.currentId && this.value != this.date) {
         this.$emit('input', this.date);
       } else {
@@ -2434,7 +2446,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['section'],
+  props: ['section', 'sort'],
   components: {
     TaskRow: _Components_TaskRow__WEBPACK_IMPORTED_MODULE_0__["default"],
     TaskRowNew: _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -2448,6 +2460,27 @@ __webpack_require__.r(__webpack_exports__);
         name: this.section.name
       })
     };
+  },
+  computed: {
+    sortedTasks: function sortedTasks() {
+      var output = this.section.tasks;
+
+      if (this.sort == 'due date') {
+        output.sort(function (a, b) {
+          return (a.due_date === null) - (b.due_date === null) || +(a.due_date > b.due_date) || -(a.due_date < b.due_date);
+        });
+      } else if (this.sort == 'alphabetical') {
+        output.sort(function (a, b) {
+          return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+        });
+      } else {
+        output.sort(function (a, b) {
+          return a.weight > b.weight ? 1 : -1;
+        });
+      }
+
+      return output;
+    }
   },
   watch: {
     section: function section() {
@@ -2736,10 +2769,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2752,8 +2781,6 @@ __webpack_require__.r(__webpack_exports__);
       form: this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        description: this.task.description,
-        due_date: this.task.due_date,
         completed: this.task.completed
       })
     };
@@ -2768,23 +2795,11 @@ __webpack_require__.r(__webpack_exports__);
       this.form = this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        description: this.task.description,
-        due_date: this.task.due_date,
         completed: this.task.completed
       });
     }
   },
   methods: {
-    focus: function focus() {
-      this.$refs.inputHidden.focus();
-    },
-    updateTask: function updateTask() {
-      if (this.form.name == '') {
-        this.form.name = this.task.name;
-      } else if (this.form.name != this.task.name || this.form.description != this.task.description || this.form.completed != this.task.completed || this.form.due_date != this.task.due_date) {
-        this.form.patch(this.task.path);
-      }
-    },
     toggleCompleted: function toggleCompleted() {
       this.task.completed = !this.task.completed ? true : false;
       this.form.completed = this.task.completed;
@@ -3023,7 +3038,15 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/InputHidden */ "./resources/js/Components/InputHidden.vue");
-/* harmony import */ var _Components_DatePicker__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/DatePicker */ "./resources/js/Components/DatePicker.vue");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_1__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3051,29 +3074,29 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['task'],
+  props: ['task', 'draggable'],
   components: {
-    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__["default"],
-    DatePicker: _Components_DatePicker__WEBPACK_IMPORTED_MODULE_1__["default"]
+    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
   data: function data() {
     return {
       form: this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        description: this.task.description,
-        due_date: this.task.due_date,
         completed: this.task.completed
       })
     };
+  },
+  computed: {
+    due_date: function due_date() {
+      return this.task.due_date ? moment__WEBPACK_IMPORTED_MODULE_1___default()(this.task.due_date).format('MMM Do') : null;
+    }
   },
   watch: {
     task: function task() {
       this.form = this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        description: this.task.description,
-        due_date: this.task.due_date,
         completed: this.task.completed
       });
     }
@@ -3085,7 +3108,7 @@ __webpack_require__.r(__webpack_exports__);
     updateTask: function updateTask() {
       if (this.form.name == '') {
         this.form.name = this.task.name;
-      } else if (this.form.name != this.task.name || this.form.description != this.task.description || this.form.completed != this.task.completed || this.form.due_date != this.task.due_date) {
+      } else if (this.form.name != this.task.name) {
         this.form.patch(this.task.path);
       }
     },
@@ -5986,6 +6009,37 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -6054,6 +6108,7 @@ __webpack_require__.r(__webpack_exports__);
       showingTask: false,
       showingUsers: false,
       layoutButton: false,
+      sort: null,
       form: this.$inertia.form({
         id: this.project.id,
         name: this.project.name,
@@ -79741,12 +79796,12 @@ var render = function() {
           {
             attrs: {
               list: _vm.section.tasks,
-              handle: ".drag-task",
-              group: "tasks"
+              group: "tasks",
+              disabled: _vm.sort != null
             },
             on: { change: _vm.updateTaskWeights }
           },
-          _vm._l(_vm.section.tasks, function(task, index) {
+          _vm._l(_vm.sortedTasks, function(task, index) {
             return _c(
               "div",
               [
@@ -80234,17 +80289,21 @@ var render = function() {
             attrs: {
               list: _vm.section.tasks,
               handle: ".drag-task",
-              group: "tasks"
+              group: "tasks",
+              disabled: _vm.sort != null
             },
             on: { change: _vm.updateTaskWeights }
           },
-          _vm._l(_vm.section.tasks, function(task, index) {
+          _vm._l(_vm.sortedTasks, function(task, index) {
             return _c(
               "div",
               { staticClass: "border-b-2 border-color" },
               [
                 _c("task-row", {
-                  attrs: { task: task },
+                  attrs: {
+                    task: task,
+                    draggable: _vm.sort != null ? false : true
+                  },
                   on: {
                     show: function($event) {
                       return _vm.$emit("show", task)
@@ -80639,30 +80698,6 @@ var render = function() {
       }
     },
     [
-      _c(
-        "svg",
-        {
-          staticClass:
-            "ml-auto h-4 text-secondary-color drag-task cursor-move absolute top-1 right-1",
-          attrs: {
-            xmlns: "http://www.w3.org/2000/svg",
-            fill: "none",
-            viewBox: "0 0 24 24",
-            stroke: "currentColor"
-          }
-        },
-        [
-          _c("path", {
-            attrs: {
-              "stroke-linecap": "round",
-              "stroke-linejoin": "round",
-              "stroke-width": "2",
-              d: "M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
-            }
-          })
-        ]
-      ),
-      _vm._v(" "),
       _c("div", [
         _c("p", { staticClass: "p-0 text-lg text-left" }, [
           _c(
@@ -81171,6 +81206,7 @@ var render = function() {
         {
           staticClass:
             "ml-3 h-4 inline-block text-secondary-color drag-task cursor-move",
+          class: _vm.draggable ? "" : "invisible",
           attrs: {
             xmlns: "http://www.w3.org/2000/svg",
             fill: "none",
@@ -81223,27 +81259,33 @@ var render = function() {
         "div",
         { staticClass: "inline-block ml-1" },
         [
-          _c("input-hidden", {
-            ref: "inputHidden",
-            attrs: { id: "name" },
-            on: {
-              "keyup-enter": function($event) {
-                return _vm.$emit("focusnew")
-              }
-            },
-            nativeOn: {
-              blur: function($event) {
-                return _vm.updateTask()
-              }
-            },
-            model: {
-              value: _vm.form.name,
-              callback: function($$v) {
-                _vm.$set(_vm.form, "name", $$v)
-              },
-              expression: "form.name"
-            }
-          })
+          !_vm.task.completed
+            ? _c("input-hidden", {
+                ref: "inputHidden",
+                attrs: { id: "name" },
+                on: {
+                  "keyup-enter": function($event) {
+                    return _vm.$emit("focusnew")
+                  }
+                },
+                nativeOn: {
+                  blur: function($event) {
+                    return _vm.updateTask()
+                  }
+                },
+                model: {
+                  value: _vm.form.name,
+                  callback: function($$v) {
+                    _vm.$set(_vm.form, "name", $$v)
+                  },
+                  expression: "form.name"
+                }
+              })
+            : _vm._e(),
+          _vm._v(" "),
+          _vm.task.completed
+            ? _c("span", [_vm._v(_vm._s(_vm.form.name))])
+            : _vm._e()
         ],
         1
       ),
@@ -81289,28 +81331,39 @@ var render = function() {
         )
       ]),
       _vm._v(" "),
-      _c(
-        "div",
-        { staticClass: "inline-block border-l-2 border-color pl-2" },
-        [
-          _c("date-picker", {
-            attrs: { id: _vm.form.id, hidden: true },
-            on: {
-              input: function($event) {
-                return _vm.updateTask()
-              }
-            },
-            model: {
-              value: _vm.form.due_date,
-              callback: function($$v) {
-                _vm.$set(_vm.form, "due_date", $$v)
-              },
-              expression: "form.due_date"
-            }
-          })
-        ],
-        1
-      )
+      _c("div", { staticClass: "inline-block border-l-2 border-color pl-2" }, [
+        _vm.due_date
+          ? _c("div", { staticClass: "flex items-center w-24" }, [
+              _c(
+                "svg",
+                {
+                  staticClass: "h-3 inline-block text-color",
+                  attrs: {
+                    xmlns: "http://www.w3.org/2000/svg",
+                    fill: "none",
+                    viewBox: "0 0 24 24",
+                    stroke: "currentColor"
+                  }
+                },
+                [
+                  _c("path", {
+                    attrs: {
+                      "stroke-linecap": "round",
+                      "stroke-linejoin": "round",
+                      "stroke-width": "2",
+                      d:
+                        "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"
+                    }
+                  })
+                ]
+              ),
+              _vm._v(" "),
+              _c("span", { staticClass: "ml-1 text-sm" }, [
+                _vm._v(_vm._s(_vm.due_date))
+              ])
+            ])
+          : _vm._e()
+      ])
     ]
   )
 }
@@ -86520,7 +86573,185 @@ var render = function() {
                       }
                     },
                     [_vm._v("\n                    Board\n                ")]
-                  )
+                  ),
+                  _vm._v(" "),
+                  _c("jet-dropdown", {
+                    staticClass: "mx-4 pb-1",
+                    attrs: { align: "left", width: "48" },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "trigger",
+                        fn: function() {
+                          return [
+                            _c(
+                              "button",
+                              { staticClass: "flex link link-color" },
+                              [
+                                _c("span", { staticClass: "text-base" }, [
+                                  _vm._v("Sort")
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "svg",
+                                  {
+                                    staticClass: "fill-current h-4 w-4 ml-1",
+                                    attrs: {
+                                      xmlns: "http://www.w3.org/2000/svg",
+                                      viewBox: "0 0 20 20"
+                                    }
+                                  },
+                                  [
+                                    _c("path", {
+                                      attrs: {
+                                        "fill-rule": "evenodd",
+                                        d:
+                                          "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
+                                        "clip-rule": "evenodd"
+                                      }
+                                    })
+                                  ]
+                                )
+                              ]
+                            )
+                          ]
+                        },
+                        proxy: true
+                      },
+                      {
+                        key: "content",
+                        fn: function() {
+                          return [
+                            _c(
+                              "jet-dropdown-link",
+                              {
+                                attrs: { as: "button" },
+                                nativeOn: {
+                                  click: function($event) {
+                                    _vm.sort = null
+                                  }
+                                }
+                              },
+                              [
+                                _vm.sort == null
+                                  ? _c(
+                                      "svg",
+                                      {
+                                        staticClass: "h-5 absolute",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          fill: "none",
+                                          viewBox: "0 0 24 24",
+                                          stroke: "currentColor"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            "stroke-linecap": "round",
+                                            "stroke-linejoin": "round",
+                                            "stroke-width": "2",
+                                            d: "M5 13l4 4L19 7"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "ml-6" }, [
+                                  _vm._v("None")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "jet-dropdown-link",
+                              {
+                                attrs: { as: "button" },
+                                nativeOn: {
+                                  click: function($event) {
+                                    _vm.sort = "due date"
+                                  }
+                                }
+                              },
+                              [
+                                _vm.sort == "due date"
+                                  ? _c(
+                                      "svg",
+                                      {
+                                        staticClass: "h-5 absolute",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          fill: "none",
+                                          viewBox: "0 0 24 24",
+                                          stroke: "currentColor"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            "stroke-linecap": "round",
+                                            "stroke-linejoin": "round",
+                                            "stroke-width": "2",
+                                            d: "M5 13l4 4L19 7"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "ml-6" }, [
+                                  _vm._v("Due Date")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "jet-dropdown-link",
+                              {
+                                attrs: { as: "button" },
+                                nativeOn: {
+                                  click: function($event) {
+                                    _vm.sort = "alphabetical"
+                                  }
+                                }
+                              },
+                              [
+                                _vm.sort == "alphabetical"
+                                  ? _c(
+                                      "svg",
+                                      {
+                                        staticClass: "h-5 absolute",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          fill: "none",
+                                          viewBox: "0 0 24 24",
+                                          stroke: "currentColor"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            "stroke-linecap": "round",
+                                            "stroke-linejoin": "round",
+                                            "stroke-width": "2",
+                                            d: "M5 13l4 4L19 7"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "ml-6" }, [
+                                  _vm._v("Alphabetical")
+                                ])
+                              ]
+                            )
+                          ]
+                        },
+                        proxy: true
+                      }
+                    ])
+                  })
                 ],
                 1
               )
@@ -86568,23 +86799,18 @@ var render = function() {
                           expression: "project.sections"
                         }
                       },
-                      _vm._l(_vm.project.sections, function(section) {
-                        return _c(
-                          "div",
-                          [
-                            _c("list-section", {
-                              staticClass: "mt-5",
-                              attrs: { section: section },
-                              on: {
-                                show: _vm.showTask,
-                                updateTaskWeights: _vm.updateTaskWeights
-                              }
-                            })
-                          ],
-                          1
-                        )
+                      _vm._l(_vm.project.sections, function(section, key) {
+                        return _c("list-section", {
+                          key: key,
+                          staticClass: "mt-5",
+                          attrs: { section: section, sort: _vm.sort },
+                          on: {
+                            show: _vm.showTask,
+                            updateTaskWeights: _vm.updateTaskWeights
+                          }
+                        })
                       }),
-                      0
+                      1
                     ),
                     _vm._v(" "),
                     _c("list-section-new", {
@@ -86615,10 +86841,10 @@ var render = function() {
                           expression: "project.sections"
                         }
                       },
-                      _vm._l(_vm.project.sections, function(section, index) {
+                      _vm._l(_vm.project.sections, function(section, key) {
                         return _c("board-section", {
-                          key: index,
-                          attrs: { section: section },
+                          key: key,
+                          attrs: { section: section, sort: _vm.sort },
                           on: {
                             show: _vm.showTask,
                             updateTaskWeights: _vm.updateTaskWeights

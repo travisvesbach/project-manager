@@ -8,14 +8,13 @@
         </div>
 
         <div class="mx-2">
-            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks">
-                <div v-for="(task, index) in section.tasks">
+            <draggable :list="section.tasks" @change="updateTaskWeights" group="tasks" :disabled="sort != null">
+                <div v-for="(task, index) in sortedTasks">
                     <task-card v-bind:task="task" @show="$emit('show', task)" @focusnew="focusNew()"/>
                 </div>
             </draggable>
 
             <div>
-                <!-- <task-row-new v-bind:section="section" ref="newTaskInput"/> -->
                 <task-card-new v-bind:section="section" ref="newTaskInput"/>
             </div>
         </div>
@@ -31,7 +30,7 @@
     import draggable  from 'vuedraggable'
 
     export default {
-        props: ['section'],
+        props: ['section', 'sort'],
 
         components: {
             TaskCard,
@@ -46,6 +45,21 @@
                     id: this.section.id,
                     name: this.section.name,
                 }),
+            }
+        },
+        computed: {
+            sortedTasks() {
+                let output = this.section.tasks;
+                if(this.sort == 'due date') {
+                    output.sort(function(a, b) {
+                        return (a.due_date === null) - (b.due_date === null) || + (a.due_date > b.due_date) || - (a.due_date < b.due_date);
+                    });
+                } else if(this.sort == 'alphabetical') {
+                    output.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
+                } else {
+                    output.sort((a, b) => (a.weight > b.weight) ? 1 : -1);
+                }
+                return output;
             }
         },
         watch: {
@@ -68,6 +82,7 @@
                 }
             },
             updateTaskWeights(target) {
+                console.log('here 2');
                 this.$emit('updateTaskWeights', target);
             }
         }

@@ -46,6 +46,39 @@
                 <nav-button class="mx-4 pb-1 text-base" :active="layout == 'board'" title="Board" @click.native="layoutButton = 'board'">
                     Board
                 </nav-button>
+                <jet-dropdown class="mx-4 pb-1" align="left" width="48">
+                    <template #trigger>
+                        <button class="flex link link-color">
+                            <span class="text-base">Sort</span>
+                            <svg class="fill-current h-4 w-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </template>
+
+                    <template #content>
+                        <jet-dropdown-link @click.native="sort = null" as="button">
+                            <svg v-if="sort == null" class="h-5 absolute" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="ml-6">None</span>
+                        </jet-dropdown-link>
+
+                        <jet-dropdown-link @click.native="sort = 'due date'" as="button">
+                            <svg v-if="sort == 'due date'" class="h-5 absolute" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="ml-6">Due Date</span>
+                        </jet-dropdown-link>
+
+                        <jet-dropdown-link @click.native="sort = 'alphabetical'" as="button">
+                            <svg v-if="sort == 'alphabetical'" class="h-5 absolute" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="ml-6">Alphabetical</span>
+                        </jet-dropdown-link>
+                    </template>
+                </jet-dropdown>
             </div>
         </template>
 
@@ -60,9 +93,7 @@
 
                 <div v-if="layout == 'list'" >
                     <draggable v-model="project.sections" @change="updateSectionWeights" handle=".drag-section">
-                        <div v-for="section in project.sections">
-                            <list-section v-bind:section="section" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
-                        </div>
+                        <list-section v-for="(section, key) in project.sections" v-bind:section="section" v-bind:key="key" v-bind:sort="sort" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
                     </draggable>
 
                     <list-section-new v-bind:project="project" class="mt-12" />
@@ -70,7 +101,7 @@
 
                 <div v-if="layout == 'board'" class="flex overflow-x-auto">
                     <draggable class="inline-block flex" v-model="project.sections" @change="updateSectionWeights"  handle=".drag-section">
-                        <board-section v-for="(section, index) in project.sections" v-bind:section="section" v-bind:key="index" @show="showTask" @updateTaskWeights="updateTaskWeights"/>
+                        <board-section v-for="(section, key) in project.sections" v-bind:section="section" v-bind:key="key" v-bind:sort="sort" @show="showTask" @updateTaskWeights="updateTaskWeights"/>
                     </draggable>
 
                     <board-section-new v-bind:project="project" />
@@ -278,6 +309,7 @@
                 showingTask: false,
                 showingUsers: false,
                 layoutButton: false,
+                sort: null,
                 form: this.$inertia.form({
                     id: this.project.id,
                     name: this.project.name,
@@ -312,7 +344,7 @@
                 } else {
                     return this.project.layout;
                 }
-            }
+            },
         },
         watch: {
             project: function() {

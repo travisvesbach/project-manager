@@ -42,19 +42,10 @@
             id: function() {
                 this.date = this.value;
             },
-            value: function() {
-                if(this.value && this.value != this.date) {
-                    this.date = this.value;
-                } else if(this.id != this.currentId) {
-                    this.date = this.value;
-                } else {
-                    this.date = '';
-                }
-            }
         },
         methods: {
             onInput() {
-                // needed otherwise will emit when chaning between tasks
+                // needed otherwise will emit when changing between tasks
                 if(this.id == this.currentId && this.value != this.date) {
                     this.$emit('input', this.date);
                 } else {
