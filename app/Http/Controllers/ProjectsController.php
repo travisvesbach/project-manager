@@ -66,7 +66,7 @@ class ProjectsController extends Controller
     public function updateSectionWeights(Request $request, Project $project) {
         $this->authorize('update', $project);
 
-        $project->updateSectionWeights($request->input('ids_by_weight'));
+        $project->updateSectionWeights($request->input('sections_array'));
 
         return redirect($project->path());
     }
@@ -74,7 +74,7 @@ class ProjectsController extends Controller
     public function updateTaskWeights(Request $request, Project $project) {
         $this->authorize('update', $project);
 
-        $project->updateTaskWeights($request->input('ids_by_weight'));
+        $project->updateTaskWeights($request->input('tasks_array'));
 
         return redirect($project->path());
     }

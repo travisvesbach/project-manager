@@ -43,8 +43,8 @@ class Section extends Model
     }
 
     public function updateTaskWeights() {
-        // used when a task is deleted
-        foreach($this->tasks as $index => $task) {
+        // used when a task is deleted or completed
+        foreach($this->tasks->where('completed', false) as $index => $task) {
             $task->weight = $index + 1;
             $task->save();
         }

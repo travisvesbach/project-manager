@@ -29,6 +29,7 @@ class ProjectFactory extends Factory
             'name' => $this->faker->sentence(4),
             'description' => $this->faker->sentence(4),
             'owner_id' => User::factory()->create(),
+            'layout' => 'list',
         ];
     }
 }

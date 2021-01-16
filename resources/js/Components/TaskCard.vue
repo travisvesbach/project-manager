@@ -26,7 +26,7 @@
     import moment from 'moment'
 
     export default {
-        props: ['task'],
+        props: ['task', 'section'],
 
         components: {
             InputHidden,
@@ -38,6 +38,7 @@
                     id: this.task.id,
                     name: this.task.name,
                     completed: this.task.completed,
+                    weight: this.task.weight,
                 }),
             }
         },
@@ -52,13 +53,16 @@
                     id: this.task.id,
                     name: this.task.name,
                     completed: this.task.completed,
+                    weight: this.task.weight,
                 });
             }
         },
         methods: {
             toggleCompleted() {
                 this.task.completed = !this.task.completed ? true : false;
+                this.task.weight = this.task.completed ? null : Math.max.apply(Math, this.section.tasks.map(function(x) { return x.weight; })) + 1;
                 this.form.completed = this.task.completed;
+                this.form.weight = this.task.weight;
                 this.form.patch(this.task.path);
             }
         }

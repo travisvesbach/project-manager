@@ -49,6 +49,32 @@
                 <jet-dropdown class="mx-4 pb-1" align="left" width="48">
                     <template #trigger>
                         <button class="flex link link-color">
+                            <span class="text-base">{{ completedFilter }} Tasks</span>
+                            <svg class="fill-current h-4 w-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                            </svg>
+                        </button>
+                    </template>
+
+                    <template #content>
+                        <jet-dropdown-link @click.native="completedFilter = 'Incomplete'" as="button">
+                            <svg v-if="completedFilter == 'Incomplete'" class="h-5 absolute" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="ml-6">Incomplete Tasks</span>
+                        </jet-dropdown-link>
+
+                        <jet-dropdown-link @click.native="completedFilter = 'Completed'" as="button">
+                            <svg v-if="completedFilter == 'Completed'" class="h-5 absolute" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="ml-6">Completed Tasks</span>
+                        </jet-dropdown-link>
+                    </template>
+                </jet-dropdown>
+                <jet-dropdown class="mx-4 pb-1" align="left" width="48" v-if="completedFilter == 'Incomplete'">
+                    <template #trigger>
+                        <button class="flex link link-color">
                             <span class="text-base">Sort</span>
                             <svg class="fill-current h-4 w-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -61,7 +87,7 @@
                             <svg v-if="sort == null" class="h-5 absolute" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
-                            <span class="ml-6">None</span>
+                            <span class="ml-6">Drag & Drop</span>
                         </jet-dropdown-link>
 
                         <jet-dropdown-link @click.native="sort = 'due date'" as="button">
@@ -93,7 +119,7 @@
 
                 <div v-if="layout == 'list'" >
                     <draggable v-model="project.sections" @change="updateSectionWeights" handle=".drag-section">
-                        <list-section v-for="(section, key) in project.sections" v-bind:section="section" v-bind:key="key" v-bind:sort="sort" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
+                        <list-section v-for="(section, key) in project.sections" v-bind:section="section" v-bind:key="key" v-bind:sort="sort" v-bind:completedFilter="completedFilter" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
                     </draggable>
 
                     <list-section-new v-bind:project="project" class="mt-12" />
@@ -101,7 +127,7 @@
 
                 <div v-if="layout == 'board'" class="flex overflow-x-auto">
                     <draggable class="inline-block flex" v-model="project.sections" @change="updateSectionWeights"  handle=".drag-section">
-                        <board-section v-for="(section, key) in project.sections" v-bind:section="section" v-bind:key="key" v-bind:sort="sort" @show="showTask" @updateTaskWeights="updateTaskWeights"/>
+                        <board-section v-for="(section, key) in project.sections" v-bind:section="section" v-bind:key="key" v-bind:sort="sort" v-bind:completedFilter="completedFilter" @show="showTask" @updateTaskWeights="updateTaskWeights"/>
                     </draggable>
 
                     <board-section-new v-bind:project="project" />
@@ -310,6 +336,7 @@
                 showingUsers: false,
                 layoutButton: false,
                 sort: null,
+                completedFilter: 'Incomplete',
                 form: this.$inertia.form({
                     id: this.project.id,
                     name: this.project.name,
@@ -398,7 +425,7 @@
                     }
                 });
                 let weightForm = this.$inertia.form({
-                    ids_by_weight: this.project.sections.map(function (obj) {
+                    sections_array: this.project.sections.map(function (obj) {
                             return obj.id;
                         }),
                 });
@@ -408,35 +435,51 @@
                 });
             },
             updateTaskWeights(target) {
+                let oldIndex = null;
                 let newIndex = null;
                 let targetId = null;
                 if(target.added) {
+                    oldIndex = target.added.oldIndex + 1;
                     newIndex = target.added.newIndex + 1;
                     targetId = target.added.element.id;
                 } else if(target.moved) {
+                    oldIndex = target.moved.oldIndex + 1;
                     newIndex = target.moved.newIndex + 1;
                     targetId = target.moved.element.id;
                 }
 
                 if(newIndex && targetId) {
-                    this.project.sections.forEach(function(section, sectionIndex) {
-                        section.tasks.forEach(function(task, taskIndex) {
+                    this.project.sections.forEach(function(section) {
+                        let weight = 1;
+                        section.tasks.forEach(function(task) {
                             task.section_id = section.id;
-                            if(task.id == targetId) {
-                                task.weight = newIndex;
-                            } else if(task.weight == newIndex && task.weight < taskIndex + 1) {
-                                task.weight++;
+                            // if section contains the modified task
+                            if(section.tasks.some(x => x.id === targetId) && oldIndex) {
+                                if(task.completed) {
+                                    task.weight = null;
+                                } else if(task.id == targetId) {
+                                    task.weight = newIndex;
+                                } else if(task.weight > oldIndex && task.weight <= newIndex) {
+                                    task.weight--;
+                                } else if(task.weight < oldIndex && task.weight >= newIndex) {
+                                    task.weight++;
+                                }
                             } else {
-                                task.weight = taskIndex + 1;
+                                if(task.completed) {
+                                    task.weight = null;
+                                } else {
+                                    task.weight = weight;
+                                    weight++;
+                                }
                             }
                         });
                     });
 
                     let weightForm = this.$inertia.form({
-                        ids_by_weight: this.project.sections.map(function (section) {
-                                return section.tasks.map(function (task) {
-                                    return task.id;
-                                });
+                        tasks_array: this.project.sections.map(function (section) {
+                                return [ section.id, section.tasks.map(function (task) {
+                                    return [task.id, task.weight];
+                                })];
                             }),
                     });
 

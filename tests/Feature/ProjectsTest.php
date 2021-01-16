@@ -35,7 +35,8 @@ class ProjectsTest extends TestCase
 
         $attributes = [
             'name' => $this->faker->sentence,
-            'description' => $this->faker->sentence
+            'description' => $this->faker->sentence,
+            'layout' => 'list',
         ];
 
         $response = $this->post('/projects', $attributes);
@@ -159,7 +160,7 @@ class ProjectsTest extends TestCase
         $this->assertEquals(3, $section3->weight);
 
         $this->actingAs($project->owner)
-            ->patch($project->path() . '/updatesectionweights', ['ids_by_weight' => [$section2->id, $section3->id, $section1->id]])
+            ->patch($project->path() . '/updatesectionweights', ['sections_array' => [$section2->id, $section3->id, $section1->id]])
             ->assertRedirect($project->path());
 
         $this->assertEquals(1, $section2->fresh()->weight);
@@ -182,16 +183,11 @@ class ProjectsTest extends TestCase
         $this->assertEquals(3, $task3->weight);
 
         $this->actingAs($project->owner)
-            ->patch($project->path() . '/updatetaskweights', ['ids_by_weight' => [$task2->id, $task3->id, $task1->id]])
+            ->patch($project->path() . '/updatetaskweights', ['tasks_array' => [[$section->id, [[$task2->id, 1], [$task3->id, 2], [$task1->id, 3]]]]])
             ->assertRedirect($project->path());
 
         $this->assertEquals(1, $task2->fresh()->weight);
         $this->assertEquals(2, $task3->fresh()->weight);
         $this->assertEquals(3, $task1->fresh()->weight);
-    }
-
-    /** @test **/
-    public function a_user_can_move_tasks_between_project_sections() {
-
     }
 }

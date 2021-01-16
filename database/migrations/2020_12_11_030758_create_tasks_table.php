@@ -22,7 +22,7 @@ class CreateTasksTable extends Migration
             $table->json('description')->nullable();
             $table->boolean('completed')->default(false);
             $table->date('due_date')->nullable();
-            $table->integer('weight');
+            $table->integer('weight')->nullable();
 
             $table->foreign('project_id')->references('id')->on('projects')->onDelete('cascade');
         });

@@ -8,11 +8,15 @@
         </div>
         <div class="border-t-2 border-color">
 
-            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks" :disabled="sort != null">
-                <div class="border-b-2 border-color" v-for="(task, index) in sortedTasks">
-                    <task-row v-bind:task="task" v-bind:draggable="sort != null ? false : true" @show="$emit('show', task)" @focusnew="focusNew()"/>
+            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks" v-if="completedFilter == 'Incomplete' && sort == null">
+                <div class="border-b-2 border-color" v-for="(task, index) in filteredTasks">
+                    <task-row v-bind:task="task" v-bind:draggable="sort != null ? false : true" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
                 </div>
             </draggable>
+
+            <div class="border-b-2 border-color" v-for="(task, index) in filteredTasks" v-if="completedFilter == 'Completed' || sort">
+                <task-row v-bind:task="task" v-bind:draggable="sort != null ? false : true" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
+            </div>
 
             <div>
                 <task-row-new v-bind:section="section" ref="newTaskInput"/>
@@ -30,7 +34,7 @@
     import draggable  from 'vuedraggable'
 
     export default {
-        props: ['section', 'sort'],
+        props: ['section', 'sort', 'completedFilter'],
 
         components: {
             TaskRow,
@@ -57,7 +61,22 @@
                 } else if(this.sort == 'alphabetical') {
                     output.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
                 } else {
-                    output.sort((a, b) => (a.weight > b.weight) ? 1 : -1);
+                    output.sort(function(a, b) {
+                        return (b.weight != null) - (a.weight != null) || a.weight - b.weight;
+                    });
+                }
+                return output;
+            },
+            filteredTasks() {
+                let output = this.sortedTasks;
+                if(this.completedFilter == 'Incomplete') {
+                    output = output.filter(function(task) {
+                        return task.completed == false;
+                    });
+                } else if(this.completedFilter == 'Completed') {
+                    output = output.filter(function(task) {
+                        return task.completed == true;
+                    });
                 }
                 return output;
             }

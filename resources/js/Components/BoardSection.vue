@@ -8,11 +8,16 @@
         </div>
 
         <div class="mx-2">
-            <draggable :list="section.tasks" @change="updateTaskWeights" group="tasks" :disabled="sort != null">
-                <div v-for="(task, index) in sortedTasks">
-                    <task-card v-bind:task="task" @show="$emit('show', task)" @focusnew="focusNew()"/>
+            <draggable :list="section.tasks" @change="updateTaskWeights" group="tasks" v-if="completedFilter == 'Incomplete' && sort == null">
+                <div v-for="(task, index) in filteredTasks">
+                    <task-card v-bind:task="task" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
                 </div>
             </draggable>
+
+            <div v-for="(task, index) in filteredTasks" v-if="completedFilter == 'Completed' || sort">
+                <task-card v-bind:task="task" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
+            </div>
+
 
             <div>
                 <task-card-new v-bind:section="section" ref="newTaskInput"/>
@@ -30,7 +35,7 @@
     import draggable  from 'vuedraggable'
 
     export default {
-        props: ['section', 'sort'],
+        props: ['section', 'sort', 'completedFilter'],
 
         components: {
             TaskCard,
@@ -57,7 +62,22 @@
                 } else if(this.sort == 'alphabetical') {
                     output.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
                 } else {
-                    output.sort((a, b) => (a.weight > b.weight) ? 1 : -1);
+                    output.sort(function(a, b) {
+                        return (b.weight != null) - (a.weight != null) || a.weight - b.weight;
+                    });
+                }
+                return output;
+            },
+            filteredTasks() {
+                let output = this.sortedTasks;
+                if(this.completedFilter == 'Incomplete') {
+                    output = output.filter(function(task) {
+                        return task.completed == false;
+                    });
+                } else if(this.completedFilter == 'Completed') {
+                    output = output.filter(function(task) {
+                        return task.completed == true;
+                    });
                 }
                 return output;
             }
@@ -82,7 +102,6 @@
                 }
             },
             updateTaskWeights(target) {
-                console.log('here 2');
                 this.$emit('updateTaskWeights', target);
             }
         }

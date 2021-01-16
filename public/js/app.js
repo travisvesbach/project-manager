@@ -2049,12 +2049,17 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['section', 'sort'],
+  props: ['section', 'sort', 'completedFilter'],
   components: {
     TaskCard: _Components_TaskCard__WEBPACK_IMPORTED_MODULE_0__["default"],
     TaskCardNew: _Components_TaskCardNew__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -2083,7 +2088,22 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         output.sort(function (a, b) {
-          return a.weight > b.weight ? 1 : -1;
+          return (b.weight != null) - (a.weight != null) || a.weight - b.weight;
+        });
+      }
+
+      return output;
+    },
+    filteredTasks: function filteredTasks() {
+      var output = this.sortedTasks;
+
+      if (this.completedFilter == 'Incomplete') {
+        output = output.filter(function (task) {
+          return task.completed == false;
+        });
+      } else if (this.completedFilter == 'Completed') {
+        output = output.filter(function (task) {
+          return task.completed == true;
         });
       }
 
@@ -2110,7 +2130,6 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     updateTaskWeights: function updateTaskWeights(target) {
-      console.log('here 2');
       this.$emit('updateTaskWeights', target);
     }
   }
@@ -2441,12 +2460,16 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['section', 'sort'],
+  props: ['section', 'sort', 'completedFilter'],
   components: {
     TaskRow: _Components_TaskRow__WEBPACK_IMPORTED_MODULE_0__["default"],
     TaskRowNew: _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -2475,7 +2498,22 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         output.sort(function (a, b) {
-          return a.weight > b.weight ? 1 : -1;
+          return (b.weight != null) - (a.weight != null) || a.weight - b.weight;
+        });
+      }
+
+      return output;
+    },
+    filteredTasks: function filteredTasks() {
+      var output = this.sortedTasks;
+
+      if (this.completedFilter == 'Incomplete') {
+        output = output.filter(function (task) {
+          return task.completed == false;
+        });
+      } else if (this.completedFilter == 'Completed') {
+        output = output.filter(function (task) {
+          return task.completed == true;
         });
       }
 
@@ -2772,7 +2810,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['task'],
+  props: ['task', 'section'],
   components: {
     InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
@@ -2781,7 +2819,8 @@ __webpack_require__.r(__webpack_exports__);
       form: this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        completed: this.task.completed
+        completed: this.task.completed,
+        weight: this.task.weight
       })
     };
   },
@@ -2795,14 +2834,19 @@ __webpack_require__.r(__webpack_exports__);
       this.form = this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        completed: this.task.completed
+        completed: this.task.completed,
+        weight: this.task.weight
       });
     }
   },
   methods: {
     toggleCompleted: function toggleCompleted() {
       this.task.completed = !this.task.completed ? true : false;
+      this.task.weight = this.task.completed ? null : Math.max.apply(Math, this.section.tasks.map(function (x) {
+        return x.weight;
+      })) + 1;
       this.form.completed = this.task.completed;
+      this.form.weight = this.task.weight;
       this.form.patch(this.task.path);
     }
   }
@@ -3074,7 +3118,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['task', 'draggable'],
+  props: ['task', 'draggable', 'section'],
   components: {
     InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
@@ -3083,7 +3127,8 @@ __webpack_require__.r(__webpack_exports__);
       form: this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        completed: this.task.completed
+        completed: this.task.completed,
+        weight: this.task.weight
       })
     };
   },
@@ -3097,7 +3142,8 @@ __webpack_require__.r(__webpack_exports__);
       this.form = this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        completed: this.task.completed
+        completed: this.task.completed,
+        weight: this.task.weight
       });
     }
   },
@@ -3114,7 +3160,11 @@ __webpack_require__.r(__webpack_exports__);
     },
     toggleCompleted: function toggleCompleted() {
       this.task.completed = !this.task.completed ? true : false;
+      this.task.weight = this.task.completed ? null : Math.max.apply(Math, this.section.tasks.map(function (x) {
+        return x.weight;
+      })) + 1;
       this.form.completed = this.task.completed;
+      this.form.weight = this.task.weight;
       this.form.patch(this.task.path);
     }
   }
@@ -6040,6 +6090,32 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -6109,6 +6185,7 @@ __webpack_require__.r(__webpack_exports__);
       showingUsers: false,
       layoutButton: false,
       sort: null,
+      completedFilter: 'Incomplete',
       form: this.$inertia.form({
         id: this.project.id,
         name: this.project.name,
@@ -6203,7 +6280,7 @@ __webpack_require__.r(__webpack_exports__);
         }
       });
       var weightForm = this.$inertia.form({
-        ids_by_weight: this.project.sections.map(function (obj) {
+        sections_array: this.project.sections.map(function (obj) {
           return obj.id;
         })
       });
@@ -6212,36 +6289,53 @@ __webpack_require__.r(__webpack_exports__);
       });
     },
     updateTaskWeights: function updateTaskWeights(target) {
+      var oldIndex = null;
       var newIndex = null;
       var targetId = null;
 
       if (target.added) {
+        oldIndex = target.added.oldIndex + 1;
         newIndex = target.added.newIndex + 1;
         targetId = target.added.element.id;
       } else if (target.moved) {
+        oldIndex = target.moved.oldIndex + 1;
         newIndex = target.moved.newIndex + 1;
         targetId = target.moved.element.id;
       }
 
       if (newIndex && targetId) {
-        this.project.sections.forEach(function (section, sectionIndex) {
-          section.tasks.forEach(function (task, taskIndex) {
-            task.section_id = section.id;
+        this.project.sections.forEach(function (section) {
+          var weight = 1;
+          section.tasks.forEach(function (task) {
+            task.section_id = section.id; // if section contains the modified task
 
-            if (task.id == targetId) {
-              task.weight = newIndex;
-            } else if (task.weight == newIndex && task.weight < taskIndex + 1) {
-              task.weight++;
+            if (section.tasks.some(function (x) {
+              return x.id === targetId;
+            }) && oldIndex) {
+              if (task.completed) {
+                task.weight = null;
+              } else if (task.id == targetId) {
+                task.weight = newIndex;
+              } else if (task.weight > oldIndex && task.weight <= newIndex) {
+                task.weight--;
+              } else if (task.weight < oldIndex && task.weight >= newIndex) {
+                task.weight++;
+              }
             } else {
-              task.weight = taskIndex + 1;
+              if (task.completed) {
+                task.weight = null;
+              } else {
+                task.weight = weight;
+                weight++;
+              }
             }
           });
         });
         var weightForm = this.$inertia.form({
-          ids_by_weight: this.project.sections.map(function (section) {
-            return section.tasks.map(function (task) {
-              return task.id;
-            });
+          tasks_array: this.project.sections.map(function (section) {
+            return [section.id, section.tasks.map(function (task) {
+              return [task.id, task.weight];
+            })];
           })
         });
         weightForm.patch(this.project.path + '/updatetaskweights', {
@@ -79791,37 +79885,57 @@ var render = function() {
       "div",
       { staticClass: "mx-2" },
       [
-        _c(
-          "draggable",
-          {
-            attrs: {
-              list: _vm.section.tasks,
-              group: "tasks",
-              disabled: _vm.sort != null
-            },
-            on: { change: _vm.updateTaskWeights }
-          },
-          _vm._l(_vm.sortedTasks, function(task, index) {
-            return _c(
-              "div",
-              [
-                _c("task-card", {
-                  attrs: { task: task },
-                  on: {
-                    show: function($event) {
-                      return _vm.$emit("show", task)
-                    },
-                    focusnew: function($event) {
-                      return _vm.focusNew()
-                    }
-                  }
-                })
-              ],
-              1
+        _vm.completedFilter == "Incomplete" && _vm.sort == null
+          ? _c(
+              "draggable",
+              {
+                attrs: { list: _vm.section.tasks, group: "tasks" },
+                on: { change: _vm.updateTaskWeights }
+              },
+              _vm._l(_vm.filteredTasks, function(task, index) {
+                return _c(
+                  "div",
+                  [
+                    _c("task-card", {
+                      attrs: { task: task, section: _vm.section },
+                      on: {
+                        show: function($event) {
+                          return _vm.$emit("show", task)
+                        },
+                        focusnew: function($event) {
+                          return _vm.focusNew()
+                        }
+                      }
+                    })
+                  ],
+                  1
+                )
+              }),
+              0
             )
-          }),
-          0
-        ),
+          : _vm._e(),
+        _vm._v(" "),
+        _vm._l(_vm.filteredTasks, function(task, index) {
+          return _vm.completedFilter == "Completed" || _vm.sort
+            ? _c(
+                "div",
+                [
+                  _c("task-card", {
+                    attrs: { task: task, section: _vm.section },
+                    on: {
+                      show: function($event) {
+                        return _vm.$emit("show", task)
+                      },
+                      focusnew: function($event) {
+                        return _vm.focusNew()
+                      }
+                    }
+                  })
+                ],
+                1
+              )
+            : _vm._e()
+        }),
         _vm._v(" "),
         _c(
           "div",
@@ -79834,7 +79948,7 @@ var render = function() {
           1
         )
       ],
-      1
+      2
     )
   ])
 }
@@ -80283,42 +80397,71 @@ var render = function() {
       "div",
       { staticClass: "border-t-2 border-color" },
       [
-        _c(
-          "draggable",
-          {
-            attrs: {
-              list: _vm.section.tasks,
-              handle: ".drag-task",
-              group: "tasks",
-              disabled: _vm.sort != null
-            },
-            on: { change: _vm.updateTaskWeights }
-          },
-          _vm._l(_vm.sortedTasks, function(task, index) {
-            return _c(
-              "div",
-              { staticClass: "border-b-2 border-color" },
-              [
-                _c("task-row", {
-                  attrs: {
-                    task: task,
-                    draggable: _vm.sort != null ? false : true
-                  },
-                  on: {
-                    show: function($event) {
-                      return _vm.$emit("show", task)
-                    },
-                    focusnew: function($event) {
-                      return _vm.focusNew()
-                    }
-                  }
-                })
-              ],
-              1
+        _vm.completedFilter == "Incomplete" && _vm.sort == null
+          ? _c(
+              "draggable",
+              {
+                attrs: {
+                  list: _vm.section.tasks,
+                  handle: ".drag-task",
+                  group: "tasks"
+                },
+                on: { change: _vm.updateTaskWeights }
+              },
+              _vm._l(_vm.filteredTasks, function(task, index) {
+                return _c(
+                  "div",
+                  { staticClass: "border-b-2 border-color" },
+                  [
+                    _c("task-row", {
+                      attrs: {
+                        task: task,
+                        draggable: _vm.sort != null ? false : true,
+                        section: _vm.section
+                      },
+                      on: {
+                        show: function($event) {
+                          return _vm.$emit("show", task)
+                        },
+                        focusnew: function($event) {
+                          return _vm.focusNew()
+                        }
+                      }
+                    })
+                  ],
+                  1
+                )
+              }),
+              0
             )
-          }),
-          0
-        ),
+          : _vm._e(),
+        _vm._v(" "),
+        _vm._l(_vm.filteredTasks, function(task, index) {
+          return _vm.completedFilter == "Completed" || _vm.sort
+            ? _c(
+                "div",
+                { staticClass: "border-b-2 border-color" },
+                [
+                  _c("task-row", {
+                    attrs: {
+                      task: task,
+                      draggable: _vm.sort != null ? false : true,
+                      section: _vm.section
+                    },
+                    on: {
+                      show: function($event) {
+                        return _vm.$emit("show", task)
+                      },
+                      focusnew: function($event) {
+                        return _vm.focusNew()
+                      }
+                    }
+                  })
+                ],
+                1
+              )
+            : _vm._e()
+        }),
         _vm._v(" "),
         _c(
           "div",
@@ -80331,7 +80474,7 @@ var render = function() {
           1
         )
       ],
-      1
+      2
     )
   ])
 }
@@ -86588,7 +86731,7 @@ var render = function() {
                               { staticClass: "flex link link-color" },
                               [
                                 _c("span", { staticClass: "text-base" }, [
-                                  _vm._v("Sort")
+                                  _vm._v(_vm._s(_vm.completedFilter) + " Tasks")
                                 ]),
                                 _vm._v(" "),
                                 _c(
@@ -86627,12 +86770,12 @@ var render = function() {
                                 attrs: { as: "button" },
                                 nativeOn: {
                                   click: function($event) {
-                                    _vm.sort = null
+                                    _vm.completedFilter = "Incomplete"
                                   }
                                 }
                               },
                               [
-                                _vm.sort == null
+                                _vm.completedFilter == "Incomplete"
                                   ? _c(
                                       "svg",
                                       {
@@ -86658,7 +86801,7 @@ var render = function() {
                                   : _vm._e(),
                                 _vm._v(" "),
                                 _c("span", { staticClass: "ml-6" }, [
-                                  _vm._v("None")
+                                  _vm._v("Incomplete Tasks")
                                 ])
                               ]
                             ),
@@ -86669,12 +86812,12 @@ var render = function() {
                                 attrs: { as: "button" },
                                 nativeOn: {
                                   click: function($event) {
-                                    _vm.sort = "due date"
+                                    _vm.completedFilter = "Completed"
                                   }
                                 }
                               },
                               [
-                                _vm.sort == "due date"
+                                _vm.completedFilter == "Completed"
                                   ? _c(
                                       "svg",
                                       {
@@ -86700,49 +86843,7 @@ var render = function() {
                                   : _vm._e(),
                                 _vm._v(" "),
                                 _c("span", { staticClass: "ml-6" }, [
-                                  _vm._v("Due Date")
-                                ])
-                              ]
-                            ),
-                            _vm._v(" "),
-                            _c(
-                              "jet-dropdown-link",
-                              {
-                                attrs: { as: "button" },
-                                nativeOn: {
-                                  click: function($event) {
-                                    _vm.sort = "alphabetical"
-                                  }
-                                }
-                              },
-                              [
-                                _vm.sort == "alphabetical"
-                                  ? _c(
-                                      "svg",
-                                      {
-                                        staticClass: "h-5 absolute",
-                                        attrs: {
-                                          xmlns: "http://www.w3.org/2000/svg",
-                                          fill: "none",
-                                          viewBox: "0 0 24 24",
-                                          stroke: "currentColor"
-                                        }
-                                      },
-                                      [
-                                        _c("path", {
-                                          attrs: {
-                                            "stroke-linecap": "round",
-                                            "stroke-linejoin": "round",
-                                            "stroke-width": "2",
-                                            d: "M5 13l4 4L19 7"
-                                          }
-                                        })
-                                      ]
-                                    )
-                                  : _vm._e(),
-                                _vm._v(" "),
-                                _c("span", { staticClass: "ml-6" }, [
-                                  _vm._v("Alphabetical")
+                                  _vm._v("Completed Tasks")
                                 ])
                               ]
                             )
@@ -86751,7 +86852,196 @@ var render = function() {
                         proxy: true
                       }
                     ])
-                  })
+                  }),
+                  _vm._v(" "),
+                  _vm.completedFilter == "Incomplete"
+                    ? _c("jet-dropdown", {
+                        staticClass: "mx-4 pb-1",
+                        attrs: { align: "left", width: "48" },
+                        scopedSlots: _vm._u(
+                          [
+                            {
+                              key: "trigger",
+                              fn: function() {
+                                return [
+                                  _c(
+                                    "button",
+                                    { staticClass: "flex link link-color" },
+                                    [
+                                      _c("span", { staticClass: "text-base" }, [
+                                        _vm._v("Sort")
+                                      ]),
+                                      _vm._v(" "),
+                                      _c(
+                                        "svg",
+                                        {
+                                          staticClass:
+                                            "fill-current h-4 w-4 ml-1",
+                                          attrs: {
+                                            xmlns: "http://www.w3.org/2000/svg",
+                                            viewBox: "0 0 20 20"
+                                          }
+                                        },
+                                        [
+                                          _c("path", {
+                                            attrs: {
+                                              "fill-rule": "evenodd",
+                                              d:
+                                                "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
+                                              "clip-rule": "evenodd"
+                                            }
+                                          })
+                                        ]
+                                      )
+                                    ]
+                                  )
+                                ]
+                              },
+                              proxy: true
+                            },
+                            {
+                              key: "content",
+                              fn: function() {
+                                return [
+                                  _c(
+                                    "jet-dropdown-link",
+                                    {
+                                      attrs: { as: "button" },
+                                      nativeOn: {
+                                        click: function($event) {
+                                          _vm.sort = null
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm.sort == null
+                                        ? _c(
+                                            "svg",
+                                            {
+                                              staticClass: "h-5 absolute",
+                                              attrs: {
+                                                xmlns:
+                                                  "http://www.w3.org/2000/svg",
+                                                fill: "none",
+                                                viewBox: "0 0 24 24",
+                                                stroke: "currentColor"
+                                              }
+                                            },
+                                            [
+                                              _c("path", {
+                                                attrs: {
+                                                  "stroke-linecap": "round",
+                                                  "stroke-linejoin": "round",
+                                                  "stroke-width": "2",
+                                                  d: "M5 13l4 4L19 7"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "ml-6" }, [
+                                        _vm._v("Drag & Drop")
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "jet-dropdown-link",
+                                    {
+                                      attrs: { as: "button" },
+                                      nativeOn: {
+                                        click: function($event) {
+                                          _vm.sort = "due date"
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm.sort == "due date"
+                                        ? _c(
+                                            "svg",
+                                            {
+                                              staticClass: "h-5 absolute",
+                                              attrs: {
+                                                xmlns:
+                                                  "http://www.w3.org/2000/svg",
+                                                fill: "none",
+                                                viewBox: "0 0 24 24",
+                                                stroke: "currentColor"
+                                              }
+                                            },
+                                            [
+                                              _c("path", {
+                                                attrs: {
+                                                  "stroke-linecap": "round",
+                                                  "stroke-linejoin": "round",
+                                                  "stroke-width": "2",
+                                                  d: "M5 13l4 4L19 7"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "ml-6" }, [
+                                        _vm._v("Due Date")
+                                      ])
+                                    ]
+                                  ),
+                                  _vm._v(" "),
+                                  _c(
+                                    "jet-dropdown-link",
+                                    {
+                                      attrs: { as: "button" },
+                                      nativeOn: {
+                                        click: function($event) {
+                                          _vm.sort = "alphabetical"
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm.sort == "alphabetical"
+                                        ? _c(
+                                            "svg",
+                                            {
+                                              staticClass: "h-5 absolute",
+                                              attrs: {
+                                                xmlns:
+                                                  "http://www.w3.org/2000/svg",
+                                                fill: "none",
+                                                viewBox: "0 0 24 24",
+                                                stroke: "currentColor"
+                                              }
+                                            },
+                                            [
+                                              _c("path", {
+                                                attrs: {
+                                                  "stroke-linecap": "round",
+                                                  "stroke-linejoin": "round",
+                                                  "stroke-width": "2",
+                                                  d: "M5 13l4 4L19 7"
+                                                }
+                                              })
+                                            ]
+                                          )
+                                        : _vm._e(),
+                                      _vm._v(" "),
+                                      _c("span", { staticClass: "ml-6" }, [
+                                        _vm._v("Alphabetical")
+                                      ])
+                                    ]
+                                  )
+                                ]
+                              },
+                              proxy: true
+                            }
+                          ],
+                          null,
+                          false,
+                          2903487861
+                        )
+                      })
+                    : _vm._e()
                 ],
                 1
               )
@@ -86803,7 +87093,11 @@ var render = function() {
                         return _c("list-section", {
                           key: key,
                           staticClass: "mt-5",
-                          attrs: { section: section, sort: _vm.sort },
+                          attrs: {
+                            section: section,
+                            sort: _vm.sort,
+                            completedFilter: _vm.completedFilter
+                          },
                           on: {
                             show: _vm.showTask,
                             updateTaskWeights: _vm.updateTaskWeights
@@ -86844,7 +87138,11 @@ var render = function() {
                       _vm._l(_vm.project.sections, function(section, key) {
                         return _c("board-section", {
                           key: key,
-                          attrs: { section: section, sort: _vm.sort },
+                          attrs: {
+                            section: section,
+                            sort: _vm.sort,
+                            completedFilter: _vm.completedFilter
+                          },
                           on: {
                             show: _vm.showTask,
                             updateTaskWeights: _vm.updateTaskWeights
