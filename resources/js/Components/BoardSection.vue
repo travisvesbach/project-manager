@@ -8,13 +8,13 @@
         </div>
 
         <div class="mx-2">
-            <draggable :list="section.tasks" @change="updateTaskWeights" group="tasks" v-if="completedFilter == 'Incomplete' && sort == null">
+            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks" v-if="sort == null">
                 <div v-for="(task, index) in filteredTasks">
                     <task-card v-bind:task="task" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
                 </div>
             </draggable>
 
-            <div v-for="(task, index) in filteredTasks" v-if="completedFilter == 'Completed' || sort">
+            <div v-for="(task, index) in filteredTasks" v-if="sort">
                 <task-card v-bind:task="task" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
             </div>
 

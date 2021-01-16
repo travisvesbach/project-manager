@@ -49,7 +49,7 @@
                 <jet-dropdown class="mx-4 pb-1" align="left" width="48">
                     <template #trigger>
                         <button class="flex link link-color">
-                            <span class="text-base">{{ completedFilter }} Tasks</span>
+                            <span class="text-base">{{ completedFilter }}</span>
                             <svg class="fill-current h-4 w-4 ml-1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
                                 <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
                             </svg>
@@ -69,6 +69,13 @@
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                             </svg>
                             <span class="ml-6">Completed Tasks</span>
+                        </jet-dropdown-link>
+
+                        <jet-dropdown-link @click.native="completedFilter = 'All'" as="button">
+                            <svg v-if="completedFilter == 'All'" class="h-5 absolute" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                            </svg>
+                            <span class="ml-6">All Tasks</span>
                         </jet-dropdown-link>
                     </template>
                 </jet-dropdown>

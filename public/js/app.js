@@ -3118,7 +3118,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['task', 'draggable', 'section'],
+  props: ['task', 'section', 'draggable'],
   components: {
     InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_0__["default"]
   },
@@ -5854,6 +5854,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_25__ = __webpack_require__(/*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.umd.js");
 /* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_25___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_25__);
 /* harmony import */ var _Directives_OutsideClick__WEBPACK_IMPORTED_MODULE_26__ = __webpack_require__(/*! @/Directives/OutsideClick */ "./resources/js/Directives/OutsideClick.js");
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -79885,11 +79892,15 @@ var render = function() {
       "div",
       { staticClass: "mx-2" },
       [
-        _vm.completedFilter == "Incomplete" && _vm.sort == null
+        _vm.sort == null
           ? _c(
               "draggable",
               {
-                attrs: { list: _vm.section.tasks, group: "tasks" },
+                attrs: {
+                  list: _vm.section.tasks,
+                  handle: ".drag-task",
+                  group: "tasks"
+                },
                 on: { change: _vm.updateTaskWeights }
               },
               _vm._l(_vm.filteredTasks, function(task, index) {
@@ -79916,7 +79927,7 @@ var render = function() {
           : _vm._e(),
         _vm._v(" "),
         _vm._l(_vm.filteredTasks, function(task, index) {
-          return _vm.completedFilter == "Completed" || _vm.sort
+          return _vm.sort
             ? _c(
                 "div",
                 [
@@ -80397,7 +80408,7 @@ var render = function() {
       "div",
       { staticClass: "border-t-2 border-color" },
       [
-        _vm.completedFilter == "Incomplete" && _vm.sort == null
+        _vm.sort == null
           ? _c(
               "draggable",
               {
@@ -80437,7 +80448,7 @@ var render = function() {
           : _vm._e(),
         _vm._v(" "),
         _vm._l(_vm.filteredTasks, function(task, index) {
-          return _vm.completedFilter == "Completed" || _vm.sort
+          return _vm.sort
             ? _c(
                 "div",
                 { staticClass: "border-b-2 border-color" },
@@ -80831,8 +80842,10 @@ var render = function() {
     "button",
     {
       staticClass:
-        "w-full relative flex flex-col focus:outline-none focus:border-0 my-2 p-2 rounded-lg card-color",
-      class: this.task.completed ? "text-secondary-color" : "text-color",
+        "w-full relative flex flex-col focus:outline-none focus:border-0 my-2 p-2 rounded-lg",
+      class: this.task.completed
+        ? "text-secondary-color card-secondary-color"
+        : "text-color card-color drag-task",
       attrs: { title: "details" },
       on: {
         click: function($event) {
@@ -80886,7 +80899,7 @@ var render = function() {
               _c(
                 "svg",
                 {
-                  staticClass: "h-5 inline-block text-color",
+                  staticClass: "h-5 inline-block",
                   attrs: {
                     xmlns: "http://www.w3.org/2000/svg",
                     fill: "none",
@@ -81349,7 +81362,7 @@ var render = function() {
         {
           staticClass:
             "ml-3 h-4 inline-block text-secondary-color drag-task cursor-move",
-          class: _vm.draggable ? "" : "invisible",
+          class: _vm.draggable && !_vm.task.completed ? "" : "invisible",
           attrs: {
             xmlns: "http://www.w3.org/2000/svg",
             fill: "none",
@@ -81480,7 +81493,7 @@ var render = function() {
               _c(
                 "svg",
                 {
-                  staticClass: "h-3 inline-block text-color",
+                  staticClass: "h-3 inline-block",
                   attrs: {
                     xmlns: "http://www.w3.org/2000/svg",
                     fill: "none",
@@ -86731,7 +86744,7 @@ var render = function() {
                               { staticClass: "flex link link-color" },
                               [
                                 _c("span", { staticClass: "text-base" }, [
-                                  _vm._v(_vm._s(_vm.completedFilter) + " Tasks")
+                                  _vm._v(_vm._s(_vm.completedFilter))
                                 ]),
                                 _vm._v(" "),
                                 _c(
@@ -86844,6 +86857,48 @@ var render = function() {
                                 _vm._v(" "),
                                 _c("span", { staticClass: "ml-6" }, [
                                   _vm._v("Completed Tasks")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "jet-dropdown-link",
+                              {
+                                attrs: { as: "button" },
+                                nativeOn: {
+                                  click: function($event) {
+                                    _vm.completedFilter = "All"
+                                  }
+                                }
+                              },
+                              [
+                                _vm.completedFilter == "All"
+                                  ? _c(
+                                      "svg",
+                                      {
+                                        staticClass: "h-5 absolute",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          fill: "none",
+                                          viewBox: "0 0 24 24",
+                                          stroke: "currentColor"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            "stroke-linecap": "round",
+                                            "stroke-linejoin": "round",
+                                            "stroke-width": "2",
+                                            d: "M5 13l4 4L19 7"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "ml-6" }, [
+                                  _vm._v("All Tasks")
                                 ])
                               ]
                             )

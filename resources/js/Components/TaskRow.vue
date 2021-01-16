@@ -1,6 +1,6 @@
 <template>
     <div class="ml-4 my-1 flex items-center h-7" :class="this.task.completed ? 'text-secondary-color' : 'text-color'">
-        <svg class="ml-3 h-4 inline-block text-secondary-color drag-task cursor-move" :class="draggable ? '' : 'invisible'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <svg class="ml-3 h-4 inline-block text-secondary-color drag-task cursor-move" :class="draggable && !task.completed ? '' : 'invisible'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
         </svg>
         <svg class="h-5 ml-3 inline-block hover:text-green-500" :class="task.completed ? 'text-green-500' : ''" @click="toggleCompleted()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -20,7 +20,7 @@
         <div class="inline-block border-l-2 border-color pl-2">
 
             <div class="flex items-center w-24" v-if="due_date">
-                <svg class="h-3 inline-block text-color" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg class="h-3 inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                 </svg>
                 <span class="ml-1 text-sm">{{ due_date }}</span>
@@ -36,7 +36,7 @@
     import moment from 'moment'
 
     export default {
-        props: ['task', 'draggable', 'section'],
+        props: ['task', 'section', 'draggable'],
 
         components: {
             InputHidden,
