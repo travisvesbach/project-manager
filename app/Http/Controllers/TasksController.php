@@ -28,18 +28,6 @@ class TasksController extends Controller
         return redirect($project->path());
     }
 
-    public function complete(TaskRequest $request, Project $project, Task $task) {
-        if(!$task->completed) {
-            $task->complete();
-        }
-    }
-
-    public function incomplete(TaskRequest $request, Project $project, Task $task) {
-        if($task->completed) {
-            $task->incomplete();
-        }
-    }
-
     public function destroy(Project $project, Task $task) {
         $this->authorize('update', $project);
 
