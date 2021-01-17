@@ -1969,10 +1969,12 @@ __webpack_require__.r(__webpack_exports__);
         case 'updated_task':
           var identifier = this["for"] == 'task' ? 'this task' : '<strong>' + this.activity.subject.name + '</strong>';
 
-          if (Object.keys(this.activity.changes.after)[0] == 'completed') {
-            description += 'marked ' + identifier + (this.activity.changes.after.completed ? ' complete' : ' incomplete');
-          } else if (Object.keys(this.activity.changes.after).length == 1) {
-            description += 'updated ' + identifier + '\'s ' + Object.keys(this.activity.changes.after)[0];
+          if (Object.keys(this.activity.changes.after).length == 1) {
+            if (Object.keys(this.activity.changes.after)[0] == 'completed') {
+              description += 'marked ' + identifier + (this.activity.changes.after.completed ? ' complete' : ' incomplete');
+            } else {
+              description += 'updated ' + identifier + '\'s ' + Object.keys(this.activity.changes.after)[0];
+            }
           } else {
             description += 'updated ' + identifier;
           }
