@@ -2021,11 +2021,17 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Components_TaskCard__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/TaskCard */ "./resources/js/Components/TaskCard.vue");
-/* harmony import */ var _Components_TaskCardNew__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/TaskCardNew */ "./resources/js/Components/TaskCardNew.vue");
-/* harmony import */ var _Components_InputHidden__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/InputHidden */ "./resources/js/Components/InputHidden.vue");
-/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.umd.js");
-/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Jetstream_Dropdown__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Jetstream/Dropdown */ "./resources/js/Jetstream/Dropdown.vue");
+/* harmony import */ var _Jetstream_DropdownLink__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Jetstream/DropdownLink */ "./resources/js/Jetstream/DropdownLink.vue");
+/* harmony import */ var _Jetstream_ConfirmationModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Jetstream/ConfirmationModal */ "./resources/js/Jetstream/ConfirmationModal.vue");
+/* harmony import */ var _Jetstream_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/Button */ "./resources/js/Jetstream/Button.vue");
+/* harmony import */ var _Jetstream_SecondaryButton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Jetstream/SecondaryButton */ "./resources/js/Jetstream/SecondaryButton.vue");
+/* harmony import */ var _Jetstream_DangerButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Jetstream/DangerButton */ "./resources/js/Jetstream/DangerButton.vue");
+/* harmony import */ var _Components_TaskCard__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/TaskCard */ "./resources/js/Components/TaskCard.vue");
+/* harmony import */ var _Components_TaskCardNew__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/TaskCardNew */ "./resources/js/Components/TaskCardNew.vue");
+/* harmony import */ var _Components_InputHidden__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/InputHidden */ "./resources/js/Components/InputHidden.vue");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.umd.js");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_9__);
 //
 //
 //
@@ -2054,23 +2060,87 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['section', 'sort', 'completedFilter'],
+  props: ['section', 'project', 'sort', 'completedFilter'],
   components: {
-    TaskCard: _Components_TaskCard__WEBPACK_IMPORTED_MODULE_0__["default"],
-    TaskCardNew: _Components_TaskCardNew__WEBPACK_IMPORTED_MODULE_1__["default"],
-    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_2__["default"],
-    draggable: vuedraggable__WEBPACK_IMPORTED_MODULE_3___default.a
+    JetDropdown: _Jetstream_Dropdown__WEBPACK_IMPORTED_MODULE_0__["default"],
+    JetDropdownLink: _Jetstream_DropdownLink__WEBPACK_IMPORTED_MODULE_1__["default"],
+    JetConfirmationModal: _Jetstream_ConfirmationModal__WEBPACK_IMPORTED_MODULE_2__["default"],
+    JetButton: _Jetstream_Button__WEBPACK_IMPORTED_MODULE_3__["default"],
+    JetSecondaryButton: _Jetstream_SecondaryButton__WEBPACK_IMPORTED_MODULE_4__["default"],
+    JetDangerButton: _Jetstream_DangerButton__WEBPACK_IMPORTED_MODULE_5__["default"],
+    TaskCard: _Components_TaskCard__WEBPACK_IMPORTED_MODULE_6__["default"],
+    TaskCardNew: _Components_TaskCardNew__WEBPACK_IMPORTED_MODULE_7__["default"],
+    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_8__["default"],
+    draggable: vuedraggable__WEBPACK_IMPORTED_MODULE_9___default.a
   },
   data: function data() {
     return {
+      confirmingDeleteSection: false,
       form: this.$inertia.form({
         id: this.section.id,
         name: this.section.name
+      }),
+      deleteForm: this.$inertia.form({
+        '_method': 'DELETE',
+        tasks: 'keep'
       })
     };
   },
@@ -2131,6 +2201,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     updateTaskWeights: function updateTaskWeights(target) {
       this.$emit('updateTaskWeights', target);
+    },
+    deleteSection: function deleteSection() {
+      this.deleteForm.post(this.section.path);
     }
   }
 });
@@ -2432,11 +2505,17 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _Components_TaskRow__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Components/TaskRow */ "./resources/js/Components/TaskRow.vue");
-/* harmony import */ var _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/TaskRowNew */ "./resources/js/Components/TaskRowNew.vue");
-/* harmony import */ var _Components_InputHidden__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/InputHidden */ "./resources/js/Components/InputHidden.vue");
-/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.umd.js");
-/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _Jetstream_Dropdown__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Jetstream/Dropdown */ "./resources/js/Jetstream/Dropdown.vue");
+/* harmony import */ var _Jetstream_DropdownLink__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Jetstream/DropdownLink */ "./resources/js/Jetstream/DropdownLink.vue");
+/* harmony import */ var _Jetstream_ConfirmationModal__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Jetstream/ConfirmationModal */ "./resources/js/Jetstream/ConfirmationModal.vue");
+/* harmony import */ var _Jetstream_Button__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/Button */ "./resources/js/Jetstream/Button.vue");
+/* harmony import */ var _Jetstream_SecondaryButton__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Jetstream/SecondaryButton */ "./resources/js/Jetstream/SecondaryButton.vue");
+/* harmony import */ var _Jetstream_DangerButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Jetstream/DangerButton */ "./resources/js/Jetstream/DangerButton.vue");
+/* harmony import */ var _Components_TaskRow__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/TaskRow */ "./resources/js/Components/TaskRow.vue");
+/* harmony import */ var _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/TaskRowNew */ "./resources/js/Components/TaskRowNew.vue");
+/* harmony import */ var _Components_InputHidden__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/InputHidden */ "./resources/js/Components/InputHidden.vue");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! vuedraggable */ "./node_modules/vuedraggable/dist/vuedraggable.umd.js");
+/* harmony import */ var vuedraggable__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(vuedraggable__WEBPACK_IMPORTED_MODULE_9__);
 //
 //
 //
@@ -2464,23 +2543,86 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+
+
 
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['section', 'sort', 'completedFilter'],
+  props: ['section', 'project', 'sort', 'completedFilter'],
   components: {
-    TaskRow: _Components_TaskRow__WEBPACK_IMPORTED_MODULE_0__["default"],
-    TaskRowNew: _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_1__["default"],
-    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_2__["default"],
-    draggable: vuedraggable__WEBPACK_IMPORTED_MODULE_3___default.a
+    JetDropdown: _Jetstream_Dropdown__WEBPACK_IMPORTED_MODULE_0__["default"],
+    JetDropdownLink: _Jetstream_DropdownLink__WEBPACK_IMPORTED_MODULE_1__["default"],
+    JetConfirmationModal: _Jetstream_ConfirmationModal__WEBPACK_IMPORTED_MODULE_2__["default"],
+    JetButton: _Jetstream_Button__WEBPACK_IMPORTED_MODULE_3__["default"],
+    JetSecondaryButton: _Jetstream_SecondaryButton__WEBPACK_IMPORTED_MODULE_4__["default"],
+    JetDangerButton: _Jetstream_DangerButton__WEBPACK_IMPORTED_MODULE_5__["default"],
+    TaskRow: _Components_TaskRow__WEBPACK_IMPORTED_MODULE_6__["default"],
+    TaskRowNew: _Components_TaskRowNew__WEBPACK_IMPORTED_MODULE_7__["default"],
+    InputHidden: _Components_InputHidden__WEBPACK_IMPORTED_MODULE_8__["default"],
+    draggable: vuedraggable__WEBPACK_IMPORTED_MODULE_9___default.a
   },
   data: function data() {
     return {
+      confirmingDeleteSection: false,
       form: this.$inertia.form({
         id: this.section.id,
         name: this.section.name
+      }),
+      deleteForm: this.$inertia.form({
+        '_method': 'DELETE',
+        tasks: 'keep'
       })
     };
   },
@@ -2541,6 +2683,9 @@ __webpack_require__.r(__webpack_exports__);
     },
     updateTaskWeights: function updateTaskWeights(target) {
       this.$emit('updateTaskWeights', target);
+    },
+    deleteSection: function deleteSection() {
+      this.deleteForm.post(this.section.path);
     }
   }
 });
@@ -79831,80 +79976,179 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", { staticClass: "w-64 inline-block align-top" }, [
-    _c(
-      "div",
-      { staticClass: "flex items-center" },
-      [
-        _c(
-          "svg",
-          {
-            staticClass:
-              "ml-3 h-4 inline-block text-secondary-color drag-section cursor-move",
-            attrs: {
-              xmlns: "http://www.w3.org/2000/svg",
-              fill: "none",
-              viewBox: "0 0 24 24",
-              stroke: "currentColor"
-            }
-          },
-          [
-            _c("path", {
+  return _c(
+    "div",
+    { staticClass: "w-64 inline-block align-top" },
+    [
+      _c(
+        "div",
+        { staticClass: "flex items-center hover-trigger" },
+        [
+          _c(
+            "svg",
+            {
+              staticClass:
+                "ml-3 h-4 inline-block text-secondary-color drag-section cursor-move",
               attrs: {
-                "stroke-linecap": "round",
-                "stroke-linejoin": "round",
-                "stroke-width": "2",
-                d: "M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                xmlns: "http://www.w3.org/2000/svg",
+                fill: "none",
+                viewBox: "0 0 24 24",
+                stroke: "currentColor"
               }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("input-hidden", {
-          staticClass: "ml-1 text-lg heading-color",
-          nativeOn: {
-            blur: function($event) {
-              return _vm.updateSection()
             },
-            keyup: function($event) {
-              if (
-                !$event.type.indexOf("key") &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              return $event.target.blur()
-            }
-          },
-          model: {
-            value: _vm.form.name,
-            callback: function($$v) {
-              _vm.$set(_vm.form, "name", $$v)
-            },
-            expression: "form.name"
-          }
-        })
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "mx-2" },
-      [
-        _vm.sort == null
-          ? _c(
-              "draggable",
-              {
+            [
+              _c("path", {
                 attrs: {
-                  list: _vm.section.tasks,
-                  handle: ".drag-task",
-                  group: "tasks"
-                },
-                on: { change: _vm.updateTaskWeights }
+                  "stroke-linecap": "round",
+                  "stroke-linejoin": "round",
+                  "stroke-width": "2",
+                  d: "M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                }
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c("input-hidden", {
+            staticClass: "ml-1 text-lg heading-color",
+            nativeOn: {
+              blur: function($event) {
+                return _vm.updateSection()
               },
-              _vm._l(_vm.filteredTasks, function(task, index) {
-                return _c(
+              keyup: function($event) {
+                if (
+                  !$event.type.indexOf("key") &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return $event.target.blur()
+              }
+            },
+            model: {
+              value: _vm.form.name,
+              callback: function($$v) {
+                _vm.$set(_vm.form, "name", $$v)
+              },
+              expression: "form.name"
+            }
+          }),
+          _vm._v(" "),
+          _vm.project.sections.length > 1
+            ? _c("jet-dropdown", {
+                staticClass: "hover-target",
+                attrs: { align: "left", width: "48" },
+                scopedSlots: _vm._u(
+                  [
+                    {
+                      key: "trigger",
+                      fn: function() {
+                        return [
+                          _c(
+                            "button",
+                            { staticClass: "flex link link-color" },
+                            [
+                              _c(
+                                "svg",
+                                {
+                                  staticClass: "fill-current h-4 w-4",
+                                  attrs: {
+                                    xmlns: "http://www.w3.org/2000/svg",
+                                    viewBox: "0 0 20 20"
+                                  }
+                                },
+                                [
+                                  _c("path", {
+                                    attrs: {
+                                      "fill-rule": "evenodd",
+                                      d:
+                                        "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
+                                      "clip-rule": "evenodd"
+                                    }
+                                  })
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      },
+                      proxy: true
+                    },
+                    {
+                      key: "content",
+                      fn: function() {
+                        return [
+                          _c(
+                            "jet-dropdown-link",
+                            {
+                              attrs: { as: "button" },
+                              nativeOn: {
+                                click: function($event) {
+                                  _vm.confirmingDeleteSection = true
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                    Delete Section\n                "
+                              )
+                            ]
+                          )
+                        ]
+                      },
+                      proxy: true
+                    }
+                  ],
+                  null,
+                  false,
+                  380101645
+                )
+              })
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "mx-2" },
+        [
+          _vm.sort == null
+            ? _c(
+                "draggable",
+                {
+                  attrs: {
+                    list: _vm.section.tasks,
+                    handle: ".drag-task",
+                    group: "tasks"
+                  },
+                  on: { change: _vm.updateTaskWeights }
+                },
+                _vm._l(_vm.filteredTasks, function(task, index) {
+                  return _c(
+                    "div",
+                    [
+                      _c("task-card", {
+                        attrs: { task: task, section: _vm.section },
+                        on: {
+                          show: function($event) {
+                            return _vm.$emit("show", task)
+                          },
+                          focusnew: function($event) {
+                            return _vm.focusNew()
+                          }
+                        }
+                      })
+                    ],
+                    1
+                  )
+                }),
+                0
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.filteredTasks, function(task, index) {
+            return _vm.sort
+              ? _c(
                   "div",
                   [
                     _c("task-card", {
@@ -79921,47 +80165,154 @@ var render = function() {
                   ],
                   1
                 )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm._l(_vm.filteredTasks, function(task, index) {
-          return _vm.sort
-            ? _c(
-                "div",
-                [
-                  _c("task-card", {
-                    attrs: { task: task, section: _vm.section },
-                    on: {
-                      show: function($event) {
-                        return _vm.$emit("show", task)
+              : _vm._e()
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            [
+              _c("task-card-new", {
+                ref: "newTaskInput",
+                attrs: { section: _vm.section }
+              })
+            ],
+            1
+          )
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("jet-confirmation-modal", {
+        attrs: { show: _vm.confirmingDeleteSection },
+        on: {
+          close: function($event) {
+            _vm.confirmingDeleteSection = false
+          }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("\n            Delete Section\n        ")]
+            },
+            proxy: true
+          },
+          {
+            key: "content",
+            fn: function() {
+              return [
+                _c("p", [
+                  _vm._v(
+                    "\n                This seciton includes " +
+                      _vm._s(
+                        _vm.section.tasks.filter(function(x) {
+                          return x.completed === true
+                        }).length
+                      ) +
+                      " completed tasks and " +
+                      _vm._s(
+                        _vm.section.tasks.filter(function(x) {
+                          return x.completed === false
+                        }).length
+                      ) +
+                      " incomplete tasks.\n            "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "mt-5" }, [
+                  _c("label", [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.deleteForm.tasks,
+                          expression: "deleteForm.tasks"
+                        }
+                      ],
+                      attrs: { type: "radio", id: "keep", value: "keep" },
+                      domProps: {
+                        checked: _vm._q(_vm.deleteForm.tasks, "keep")
                       },
-                      focusnew: function($event) {
-                        return _vm.focusNew()
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(_vm.deleteForm, "tasks", "keep")
+                        }
+                      }
+                    }),
+                    _vm._v(" Delete this section, but keep all its tasks")
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("label", [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.deleteForm.tasks,
+                          expression: "deleteForm.tasks"
+                        }
+                      ],
+                      attrs: { type: "radio", id: "delete", value: "delete" },
+                      domProps: {
+                        checked: _vm._q(_vm.deleteForm.tasks, "delete")
+                      },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(_vm.deleteForm, "tasks", "delete")
+                        }
+                      }
+                    }),
+                    _vm._v(" Delete this section and delete all its tasks")
+                  ])
+                ])
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "footer",
+            fn: function() {
+              return [
+                _c(
+                  "jet-secondary-button",
+                  {
+                    nativeOn: {
+                      click: function($event) {
+                        _vm.confirmingDeleteSection = false
                       }
                     }
-                  })
-                ],
-                1
-              )
-            : _vm._e()
-        }),
-        _vm._v(" "),
-        _c(
-          "div",
-          [
-            _c("task-card-new", {
-              ref: "newTaskInput",
-              attrs: { section: _vm.section }
-            })
-          ],
-          1
-        )
-      ],
-      2
-    )
-  ])
+                  },
+                  [_vm._v("\n                Cancel\n            ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "jet-danger-button",
+                  {
+                    staticClass: "ml-2",
+                    class: { "opacity-25": _vm.deleteForm.processing },
+                    attrs: { disabled: _vm.deleteForm.processing },
+                    nativeOn: {
+                      click: function($event) {
+                        return _vm.deleteSection($event)
+                      }
+                    }
+                  },
+                  [_vm._v("\n                Delete Section\n            ")]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -80347,80 +80698,183 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _c(
-      "div",
-      { staticClass: "flex items-center" },
-      [
-        _c(
-          "svg",
-          {
-            staticClass:
-              "ml-3 h-4 inline-block text-secondary-color drag-section cursor-move",
-            attrs: {
-              xmlns: "http://www.w3.org/2000/svg",
-              fill: "none",
-              viewBox: "0 0 24 24",
-              stroke: "currentColor"
-            }
-          },
-          [
-            _c("path", {
+  return _c(
+    "div",
+    [
+      _c(
+        "div",
+        { staticClass: "flex items-center hover-trigger" },
+        [
+          _c(
+            "svg",
+            {
+              staticClass:
+                "ml-3 h-4 inline-block text-secondary-color drag-section cursor-move",
               attrs: {
-                "stroke-linecap": "round",
-                "stroke-linejoin": "round",
-                "stroke-width": "2",
-                d: "M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                xmlns: "http://www.w3.org/2000/svg",
+                fill: "none",
+                viewBox: "0 0 24 24",
+                stroke: "currentColor"
               }
-            })
-          ]
-        ),
-        _vm._v(" "),
-        _c("input-hidden", {
-          staticClass: "ml-1 text-lg heading-color",
-          nativeOn: {
-            blur: function($event) {
-              return _vm.updateSection()
             },
-            keyup: function($event) {
-              if (
-                !$event.type.indexOf("key") &&
-                _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
-              ) {
-                return null
-              }
-              return $event.target.blur()
-            }
-          },
-          model: {
-            value: _vm.form.name,
-            callback: function($$v) {
-              _vm.$set(_vm.form, "name", $$v)
-            },
-            expression: "form.name"
-          }
-        })
-      ],
-      1
-    ),
-    _vm._v(" "),
-    _c(
-      "div",
-      { staticClass: "border-t-2 border-color" },
-      [
-        _vm.sort == null
-          ? _c(
-              "draggable",
-              {
+            [
+              _c("path", {
                 attrs: {
-                  list: _vm.section.tasks,
-                  handle: ".drag-task",
-                  group: "tasks"
-                },
-                on: { change: _vm.updateTaskWeights }
+                  "stroke-linecap": "round",
+                  "stroke-linejoin": "round",
+                  "stroke-width": "2",
+                  d: "M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4"
+                }
+              })
+            ]
+          ),
+          _vm._v(" "),
+          _c("input-hidden", {
+            staticClass: "ml-1 text-lg heading-color",
+            nativeOn: {
+              blur: function($event) {
+                return _vm.updateSection()
               },
-              _vm._l(_vm.filteredTasks, function(task, index) {
-                return _c(
+              keyup: function($event) {
+                if (
+                  !$event.type.indexOf("key") &&
+                  _vm._k($event.keyCode, "enter", 13, $event.key, "Enter")
+                ) {
+                  return null
+                }
+                return $event.target.blur()
+              }
+            },
+            model: {
+              value: _vm.form.name,
+              callback: function($$v) {
+                _vm.$set(_vm.form, "name", $$v)
+              },
+              expression: "form.name"
+            }
+          }),
+          _vm._v(" "),
+          _vm.project.sections.length > 1
+            ? _c("jet-dropdown", {
+                staticClass: "hover-target",
+                attrs: { align: "left", width: "48" },
+                scopedSlots: _vm._u(
+                  [
+                    {
+                      key: "trigger",
+                      fn: function() {
+                        return [
+                          _c(
+                            "button",
+                            { staticClass: "flex link link-color" },
+                            [
+                              _c(
+                                "svg",
+                                {
+                                  staticClass: "fill-current h-4 w-4",
+                                  attrs: {
+                                    xmlns: "http://www.w3.org/2000/svg",
+                                    viewBox: "0 0 20 20"
+                                  }
+                                },
+                                [
+                                  _c("path", {
+                                    attrs: {
+                                      "fill-rule": "evenodd",
+                                      d:
+                                        "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
+                                      "clip-rule": "evenodd"
+                                    }
+                                  })
+                                ]
+                              )
+                            ]
+                          )
+                        ]
+                      },
+                      proxy: true
+                    },
+                    {
+                      key: "content",
+                      fn: function() {
+                        return [
+                          _c(
+                            "jet-dropdown-link",
+                            {
+                              attrs: { as: "button" },
+                              nativeOn: {
+                                click: function($event) {
+                                  _vm.confirmingDeleteSection = true
+                                }
+                              }
+                            },
+                            [
+                              _vm._v(
+                                "\n                    Delete Section\n                "
+                              )
+                            ]
+                          )
+                        ]
+                      },
+                      proxy: true
+                    }
+                  ],
+                  null,
+                  false,
+                  380101645
+                )
+              })
+            : _vm._e()
+        ],
+        1
+      ),
+      _vm._v(" "),
+      _c(
+        "div",
+        { staticClass: "border-t-2 border-color" },
+        [
+          _vm.sort == null
+            ? _c(
+                "draggable",
+                {
+                  attrs: {
+                    list: _vm.section.tasks,
+                    handle: ".drag-task",
+                    group: "tasks"
+                  },
+                  on: { change: _vm.updateTaskWeights }
+                },
+                _vm._l(_vm.filteredTasks, function(task, index) {
+                  return _c(
+                    "div",
+                    { staticClass: "border-b-2 border-color" },
+                    [
+                      _c("task-row", {
+                        attrs: {
+                          task: task,
+                          draggable: _vm.sort != null ? false : true,
+                          section: _vm.section
+                        },
+                        on: {
+                          show: function($event) {
+                            return _vm.$emit("show", task)
+                          },
+                          focusnew: function($event) {
+                            return _vm.focusNew()
+                          }
+                        }
+                      })
+                    ],
+                    1
+                  )
+                }),
+                0
+              )
+            : _vm._e(),
+          _vm._v(" "),
+          _vm._l(_vm.filteredTasks, function(task, index) {
+            return _vm.sort
+              ? _c(
                   "div",
                   { staticClass: "border-b-2 border-color" },
                   [
@@ -80442,52 +80896,154 @@ var render = function() {
                   ],
                   1
                 )
-              }),
-              0
-            )
-          : _vm._e(),
-        _vm._v(" "),
-        _vm._l(_vm.filteredTasks, function(task, index) {
-          return _vm.sort
-            ? _c(
-                "div",
-                { staticClass: "border-b-2 border-color" },
-                [
-                  _c("task-row", {
-                    attrs: {
-                      task: task,
-                      draggable: _vm.sort != null ? false : true,
-                      section: _vm.section
-                    },
-                    on: {
-                      show: function($event) {
-                        return _vm.$emit("show", task)
+              : _vm._e()
+          }),
+          _vm._v(" "),
+          _c(
+            "div",
+            [
+              _c("task-row-new", {
+                ref: "newTaskInput",
+                attrs: { section: _vm.section }
+              })
+            ],
+            1
+          )
+        ],
+        2
+      ),
+      _vm._v(" "),
+      _c("jet-confirmation-modal", {
+        attrs: { show: _vm.confirmingDeleteSection },
+        on: {
+          close: function($event) {
+            _vm.confirmingDeleteSection = false
+          }
+        },
+        scopedSlots: _vm._u([
+          {
+            key: "title",
+            fn: function() {
+              return [_vm._v("\n            Delete Section\n        ")]
+            },
+            proxy: true
+          },
+          {
+            key: "content",
+            fn: function() {
+              return [
+                _c("p", [
+                  _vm._v(
+                    "\n                This seciton includes " +
+                      _vm._s(
+                        _vm.section.tasks.filter(function(x) {
+                          return x.completed === true
+                        }).length
+                      ) +
+                      " completed tasks and " +
+                      _vm._s(
+                        _vm.section.tasks.filter(function(x) {
+                          return x.completed === false
+                        }).length
+                      ) +
+                      " incomplete tasks.\n            "
+                  )
+                ]),
+                _vm._v(" "),
+                _c("div", { staticClass: "mt-5" }, [
+                  _c("label", [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.deleteForm.tasks,
+                          expression: "deleteForm.tasks"
+                        }
+                      ],
+                      attrs: { type: "radio", id: "keep", value: "keep" },
+                      domProps: {
+                        checked: _vm._q(_vm.deleteForm.tasks, "keep")
                       },
-                      focusnew: function($event) {
-                        return _vm.focusNew()
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(_vm.deleteForm, "tasks", "keep")
+                        }
+                      }
+                    }),
+                    _vm._v(" Delete this section, but keep all its tasks")
+                  ]),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("br"),
+                  _vm._v(" "),
+                  _c("label", [
+                    _c("input", {
+                      directives: [
+                        {
+                          name: "model",
+                          rawName: "v-model",
+                          value: _vm.deleteForm.tasks,
+                          expression: "deleteForm.tasks"
+                        }
+                      ],
+                      attrs: { type: "radio", id: "delete", value: "delete" },
+                      domProps: {
+                        checked: _vm._q(_vm.deleteForm.tasks, "delete")
+                      },
+                      on: {
+                        change: function($event) {
+                          return _vm.$set(_vm.deleteForm, "tasks", "delete")
+                        }
+                      }
+                    }),
+                    _vm._v(" Delete this section and delete all its tasks")
+                  ])
+                ])
+              ]
+            },
+            proxy: true
+          },
+          {
+            key: "footer",
+            fn: function() {
+              return [
+                _c(
+                  "jet-secondary-button",
+                  {
+                    nativeOn: {
+                      click: function($event) {
+                        _vm.confirmingDeleteSection = false
                       }
                     }
-                  })
-                ],
-                1
-              )
-            : _vm._e()
-        }),
-        _vm._v(" "),
-        _c(
-          "div",
-          [
-            _c("task-row-new", {
-              ref: "newTaskInput",
-              attrs: { section: _vm.section }
-            })
-          ],
-          1
-        )
-      ],
-      2
-    )
-  ])
+                  },
+                  [_vm._v("\n                Cancel\n            ")]
+                ),
+                _vm._v(" "),
+                _c(
+                  "jet-danger-button",
+                  {
+                    staticClass: "ml-2",
+                    class: { "opacity-25": _vm.deleteForm.processing },
+                    attrs: { disabled: _vm.deleteForm.processing },
+                    nativeOn: {
+                      click: function($event) {
+                        return _vm.deleteSection($event)
+                      }
+                    }
+                  },
+                  [_vm._v("\n                Delete Section\n            ")]
+                )
+              ]
+            },
+            proxy: true
+          }
+        ])
+      })
+    ],
+    1
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -87150,6 +87706,7 @@ var render = function() {
                           staticClass: "mt-5",
                           attrs: {
                             section: section,
+                            project: _vm.project,
                             sort: _vm.sort,
                             completedFilter: _vm.completedFilter
                           },
@@ -87195,6 +87752,7 @@ var render = function() {
                           key: key,
                           attrs: {
                             section: section,
+                            project: _vm.project,
                             sort: _vm.sort,
                             completedFilter: _vm.completedFilter
                           },

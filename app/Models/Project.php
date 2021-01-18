@@ -46,14 +46,6 @@ class Project extends Model
 
     public function updateTaskWeights($order = false) {
         if($order) {
-            // foreach($this->sections as $sectionIndex => $section) {
-            //     foreach($order[$sectionIndex] as $item) {
-            //         $task = $this->tasks->where('id', $item[0])->first();
-            //         $task->section_id = $section->id;
-            //         $task->weight = $item[1];
-            //         $task->save();
-            //     }
-            // }
             foreach($order as $sectionArray) {
                 $section = $this->sections->where('id', $sectionArray[0])->first();
                 foreach($sectionArray[1] as $taskArray) {

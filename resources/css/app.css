@@ -130,3 +130,11 @@ code {
     @apply bg-gray-300;
     @apply dark:bg-gray-700;
 }
+
+.hover-trigger .hover-target {
+    display: none;
+}
+
+.hover-trigger:hover .hover-target {
+    display: block;
+}

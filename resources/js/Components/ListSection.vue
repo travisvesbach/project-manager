@@ -1,10 +1,27 @@
 <template>
     <div>
-        <div class="flex items-center">
+        <div class="flex items-center hover-trigger">
             <svg class="ml-3 h-4 inline-block text-secondary-color drag-section cursor-move" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
             </svg>
             <input-hidden v-model="form.name" class="ml-1 text-lg heading-color" @blur.native="updateSection()" @keyup.enter.native="$event.target.blur()"/>
+
+            <!-- dropdown -->
+            <jet-dropdown align="left" width="48" v-if="project.sections.length > 1" class="hover-target">
+                <template #trigger>
+                    <button class="flex link link-color">
+                        <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                        </svg>
+                    </button>
+                </template>
+
+                <template #content>
+                    <jet-dropdown-link @click.native="confirmingDeleteSection = true" as="button">
+                        Delete Section
+                    </jet-dropdown-link>
+                </template>
+            </jet-dropdown>
         </div>
         <div class="border-t-2 border-color">
 
@@ -22,11 +39,46 @@
                 <task-row-new v-bind:section="section" ref="newTaskInput"/>
             </div>
         </div>
+
+        <!-- delete confirmation -->
+        <jet-confirmation-modal :show="confirmingDeleteSection" @close="confirmingDeleteSection = false">
+            <template #title>
+                Delete Section
+            </template>
+
+            <template #content>
+                <p>
+                    This seciton includes {{ section.tasks.filter((x) => x.completed === true).length }} completed tasks and {{ section.tasks.filter((x) => x.completed === false).length }} incomplete tasks.
+                </p>
+                <div class="mt-5">
+                    <label><input type="radio" id="keep" value="keep" v-model="deleteForm.tasks"> Delete this section, but keep all its tasks</label>
+                    <br>
+                    <br>
+                    <label><input type="radio" id="delete" value="delete" v-model="deleteForm.tasks"> Delete this section and delete all its tasks</label>
+                </div>
+
+            </template>
+
+            <template #footer>
+                <jet-secondary-button @click.native="confirmingDeleteSection = false">
+                    Cancel
+                </jet-secondary-button>
+                <jet-danger-button class="ml-2" @click.native="deleteSection" :class="{ 'opacity-25': deleteForm.processing }" :disabled="deleteForm.processing">
+                    Delete Section
+                </jet-danger-button>
+            </template>
+        </jet-confirmation-modal>
     </div>
 </template>
 
 <script>
 
+    import JetDropdown from '@/Jetstream/Dropdown'
+    import JetDropdownLink from '@/Jetstream/DropdownLink'
+    import JetConfirmationModal from '@/Jetstream/ConfirmationModal'
+    import JetButton from '@/Jetstream/Button'
+    import JetSecondaryButton from '@/Jetstream/SecondaryButton'
+    import JetDangerButton from '@/Jetstream/DangerButton'
     import TaskRow from '@/Components/TaskRow'
     import TaskRowNew from '@/Components/TaskRowNew'
     import InputHidden from '@/Components/InputHidden'
@@ -34,9 +86,15 @@
     import draggable  from 'vuedraggable'
 
     export default {
-        props: ['section', 'sort', 'completedFilter'],
+        props: ['section', 'project', 'sort', 'completedFilter'],
 
         components: {
+            JetDropdown,
+            JetDropdownLink,
+            JetConfirmationModal,
+            JetButton,
+            JetSecondaryButton,
+            JetDangerButton,
             TaskRow,
             TaskRowNew,
             InputHidden,
@@ -45,10 +103,15 @@
 
         data() {
             return {
+                confirmingDeleteSection: false,
                 form: this.$inertia.form({
                     id: this.section.id,
                     name: this.section.name,
                 }),
+                deleteForm: this.$inertia.form({
+                    '_method': 'DELETE',
+                    tasks: 'keep',
+                })
             }
         },
         computed: {
@@ -102,6 +165,9 @@
             },
             updateTaskWeights(target) {
                 this.$emit('updateTaskWeights', target);
+            },
+            deleteSection() {
+                this.deleteForm.post(this.section.path);
             }
         }
     }

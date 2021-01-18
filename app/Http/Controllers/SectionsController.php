@@ -22,8 +22,25 @@ class SectionsController extends Controller
         return redirect($project->path());
     }
 
-    public function destroy(Project $project, Section $section) {
+    public function destroy(Request $request, Project $project, Section $section) {
         $this->authorize('update', $project);
+
+        if($request && $request->filled('tasks') && $request->input('tasks') == 'keep') {
+            $new_seciton = $project->sections->where('id', '!=', $section->id)->first();
+            $weight = count($new_seciton->tasks) > 0 ? $new_seciton->tasks->last()->weight + 1 : 1;
+            foreach($section->tasks as $task) {
+                $task->section_id = $new_seciton->id;
+                if(!$task->completed) {
+                    $task->weight = $weight;
+                    $weight++;
+                }
+                $task->save();
+            }
+        } else if($request && $request->filled('tasks') && $request->input('tasks') == 'delete') {
+            foreach($section->tasks as $task) {
+                $task->delete();
+            }
+        }
 
         $section->delete();
 

@@ -99,4 +99,42 @@ class SectionsTest extends TestCase
         $this->assertCount(2, $project->sections);
         $this->assertEquals(2, $project->sections->last()->weight);
     }
+
+    /** @test **/
+    public function section_tasks_can_be_moved_to_a_new_section_when_a_section_is_deleted() {
+        $project = ProjectFactory::withSections(1)->withTasks(3)->create();
+
+        $section = $project->sections->first();
+
+        $this->assertCount(3, $section->tasks);
+
+        $this->actingAs($project->owner)
+            ->delete($section->path(), ['tasks' => 'keep'])
+            ->assertRedirect($project->path());
+
+        $project->refresh();
+
+        $this->assertCount(1, $project->sections);
+        $this->assertCount(3, $project->sections->first()->tasks);
+
+    }
+
+    /** @test **/
+    public function section_tasks_can_be_deleted_when_a_section_is_deleted() {
+        $project = ProjectFactory::withSections(1)->withTasks(3)->create();
+
+        $section = $project->sections->first();
+
+        $this->assertCount(3, $section->tasks);
+
+        $this->actingAs($project->owner)
+            ->delete($section->path(), ['tasks' => 'delete'])
+            ->assertRedirect($project->path());
+
+        $project->refresh();
+
+        $this->assertCount(1, $project->sections);
+        $this->assertCount(0, $project->sections->first()->tasks);
+
+    }
 }
