@@ -126,18 +126,18 @@
 
                 <div v-if="layout == 'list'" >
                     <draggable v-model="project.sections" @change="updateSectionWeights" handle=".drag-section">
-                        <list-section v-for="(section, key) in project.sections" v-bind:section="section" v-bind:project="project" v-bind:key="key" v-bind:sort="sort" v-bind:completedFilter="completedFilter" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
+                        <section-list v-for="(section, key) in project.sections" v-bind:section="section" v-bind:project="project" v-bind:key="key" v-bind:sort="sort" v-bind:completedFilter="completedFilter" @show="showTask" @updateTaskWeights="updateTaskWeights" class="mt-5"/>
                     </draggable>
 
-                    <list-section-new v-bind:project="project" class="mt-12" />
+                    <section-list-new v-bind:project="project" class="mt-12" />
                 </div>
 
                 <div v-if="layout == 'board'" class="flex overflow-x-auto">
                     <draggable class="inline-block flex" v-model="project.sections" @change="updateSectionWeights"  handle=".drag-section">
-                        <board-section v-for="(section, key) in project.sections" v-bind:section="section" v-bind:project="project" v-bind:key="key" v-bind:sort="sort" v-bind:completedFilter="completedFilter" @show="showTask" @updateTaskWeights="updateTaskWeights"/>
+                        <section-board v-for="(section, key) in project.sections" v-bind:section="section" v-bind:project="project" v-bind:key="key" v-bind:sort="sort" v-bind:completedFilter="completedFilter" @show="showTask" @updateTaskWeights="updateTaskWeights"/>
                     </draggable>
 
-                    <board-section-new v-bind:project="project" />
+                    <section-board-new v-bind:project="project" />
                 </div>
 
                 <task-details v-bind:task="showingTask" @close="showingTask = false" ref="taskDetails"/>
@@ -287,11 +287,11 @@
     import TaskDetails from '@/Components/TaskDetails'
     import ActivityItem from '@/Components/ActivityItem'
     import SelectInput from '@/Components/SelectInput'
-    import ListSection from '@/Components/ListSection'
-    import ListSectionNew from '@/Components/ListSectionNew'
+    import SectionList from '@/Components/SectionList'
+    import SectionListNew from '@/Components/SectionListNew'
     import ProjectForm from '@/Components/ProjectForm'
-    import BoardSection from '@/Components/BoardSection'
-    import BoardSectionNew from '@/Components/BoardSectionNew'
+    import SectionBoard from '@/Components/SectionBoard'
+    import SectionBoardNew from '@/Components/SectionBoardNew'
     import NavButton from '@/Components/NavButton'
 
     import draggable  from 'vuedraggable'
@@ -321,12 +321,12 @@
             TaskDetails,
             ActivityItem,
             SelectInput,
-            ListSection,
-            ListSectionNew,
+            SectionList,
+            SectionListNew,
             draggable,
             ProjectForm,
-            BoardSection,
-            BoardSectionNew,
+            SectionBoard,
+            SectionBoardNew,
             NavButton,
         },
 
