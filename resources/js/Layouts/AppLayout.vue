@@ -70,6 +70,30 @@
                         </div>
                     </div>
 
+                    <!-- Notifications -->
+                    <div class="hidden sm:flex sm:items-center sm:ml-6">
+                        <div class="ml-3 relative">
+                            <jet-dropdown align="right" width="96">
+                                <template #trigger>
+                                    <button class="flex link link-color" title="Add">
+                                        <svg class="h-7" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+                                        </svg>
+                                    </button>
+                                </template>
+
+                                <template #content>
+                                    <div class="block px-4 py-2 text-xs dropdown-title-color">
+                                        Notifications
+                                    </div>
+                                    <jet-dropdown-link :href="notification.data['path']" v-for="(notification, key) in $page.user.notifications" v-bind:key="key">
+                                        <notification-item v-bind:notification="notification" />
+                                    </jet-dropdown-link>
+                                </template>
+                            </jet-dropdown>
+                        </div>
+                    </div>
+
                     <!-- Settings Dropdown -->
                     <div class="hidden sm:flex sm:items-center sm:ml-6">
                         <div class="ml-3 relative">
@@ -281,6 +305,7 @@
     import JetDropdownLink from '@/Jetstream/DropdownLink'
     import JetNavLink from '@/Jetstream/NavLink'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
+    import NotificationItem from '@/Components/NotificationItem'
 
     export default {
         components: {
@@ -289,6 +314,7 @@
             JetDropdownLink,
             JetNavLink,
             JetResponsiveNavLink,
+            NotificationItem,
         },
 
         data() {

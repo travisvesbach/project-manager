@@ -23,11 +23,6 @@ class Activity extends Model
         'changes' => 'array'
     ];
 
-    protected $appends = [
-        'timeSince',
-        'createdAtFormatted',
-    ];
-
     public function subject() {
         return $this->morphTo();
     }
@@ -38,15 +33,5 @@ class Activity extends Model
 
     public function project() {
         return $this->belongsTo(Project::class);
-    }
-
-    public function getTimeSinceAttribute()
-    {
-        return Carbon::parse($this->created_at)->diffForHumans();
-    }
-
-    public function getCreatedAtFormattedAttribute()
-    {
-        return Carbon::parse($this->created_at)->format('M j, Y, h:i:s A');
     }
 }

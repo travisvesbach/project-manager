@@ -61,6 +61,10 @@ class User extends Authenticatable
         'profile_photo_url',
     ];
 
+    protected $with = [
+        'notifications'
+    ];
+
     public function projects() {
         return $this->hasMany(Project::class, 'owner_id');
     }

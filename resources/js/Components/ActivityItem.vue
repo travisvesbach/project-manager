@@ -2,16 +2,29 @@
     <div>
         <img class="h-6 w-6 rounded-full object-cover inline-block" :src="activity.user.profile_photo_url" :alt="activity.user.name" v-if="activity.user.profile_photo_url"/>
         <span v-html="description" />
-        <span class="text-xs text-secondary-color" :title="activity.createdAtFormatted">{{ activity.timeSince }}</span>
+        <span class="text-xs text-secondary-color" :title="created_at"><vue-moments-ago prefix="" suffix="ago" :date="created_at_standard" lang="en" /></span>
     </div>
 </template>
 
 <script>
 
+    import moment from 'moment'
+    import VueMomentsAgo from 'vue-moments-ago'
+
     export default {
         props: ['activity', 'for'],
 
+        components: {
+            VueMomentsAgo
+        },
+
         computed: {
+            created_at() {
+                return this.activity.created_at ? moment(this.activity.created_at).format('MMMM Do YYYY, h:mm:ss a') : null;
+            },
+            created_at_standard() {
+                return this.activity.created_at ? moment(this.activity.created_at).format() : null;
+            },
             description() {
                 let description = this.activity.user.name + ' ';
 

@@ -67,9 +67,7 @@
 
         computed: {
             widthClass() {
-                return {
-                    '48': 'w-48',
-                }[this.width.toString()]
+                return 'w-' + this.width;
             },
 
             alignmentClasses() {

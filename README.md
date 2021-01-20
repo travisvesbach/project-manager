@@ -14,3 +14,6 @@ https://github.com/ankurk91/vue-flatpickr-component
 
 vue-draggable
 https://github.com/SortableJS/Vue.Draggable
+
+vue-moments-ago
+https://github.com/jillztom/vue-moments-ago

@@ -8,6 +8,7 @@ use App\Models\User;
 use App\Models\Task;
 use App\Models\Activity;
 use App\Traits\RecordsActivity;
+use App\Notifications\InvitedToProject;
 
 class Project extends Model
 {
@@ -103,6 +104,7 @@ class Project extends Model
     public function invite(User $user) {
         $this->users()->attach($user);
         $this->recordActivity('joined_project', $user->id);
+        $user->notify(new InvitedToProject($this));
     }
 
     public function uninvite(User $user) {
