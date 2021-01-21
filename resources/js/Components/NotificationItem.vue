@@ -1,8 +1,11 @@
 <template>
-    <div>
-        <img class="h-6 w-6 rounded-full object-cover inline-block" :src="notification.data['user']['profile_photo_url']" :alt="notification.data['user']['name']" v-if="notification.data['user']['profile_photo_url']"/>
-        <span v-html="description" />
-        <span class="text-xs text-secondary-color" :title="created_at"><vue-moments-ago prefix="" suffix="ago" :date="created_at_standard" lang="en" /></span>
+    <div @click="markAsRead" class="flex items-center">
+        <div>
+            <img class="h-6 w-6 rounded-full object-cover inline-block" :src="notification.data['user']['profile_photo_url']" :alt="notification.data['user']['name']" v-if="notification.data['user']['profile_photo_url']"/>
+            <span v-html="description" />
+            <span class="text-xs text-secondary-color" :title="created_at"><vue-moments-ago prefix="" suffix="ago" :date="created_at_standard" lang="en" /></span>
+        </div>
+        <span class="dot dot-color ml-auto" v-if="!read"></span>
     </div>
 </template>
 
@@ -14,8 +17,15 @@
     export default {
         props: ['notification'],
 
+
         components: {
             VueMomentsAgo
+        },
+
+        data() {
+            return {
+                read: this.notification.read_at,
+            }
         },
 
         computed: {
@@ -38,5 +48,19 @@
                 return description;
             },
         },
+        methods: {
+            markAsRead() {
+                console.log('making as read');
+                if(this.notification.read_at == null) {
+                    this.read = true;
+
+                    axios.patch('/notifications/' + this.notification.id, {
+                        'read': true,
+                    }).then(response => {
+                        // this.notification = response.data;
+                    });
+                }
+            }
+        }
     }
 </script>

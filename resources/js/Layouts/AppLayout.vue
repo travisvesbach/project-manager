@@ -86,9 +86,12 @@
                                     <div class="block px-4 py-2 text-xs dropdown-title-color">
                                         Notifications
                                     </div>
-                                    <jet-dropdown-link :href="notification.data['path']" v-for="(notification, key) in $page.user.notifications" v-bind:key="key">
+                                    <jet-dropdown-link :href="notification.data['path']" v-for="(notification, key) in $page.user.unread_notifications" v-bind:key="key">
                                         <notification-item v-bind:notification="notification" />
                                     </jet-dropdown-link>
+                                    <div class="block px-4 py-2 text-xs dropdown-title-color" v-if="$page.user.unread_notifications.length == 0">
+                                        No unread notifications
+                                    </div>
                                 </template>
                             </jet-dropdown>
                         </div>

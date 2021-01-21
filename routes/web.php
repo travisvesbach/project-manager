@@ -6,6 +6,7 @@ use App\Http\Controllers\ProjectsController;
 use App\Http\Controllers\ProjectUsersController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\SectionsController;
+use App\Http\Controllers\NotificationsController;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,4 +50,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
     Route::post('/projects/{project}/sections', [SectionsController::class, 'store'])->name('sections.store');
     Route::patch('/projects/{project}/sections/{section}', [SectionsController::class, 'update'])->name('sections.update');
     Route::delete('/projects/{project}/sections/{section}', [SectionsController::class, 'destroy'])->name('sections.destroy');
+
+
+    Route::patch('/notifications/{notificationId}', [NotificationsController::class, 'update'])->name('notifications.update');
 });

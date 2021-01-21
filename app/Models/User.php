@@ -62,7 +62,7 @@ class User extends Authenticatable
     ];
 
     protected $with = [
-        'notifications'
+        'unreadNotifications'
     ];
 
     public function projects() {
@@ -77,5 +77,9 @@ class User extends Authenticatable
             ->orderByDesc('updated_at')
             ->with(['tasks', 'activity'])
             ->get();
+    }
+
+    public function getUnreadNotificationsAttribute() {
+        $this->unreadNotifications;
     }
 }

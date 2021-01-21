@@ -138,3 +138,14 @@ code {
 .hover-trigger:hover .hover-target {
     display: block;
 }
+
+.dot {
+    @apply h-4 w-4 inline-block;
+
+    border-radius: 50%;
+}
+
+.dot-color {
+    @apply bg-gray-500;
+    @apply dark:bg-yellow-600;
+}

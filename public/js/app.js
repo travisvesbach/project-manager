@@ -2375,12 +2375,20 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['notification'],
   components: {
     VueMomentsAgo: vue_moments_ago__WEBPACK_IMPORTED_MODULE_1__["default"]
+  },
+  data: function data() {
+    return {
+      read: this.notification.read_at
+    };
   },
   computed: {
     created_at: function created_at() {
@@ -2401,6 +2409,19 @@ __webpack_require__.r(__webpack_exports__);
       }
 
       return description;
+    }
+  },
+  methods: {
+    markAsRead: function markAsRead() {
+      console.log('making as read');
+
+      if (this.notification.read_at == null) {
+        this.read = true;
+        axios.patch('/notifications/' + this.notification.id, {
+          'read': true
+        }).then(function (response) {// this.notification = response.data;
+        });
+      }
     }
   }
 });
@@ -4418,6 +4439,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Jetstream_NavLink__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Jetstream/NavLink */ "./resources/js/Jetstream/NavLink.vue");
 /* harmony import */ var _Jetstream_ResponsiveNavLink__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Jetstream/ResponsiveNavLink */ "./resources/js/Jetstream/ResponsiveNavLink.vue");
 /* harmony import */ var _Components_NotificationItem__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Components/NotificationItem */ "./resources/js/Components/NotificationItem.vue");
+//
+//
+//
 //
 //
 //
@@ -80708,38 +80732,48 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [
-    _vm.notification.data["user"]["profile_photo_url"]
-      ? _c("img", {
-          staticClass: "h-6 w-6 rounded-full object-cover inline-block",
-          attrs: {
-            src: _vm.notification.data["user"]["profile_photo_url"],
-            alt: _vm.notification.data["user"]["name"]
-          }
-        })
-      : _vm._e(),
-    _vm._v(" "),
-    _c("span", { domProps: { innerHTML: _vm._s(_vm.description) } }),
-    _vm._v(" "),
-    _c(
-      "span",
-      {
-        staticClass: "text-xs text-secondary-color",
-        attrs: { title: _vm.created_at }
-      },
-      [
-        _c("vue-moments-ago", {
-          attrs: {
-            prefix: "",
-            suffix: "ago",
-            date: _vm.created_at_standard,
-            lang: "en"
-          }
-        })
-      ],
-      1
-    )
-  ])
+  return _c(
+    "div",
+    { staticClass: "flex items-center", on: { click: _vm.markAsRead } },
+    [
+      _c("div", [
+        _vm.notification.data["user"]["profile_photo_url"]
+          ? _c("img", {
+              staticClass: "h-6 w-6 rounded-full object-cover inline-block",
+              attrs: {
+                src: _vm.notification.data["user"]["profile_photo_url"],
+                alt: _vm.notification.data["user"]["name"]
+              }
+            })
+          : _vm._e(),
+        _vm._v(" "),
+        _c("span", { domProps: { innerHTML: _vm._s(_vm.description) } }),
+        _vm._v(" "),
+        _c(
+          "span",
+          {
+            staticClass: "text-xs text-secondary-color",
+            attrs: { title: _vm.created_at }
+          },
+          [
+            _c("vue-moments-ago", {
+              attrs: {
+                prefix: "",
+                suffix: "ago",
+                date: _vm.created_at_standard,
+                lang: "en"
+              }
+            })
+          ],
+          1
+        )
+      ]),
+      _vm._v(" "),
+      !_vm.read
+        ? _c("span", { staticClass: "dot dot-color ml-auto" })
+        : _vm._e()
+    ]
+  )
 }
 var staticRenderFns = []
 render._withStripped = true
@@ -84545,24 +84579,41 @@ var render = function() {
                                   ]
                                 ),
                                 _vm._v(" "),
-                                _vm._l(_vm.$page.user.notifications, function(
-                                  notification,
-                                  key
-                                ) {
-                                  return _c(
-                                    "jet-dropdown-link",
-                                    {
-                                      key: key,
-                                      attrs: { href: notification.data["path"] }
-                                    },
-                                    [
-                                      _c("notification-item", {
-                                        attrs: { notification: notification }
-                                      })
-                                    ],
-                                    1
-                                  )
-                                })
+                                _vm._l(
+                                  _vm.$page.user.unread_notifications,
+                                  function(notification, key) {
+                                    return _c(
+                                      "jet-dropdown-link",
+                                      {
+                                        key: key,
+                                        attrs: {
+                                          href: notification.data["path"]
+                                        }
+                                      },
+                                      [
+                                        _c("notification-item", {
+                                          attrs: { notification: notification }
+                                        })
+                                      ],
+                                      1
+                                    )
+                                  }
+                                ),
+                                _vm._v(" "),
+                                _vm.$page.user.unread_notifications.length == 0
+                                  ? _c(
+                                      "div",
+                                      {
+                                        staticClass:
+                                          "block px-4 py-2 text-xs dropdown-title-color"
+                                      },
+                                      [
+                                        _vm._v(
+                                          "\n                                        No unread notifications\n                                    "
+                                        )
+                                      ]
+                                    )
+                                  : _vm._e()
                               ]
                             },
                             proxy: true

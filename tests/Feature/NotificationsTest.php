@@ -17,10 +17,29 @@ class NotificationsTest extends TestCase
 
     /** @test **/
     public function inviting_a_user_to_a_project() {
+        $this->signIn();
+
         $project = ProjectFactory::create();
 
         $project->invite($user = User::factory()->create());
         $this->assertCount(1, $user->notifications);
         $this->assertEquals($project->id, $user->notifications->first()->data['project_id']);
+    }
+
+    /** @test **/
+    public function can_be_marked_as_read() {
+        $this->signIn();
+
+        $project = ProjectFactory::create();
+
+        $project->invite($user = User::factory()->create());
+        $notification = $user->notifications->first();
+        $this->assertNull($notification->read_at);
+
+        $this->signIn($user);
+
+        $this->patch('/notifications/' . $notification->id, ['read' => true]);
+
+        $this->assertNotNull($notification->fresh()->read_at);
     }
 }
