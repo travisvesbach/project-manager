@@ -16,6 +16,10 @@ class TasksController extends Controller
         return Inertia::render('Tasks/Create', compact('projects'));
     }
 
+    public function show(Project $project, Task $task) {
+        return redirect()->route('projects.show', ['project' => $project])->with(['task_to_show' => $task->id]);
+    }
+
     public function store(TaskRequest $request, Project $project) {
         $project->addTask($request->validated());
 

@@ -299,7 +299,7 @@
     import OutsideClick from '@/Directives/OutsideClick'
 
     export default {
-        props: ['project', 'users'],
+        props: ['project', 'users', 'taskToShow'],
 
         components: {
             AppLayout,
@@ -356,6 +356,17 @@
                 removeUserForm: this.$inertia.form({
                     id: null,
                 }),
+            }
+        },
+        mounted() {
+            if(this.taskToShow) {
+                for(let i=0;i<this.project.tasks.length;i++) {
+                    if(this.project.tasks[i].id == this.taskToShow) {
+                        this.showingTask = this.project.tasks[i];
+                        return;
+                    }
+                }
+
             }
         },
         computed: {

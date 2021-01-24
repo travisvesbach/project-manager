@@ -6411,7 +6411,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
-  props: ['project', 'users'],
+  props: ['project', 'users', 'taskToShow'],
   components: {
     AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
     ModalForm: _Components_ModalForm__WEBPACK_IMPORTED_MODULE_1__["default"],
@@ -6466,6 +6466,16 @@ __webpack_require__.r(__webpack_exports__);
         id: null
       })
     };
+  },
+  mounted: function mounted() {
+    if (this.taskToShow) {
+      for (var i = 0; i < this.project.tasks.length; i++) {
+        if (this.project.tasks[i].id == this.taskToShow) {
+          this.showingTask = this.project.tasks[i];
+          return;
+        }
+      }
+    }
   },
   computed: {
     filteredUsers: function filteredUsers() {

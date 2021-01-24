@@ -15,7 +15,7 @@ class ProjectsController extends Controller
         return Inertia::render('Projects/Index', compact('projects'));
     }
 
-    public function show(Project $project) {
+    public function show(Request $request, Project $project) {
         $this->authorize('update', $project);
 
         $project->load(['tasks', 'activity', 'users', 'sections'])->get();
@@ -31,8 +31,12 @@ class ProjectsController extends Controller
                 ->orderBy('name', 'ASC')
                 ->get();
         }
+        $taskToShow = null;
+        if(request()->session()->get('task_to_show')) {
+            $taskToShow = request()->session()->get('task_to_show');
+        }
 
-        return Inertia::render('Projects/Show', compact(['project', 'users']));
+        return Inertia::render('Projects/Show', compact(['project', 'users', 'taskToShow']));
     }
 
     public function create() {
