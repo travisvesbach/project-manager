@@ -44,7 +44,9 @@
             },
             createTask() {
                 if(this.form.name != null && this.form.name.length > 0) {
-                    this.form.post(this.section.project.path + '/tasks');
+                    this.form.post(this.section.project.path + '/tasks').then(() => {
+                        this.$refs.inputHidden.focus();
+                    });
                 }
             }
         }

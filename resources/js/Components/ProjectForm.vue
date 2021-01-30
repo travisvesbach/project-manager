@@ -6,7 +6,7 @@
 
         <!-- Project Layout -->
         <jet-label for="layout" value="Layout" class="mt-4" />
-        <select-input id="layout" class="mt=1 block w-full" v-model="value.layout" v-bind:options="['list', 'board']" />
+        <select-input id="layout" class="mt=1 block w-full" v-model="value.layout" v-bind:options="['board', 'list']" />
         <jet-input-error :message="value.error('layout')" class="mt-2" />
 
         <jet-label for="description" value="Description" class="mt-4" />

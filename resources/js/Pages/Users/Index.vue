@@ -36,7 +36,7 @@
                     </div>
                     <div class="inline-block">
                         <!-- dropdown -->
-                        <jet-dropdown align="right" width="48" class="hover-target" v-if="user.id != $page.user.id">
+                        <jet-dropdown align="right" width="48" class="hover-target">
                             <template #trigger>
                                 <button class="flex link link-color">
                                     <svg class="fill-current h-8 w-8" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
@@ -46,11 +46,17 @@
                             </template>
 
                             <template #content>
-                                <jet-dropdown-link :href="route('users.edit', {id: user.id})">
-                                    Edit User
-                                </jet-dropdown-link>
-                                <jet-dropdown-link @click.native="confirmingDeleteUser = user" as="button">
-                                    Delete User
+                                <div v-if="user.id != $page.user.id">
+                                    <jet-dropdown-link :href="route('users.edit', {id: user.id})">
+                                        Edit User
+                                    </jet-dropdown-link>
+                                    <jet-dropdown-link @click.native="confirmingDeleteUser = user" as="button">
+                                        Delete User
+                                    </jet-dropdown-link>
+                                </div>
+
+                                <jet-dropdown-link :href="route('profile.show')" v-if="user.id == $page.user.id">
+                                    My Profile
                                 </jet-dropdown-link>
                             </template>
                         </jet-dropdown>

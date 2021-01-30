@@ -1,7 +1,7 @@
 <template>
     <div class="ml-4 my-1 flex items-center text-secondary-color">
         <div class="inline-block ml-2">
-            <input-hidden class="text-lg" id="name" v-model="name" @blur.native="createSection()" placeholder="+ New Section" @keyup-enter="createSection()" ref="inputHidden"/>
+            <input-hidden class="text-lg" id="name" v-model="name" @blur.native="createSection()" placeholder="+ New Section" @keyup-enter="createSection()" ref="inputHidden" :class="{ 'opacity-25': form.processing }" :disabled="form.processing"/>
         </div>
     </div>
 </template>
@@ -32,7 +32,9 @@
             createSection() {
                 if(this.name != null && this.name.length > 0) {
                     this.form.name = this.name;
-                    this.form.post(this.project.path + '/sections');
+                    this.form.post(this.project.path + '/sections').then(() => {
+                        this.$refs.inputHidden.focus();
+                    });
                     this.name = null;
                 }
             }

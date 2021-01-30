@@ -1,6 +1,6 @@
 <template>
-    <div class="ml-4 my-1 flex items-center h-7" :class="this.task.completed ? 'text-secondary-color' : 'text-color'">
-        <svg class="ml-3 h-4 inline-block text-secondary-color drag-task cursor-move" :class="draggable && !task.completed ? '' : 'invisible'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+    <div class="ml-4 my-1 flex items-center h-7 hover-trigger" :class="this.task.completed ? 'text-secondary-color' : 'text-color'">
+        <svg class="ml-3 h-4 inline-block text-secondary-color drag-task cursor-move hover-target" :class="draggable && !task.completed ? '' : 'invisible'" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16V4m0 0L3 8m4-4l4 4m6 0v12m0 0l4-4m-4 4l-4-4" />
         </svg>
         <svg class="h-5 ml-3 inline-block hover:text-green-500" :class="task.completed ? 'text-green-500' : ''" @click="toggleCompleted()" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">

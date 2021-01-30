@@ -2740,9 +2740,13 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.inputHidden.focus();
     },
     createSection: function createSection() {
+      var _this = this;
+
       if (this.name != null && this.name.length > 0) {
         this.form.name = this.name;
-        this.form.post(this.project.path + '/sections');
+        this.form.post(this.project.path + '/sections').then(function () {
+          _this.$refs.inputHidden.focus();
+        });
         this.name = null;
       }
     }
@@ -2984,9 +2988,13 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.inputHidden.focus();
     },
     createSection: function createSection() {
+      var _this = this;
+
       if (this.name != null && this.name.length > 0) {
         this.form.name = this.name;
-        this.form.post(this.project.path + '/sections');
+        this.form.post(this.project.path + '/sections').then(function () {
+          _this.$refs.inputHidden.focus();
+        });
         this.name = null;
       }
     }
@@ -3162,8 +3170,12 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.textareaInput.focus();
     },
     createTask: function createTask() {
+      var _this = this;
+
       if (this.form.name != null && this.form.name.length > 0) {
-        this.form.post(this.section.project.path + '/tasks');
+        this.form.post(this.section.project.path + '/tasks').then(function () {
+          _this.$refs.textareaInput.focus();
+        });
       }
     }
   }
@@ -3484,8 +3496,12 @@ __webpack_require__.r(__webpack_exports__);
       this.$refs.inputHidden.focus();
     },
     createTask: function createTask() {
+      var _this = this;
+
       if (this.form.name != null && this.form.name.length > 0) {
-        this.form.post(this.section.project.path + '/tasks');
+        this.form.post(this.section.project.path + '/tasks').then(function () {
+          _this.$refs.inputHidden.focus();
+        });
       }
     }
   }
@@ -6063,7 +6079,7 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     submit: function submit() {
-      this.$inertia.post('/projects', this.form);
+      this.form.post('/projects');
     }
   }
 });
@@ -6080,7 +6096,8 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/AppLayout */ "./resources/js/Layouts/AppLayout.vue");
-/* harmony import */ var _Components_Card__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Components/Card */ "./resources/js/Components/Card.vue");
+/* harmony import */ var _Jetstream_Button__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Jetstream/Button */ "./resources/js/Jetstream/Button.vue");
+/* harmony import */ var _Components_Card__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @/Components/Card */ "./resources/js/Components/Card.vue");
 //
 //
 //
@@ -6112,13 +6129,22 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['projects'],
   components: {
     AppLayout: _Layouts_AppLayout__WEBPACK_IMPORTED_MODULE_0__["default"],
-    Card: _Components_Card__WEBPACK_IMPORTED_MODULE_1__["default"]
+    JetButton: _Jetstream_Button__WEBPACK_IMPORTED_MODULE_1__["default"],
+    Card: _Components_Card__WEBPACK_IMPORTED_MODULE_2__["default"]
   }
 });
 
@@ -6916,6 +6942,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Jetstream_SecondaryButton__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/Jetstream/SecondaryButton */ "./resources/js/Jetstream/SecondaryButton.vue");
 /* harmony import */ var _Jetstream_DangerButton__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Jetstream/DangerButton */ "./resources/js/Jetstream/DangerButton.vue");
 /* harmony import */ var _Jetstream_ConfirmationModal__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Jetstream/ConfirmationModal */ "./resources/js/Jetstream/ConfirmationModal.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -81177,7 +81209,7 @@ var render = function() {
       _vm._v(" "),
       _c("select-input", {
         staticClass: "mt=1 block w-full",
-        attrs: { id: "layout", options: ["list", "board"] },
+        attrs: { id: "layout", options: ["board", "list"] },
         model: {
           value: _vm.value.layout,
           callback: function($$v) {
@@ -81251,7 +81283,7 @@ var render = function() {
             "svg",
             {
               staticClass:
-                "ml-3 h-4 inline-block text-secondary-color drag-section cursor-move",
+                "ml-3 h-4 inline-block text-secondary-color drag-section cursor-move hover-target",
               attrs: {
                 xmlns: "http://www.w3.org/2000/svg",
                 fill: "none",
@@ -81606,7 +81638,12 @@ var render = function() {
       _c("input-hidden", {
         ref: "inputHidden",
         staticClass: "text-lg",
-        attrs: { id: "name", placeholder: "+ New Section" },
+        class: { "opacity-25": _vm.form.processing },
+        attrs: {
+          id: "name",
+          placeholder: "+ New Section",
+          disabled: _vm.form.processing
+        },
         on: {
           "keyup-enter": function($event) {
             return _vm.createSection()
@@ -81662,7 +81699,7 @@ var render = function() {
             "svg",
             {
               staticClass:
-                "ml-3 h-4 inline-block text-secondary-color drag-section cursor-move",
+                "ml-3 h-4 inline-block text-secondary-color drag-section cursor-move hover-target",
               attrs: {
                 xmlns: "http://www.w3.org/2000/svg",
                 fill: "none",
@@ -82031,7 +82068,12 @@ var render = function() {
           _c("input-hidden", {
             ref: "inputHidden",
             staticClass: "text-lg",
-            attrs: { id: "name", placeholder: "+ New Section" },
+            class: { "opacity-25": _vm.form.processing },
+            attrs: {
+              id: "name",
+              placeholder: "+ New Section",
+              disabled: _vm.form.processing
+            },
             on: {
               "keyup-enter": function($event) {
                 return _vm.createSection()
@@ -82658,7 +82700,7 @@ var render = function() {
   return _c(
     "div",
     {
-      staticClass: "ml-4 my-1 flex items-center h-7",
+      staticClass: "ml-4 my-1 flex items-center h-7 hover-trigger",
       class: this.task.completed ? "text-secondary-color" : "text-color"
     },
     [
@@ -82666,7 +82708,7 @@ var render = function() {
         "svg",
         {
           staticClass:
-            "ml-3 h-4 inline-block text-secondary-color drag-task cursor-move",
+            "ml-3 h-4 inline-block text-secondary-color drag-task cursor-move hover-target",
           class: _vm.draggable && !_vm.task.completed ? "" : "invisible",
           attrs: {
             xmlns: "http://www.w3.org/2000/svg",
@@ -87891,11 +87933,35 @@ var render = function() {
         { staticClass: "lg:flex lg:flex-wrap" },
         [
           _vm.projects.length == 0
-            ? _c("div", { staticClass: "w-full text-center text-color" }, [
-                _vm._v(
-                  "\n            You aren't a part of any projects.\n        "
-                )
-              ])
+            ? _c(
+                "div",
+                { staticClass: "w-full text-center text-color" },
+                [
+                  _c("p", { staticClass: "mb-4" }, [
+                    _vm._v(
+                      "\n                You aren't a part of any projects.\n            "
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "jet-button",
+                    { staticClass: "ml-auto" },
+                    [
+                      _c(
+                        "inertia-link",
+                        { attrs: { href: _vm.route("projects.create") } },
+                        [
+                          _vm._v(
+                            "\n                    New Project\n                "
+                          )
+                        ]
+                      )
+                    ],
+                    1
+                  )
+                ],
+                1
+              )
             : _vm._e(),
           _vm._v(" "),
           _vm._l(_vm.projects, function(project) {
@@ -89646,96 +89712,116 @@ var render = function() {
                       "div",
                       { staticClass: "inline-block" },
                       [
-                        user.id != _vm.$page.user.id
-                          ? _c("jet-dropdown", {
-                              staticClass: "hover-target",
-                              attrs: { align: "right", width: "48" },
-                              scopedSlots: _vm._u(
-                                [
-                                  {
-                                    key: "trigger",
-                                    fn: function() {
-                                      return [
+                        _c("jet-dropdown", {
+                          staticClass: "hover-target",
+                          attrs: { align: "right", width: "48" },
+                          scopedSlots: _vm._u(
+                            [
+                              {
+                                key: "trigger",
+                                fn: function() {
+                                  return [
+                                    _c(
+                                      "button",
+                                      { staticClass: "flex link link-color" },
+                                      [
                                         _c(
-                                          "button",
+                                          "svg",
                                           {
-                                            staticClass: "flex link link-color"
+                                            staticClass: "fill-current h-8 w-8",
+                                            attrs: {
+                                              xmlns:
+                                                "http://www.w3.org/2000/svg",
+                                              viewBox: "0 0 20 20"
+                                            }
                                           },
                                           [
+                                            _c("path", {
+                                              attrs: {
+                                                "fill-rule": "evenodd",
+                                                d:
+                                                  "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
+                                                "clip-rule": "evenodd"
+                                              }
+                                            })
+                                          ]
+                                        )
+                                      ]
+                                    )
+                                  ]
+                                },
+                                proxy: true
+                              },
+                              {
+                                key: "content",
+                                fn: function() {
+                                  return [
+                                    user.id != _vm.$page.user.id
+                                      ? _c(
+                                          "div",
+                                          [
                                             _c(
-                                              "svg",
+                                              "jet-dropdown-link",
                                               {
-                                                staticClass:
-                                                  "fill-current h-8 w-8",
                                                 attrs: {
-                                                  xmlns:
-                                                    "http://www.w3.org/2000/svg",
-                                                  viewBox: "0 0 20 20"
+                                                  href: _vm.route(
+                                                    "users.edit",
+                                                    { id: user.id }
+                                                  )
                                                 }
                                               },
                                               [
-                                                _c("path", {
-                                                  attrs: {
-                                                    "fill-rule": "evenodd",
-                                                    d:
-                                                      "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
-                                                    "clip-rule": "evenodd"
+                                                _vm._v(
+                                                  "\n                                    Edit User\n                                "
+                                                )
+                                              ]
+                                            ),
+                                            _vm._v(" "),
+                                            _c(
+                                              "jet-dropdown-link",
+                                              {
+                                                attrs: { as: "button" },
+                                                nativeOn: {
+                                                  click: function($event) {
+                                                    _vm.confirmingDeleteUser = user
                                                   }
-                                                })
+                                                }
+                                              },
+                                              [
+                                                _vm._v(
+                                                  "\n                                    Delete User\n                                "
+                                                )
                                               ]
                                             )
-                                          ]
+                                          ],
+                                          1
                                         )
-                                      ]
-                                    },
-                                    proxy: true
-                                  },
-                                  {
-                                    key: "content",
-                                    fn: function() {
-                                      return [
-                                        _c(
+                                      : _vm._e(),
+                                    _vm._v(" "),
+                                    user.id == _vm.$page.user.id
+                                      ? _c(
                                           "jet-dropdown-link",
                                           {
                                             attrs: {
-                                              href: _vm.route("users.edit", {
-                                                id: user.id
-                                              })
+                                              href: _vm.route("profile.show")
                                             }
                                           },
                                           [
                                             _vm._v(
-                                              "\n                                Edit User\n                            "
-                                            )
-                                          ]
-                                        ),
-                                        _vm._v(" "),
-                                        _c(
-                                          "jet-dropdown-link",
-                                          {
-                                            attrs: { as: "button" },
-                                            nativeOn: {
-                                              click: function($event) {
-                                                _vm.confirmingDeleteUser = user
-                                              }
-                                            }
-                                          },
-                                          [
-                                            _vm._v(
-                                              "\n                                Delete User\n                            "
+                                              "\n                                My Profile\n                            "
                                             )
                                           ]
                                         )
-                                      ]
-                                    },
-                                    proxy: true
-                                  }
-                                ],
-                                null,
-                                true
-                              )
-                            })
-                          : _vm._e()
+                                      : _vm._e()
+                                  ]
+                                },
+                                proxy: true
+                              }
+                            ],
+                            null,
+                            true
+                          )
+                        })
                       ],
                       1
                     )

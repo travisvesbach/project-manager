@@ -6,7 +6,14 @@
 
         <div class="lg:flex lg:flex-wrap">
             <div v-if="projects.length == 0" class="w-full text-center text-color">
-                You aren't a part of any projects.
+                <p class="mb-4">
+                    You aren't a part of any projects.
+                </p>
+                <jet-button class="ml-auto">
+                    <inertia-link :href="route('projects.create')">
+                        New Project
+                    </inertia-link>
+                </jet-button>
             </div>
             <div class="lg:w-1/3 px-3 pb-6 flex flex-col" v-for="project in projects">
                 <inertia-link :href="route('projects.show', {id: project.id})" class="flex flex-col flex-1">
@@ -31,6 +38,7 @@
 
 <script>
     import AppLayout from '@/Layouts/AppLayout'
+    import JetButton from '@/Jetstream/Button'
     import Card from '@/Components/Card'
 
     export default {
@@ -38,6 +46,7 @@
 
         components: {
             AppLayout,
+            JetButton,
             Card,
         },
     }

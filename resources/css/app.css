@@ -132,11 +132,11 @@ code {
 }
 
 .hover-trigger .hover-target {
-    display: none;
+    visibility: hidden;
 }
 
 .hover-trigger:hover .hover-target {
-    display: block;
+    visibility: visible;
 }
 
 .dot {
