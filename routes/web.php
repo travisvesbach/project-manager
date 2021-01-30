@@ -7,6 +7,7 @@ use App\Http\Controllers\ProjectUsersController;
 use App\Http\Controllers\TasksController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\NotificationsController;
+use App\Http\Controllers\UsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -54,4 +55,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
 
 
     Route::patch('/notifications/{notificationId}', [NotificationsController::class, 'update'])->name('notifications.update');
+
+    Route::get('/users', [UsersController::class, 'index'])->name('users.index');
+    Route::get('/users/create', [UsersController::class, 'create'])->name('users.create');
+    Route::post('/users', [UsersController::class, 'store'])->name('users.store');
 });

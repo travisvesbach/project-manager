@@ -90,7 +90,7 @@ class User extends Authenticatable
             ->get();
     }
 
-    public function getUnreadNotificationsAttribute() {
-        $this->unreadNotifications;
-    }
+    // public function getUnreadNotificationsAttribute() {
+        // $this->unreadNotifications;
+    // }
 }

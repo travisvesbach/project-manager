@@ -24,7 +24,7 @@ class InvitedToProject extends Notification
     public function __construct(Project $project)
     {
         $this->project = $project;
-        $this->user = Auth::user();
+        $this->user = Auth::user() ? Auth::user() : $project->owner;
     }
 
     /**

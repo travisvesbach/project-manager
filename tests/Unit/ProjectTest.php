@@ -14,7 +14,6 @@ class ProjectTest extends TestCase
 
     /** @test **/
     public function it_has_a_path() {
-
         $project = Project::factory()->create();
 
         $this->assertEquals('/projects/' . $project->id, $project->path());
@@ -32,7 +31,6 @@ class ProjectTest extends TestCase
         $project = Project::factory()->create();
 
         $project->invite($user = User::factory()->create());
-
         $this->assertTrue($project->users->contains($user));
     }
 
@@ -41,11 +39,9 @@ class ProjectTest extends TestCase
         $project = Project::factory()->create();
 
         $project->invite($user = User::factory()->create());
-
         $this->assertTrue($project->users->contains($user));
 
         $project->uninvite($user);
-
         $this->assertFalse($project->fresh()->users->contains($user));
     }
 }
