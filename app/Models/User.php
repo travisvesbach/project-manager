@@ -69,9 +69,9 @@ class User extends Authenticatable
     protected static function booted()
     {
         static::creating(function ($user) {
-            //if there aren't any users, this user is an admin
+            //if there aren't any users, this user is an Administrator
             if(User::count() == 0) {
-                $user->role = 'admin';
+                $user->role = 'Administrator';
             }
         });
     }

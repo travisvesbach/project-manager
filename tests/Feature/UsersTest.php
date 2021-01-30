@@ -14,14 +14,14 @@ class UsersTest extends TestCase
     /** @test **/
     public function first_user_is_an_admin() {
         $user = User::factory()->create();
-        $this->assertEquals('admin', $user->role);
+        $this->assertEquals('Administrator', $user->role);
     }
 
     /** @test **/
     public function users_added_after_the_first_are_not_admins() {
-        $this->assertEquals('admin', User::factory()->create()->role);
-        $this->assertNotEquals('admin', User::factory()->create()->role);
-        $this->assertNotEquals('admin', User::factory()->create()->role);
+        $this->assertEquals('Administrator', User::factory()->create()->role);
+        $this->assertNotEquals('Administrator', User::factory()->create()->role);
+        $this->assertNotEquals('Administrator', User::factory()->create()->role);
     }
 
     /** @test **/
