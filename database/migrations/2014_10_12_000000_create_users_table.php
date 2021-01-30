@@ -24,6 +24,7 @@ class CreateUsersTable extends Migration
             $table->text('profile_photo_path')->nullable();
             $table->string('theme')->default('light');
             $table->string('project_layout')->default('project default');
+            $table->string('role')->nullable();
             $table->timestamps();
         });
     }

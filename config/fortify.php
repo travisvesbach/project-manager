@@ -131,7 +131,7 @@ return [
     */
 
     'features' => [
-        Features::registration(),
+        env('ALLOW_USER_REGISTRATION', true) ? Features::registration() : null,
         Features::resetPasswords(),
         // Features::emailVerification(),
         Features::updateProfileInformation(),

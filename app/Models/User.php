@@ -28,7 +28,8 @@ class User extends Authenticatable
         'email',
         'password',
         'theme',
-        'project_layout'
+        'project_layout',
+        'role'
     ];
 
     /**
@@ -64,6 +65,16 @@ class User extends Authenticatable
     protected $with = [
         'unreadNotifications'
     ];
+
+    protected static function booted()
+    {
+        static::creating(function ($user) {
+            //if there aren't any users, this user is an admin
+            if(User::count() == 0) {
+                $user->role = 'admin';
+            }
+        });
+    }
 
     public function projects() {
         return $this->hasMany(Project::class, 'owner_id');

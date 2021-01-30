@@ -17,3 +17,7 @@ https://github.com/SortableJS/Vue.Draggable
 
 vue-moments-ago
 https://github.com/jillztom/vue-moments-ago
+
+
+### User Registration
+There is a variable in the .env file called `ALLOW_USER_REGISTRATION`.  Set this to `true` to allow user registration.  The first user created is an admin by default and they can create/delete other users.  I recommend setting `ALLOW_USER_REGISTRATION` to `false` once you create your first user.
