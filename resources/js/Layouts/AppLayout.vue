@@ -166,8 +166,22 @@
                                             </form>
                                         </template>
 
-                                        <div class="border-t border-gray-100"></div>
+                                        <div class="border-t dropdown-divider-color"></div>
                                     </template>
+
+
+                                    <!-- Admin -->
+                                    <div v-if="$page.user.role == 'Administrator'">
+                                        <div class="block px-4 py-2 text-xs dropdown-title-color">
+                                            Admin
+                                        </div>
+
+                                        <jet-dropdown-link :href="route('users.index')">
+                                            Users
+                                        </jet-dropdown-link>
+
+                                        <div class="border-t dropdown-divider-color"></div>
+                                    </div>
 
                                     <!-- Authentication -->
                                     <form @submit.prevent="logout">
