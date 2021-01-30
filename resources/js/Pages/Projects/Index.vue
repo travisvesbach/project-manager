@@ -5,6 +5,9 @@
         </template>
 
         <div class="lg:flex lg:flex-wrap">
+            <div v-if="projects.length == 0" class="w-full text-center text-color">
+                You aren't a part of any projects.
+            </div>
             <div class="lg:w-1/3 px-3 pb-6 flex flex-col" v-for="project in projects">
                 <inertia-link :href="route('projects.show', {id: project.id})" class="flex flex-col flex-1">
                     <card class="flex-1">

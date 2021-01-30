@@ -58,7 +58,7 @@ class UsersTest extends TestCase
     }
 
     /** @test **/
-    public function an_admin_can_create_new_users() {
+    public function an_admin_can_create_users() {
         $admin_user = User::factory()->create();
 
         $this->actingAs($admin_user)
@@ -71,5 +71,18 @@ class UsersTest extends TestCase
             ->assertRedirect('users');
 
         $this->assertCount(2, User::all());
+    }
+
+    /** @test **/
+    public function an_admin_can_delete_users() {
+        $admin_user = User::factory()->create();
+        $delete_user = User::factory()->create();
+        $this->assertCount(2, User::all());
+
+        $this->actingAs($admin_user)
+            ->delete('users/' . $delete_user->id)
+            ->assertRedirect('users');
+
+        $this->assertCount(1, User::all());
     }
 }

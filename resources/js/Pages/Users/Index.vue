@@ -4,18 +4,33 @@
             Users
         </template>
 
-        <div class="w-full md:w-1/2 mx-auto py-10 sm:px-6 lg:px-8 m-2">
+        <div class="w-full md:w-3/4 xl:w-1/2 mx-auto pb-10 sm:px-6 lg:px-8 m-2">
+
+            <div class="flex mb-1 mx-2 text-color items-end">
+                <div class="flex items-center">
+                    <svg class="h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" />
+                    </svg>
+                    <span class="ml-1">{{ users.length }} {{ users.length == 1 ? 'user' : 'users' }}</span>
+                </div>
+
+                <jet-button class="ml-auto">
+                    <inertia-link :href="route('users.create')">
+                        New User
+                    </inertia-link>
+                </jet-button>
+            </div>
+
             <div class="border-b-2 border-color w-full"></div>
             <div class="border-b-2 border-color w-full" v-for="user in users">
                 <div class="pl-1 py-1 flex items-center text-color flex-1 hover-trigger">
 
                     <img class="h-8 w-8 rounded-full object-cover" :src="user.profile_photo_url" :alt="user.name" />
 
-                    <div class="inline-block ml-1 flex-1">
-                        <div>{{ user.name }}</div>
+                    <div class="inline-block ml-2 flex-1">
+                        <div class="text-lg mb-1">{{ user.name }}</div>
                         <div class="flex items-center">
                             <badge class="ml-0" :value="user.role"/>
-
                             <a :href="'mailto:' + user.email" class="text-sm link-color">{{ user.email }}</a>
                         </div>
                     </div>
@@ -102,8 +117,8 @@
 
         methods: {
             deleteUser() {
-                // this.form.id = this.confirmingDeleteUser.id;
-                // this.$inertia.delete('/users/' + this.form.id);
+                this.form.id = this.confirmingDeleteUser.id;
+                this.form.delete('/users/' + this.form.id);
             }
         }
     }
