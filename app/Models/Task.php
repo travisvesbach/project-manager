@@ -71,7 +71,7 @@ class Task extends Model
     }
 
     public function users() {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class)->orderBy('name', 'ASC');
     }
 
     public function path() {

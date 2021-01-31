@@ -18,16 +18,17 @@ class ProjectsController extends Controller
     public function show(Request $request, Project $project) {
         $this->authorize('update', $project);
 
-        $project->load(['tasks', 'activity', 'users', 'sections'])->get();
+        $project->load(['tasks', 'activity', 'sections'])->get();
 
         $users = null;
         if(auth()->user()->id == $project->owner->id) {
             $users = User::select([
                     'users.id',
                     'users.name',
-                    'users.email'
+                    'users.email',
+                    'users.role'
                 ])
-                ->where('users.id', '!=', $project->owner_id)
+                // ->where('users.id', '!=', $project->owner_id)
                 ->orderBy('name', 'ASC')
                 ->get();
         }

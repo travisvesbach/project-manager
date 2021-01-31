@@ -115,6 +115,11 @@
     @apply dark:border-gray-600;
 }
 
+.border-secondary-color {
+    @apply border-gray-300;
+    @apply dark:border-gray-500;
+}
+
 .slidein-left-leave-active,
 .slidein-left-enter-active {
   transition: .25s;
@@ -135,7 +140,7 @@ code {
     visibility: hidden;
 }
 
-.hover-trigger:hover .hover-target {
+.hover-trigger:hover .hover-target, .hover-trigger .hover-target:focus, .hover-trigger .hover-target:focus-within {
     visibility: visible;
 }
 

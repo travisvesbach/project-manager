@@ -63,15 +63,19 @@
 
             </div>
 
+
             <div>
                 <span class="text-secondary-color text-sm">Collaborators: </span>
 
-                <img class="h-5 w-5 rounded-full object-cover inline-block hover:opacity-75 " :src="user.profile_photo_url" :title="user.name" :alt="user.name" v-if="user.profile_photo_url"/>
+                <img class="h-5 w-5 mx-0.5 rounded-full object-cover inline-block" v-for="user in task.users" :src="user.profile_photo_url" :title="user.name" :alt="user.name" v-if="user.profile_photo_url"/>
 
-                <svg class="h-5 w-5 link-color inline-block" @click="managingCollaborators = true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg class="h-5 w-5 link-color cursor-pointer inline-block" @click="managingCollaborators = true" title="Edit task Collaborators" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" />
                 </svg>
+
+                <users-modal :owner="task.project.owner" :usersCurrent="task.users" :usersFrom="$page.users" :type="'task'" :path="task.path + '/users'" :show="managingCollaborators" @close="managingCollaborators = false"/>
             </div>
+
 
         </div>
     </transition>
@@ -87,6 +91,7 @@
     import Editor from '@/Components/Editor'
     import DatePicker from '@/Components/DatePicker'
     import ActivityItem from '@/Components/ActivityItem'
+    import UsersModal from '@/Components/UsersModal'
 
     export default {
         props: ['task'],
@@ -100,6 +105,7 @@
             Editor,
             DatePicker,
             ActivityItem,
+            UsersModal,
         },
 
         data() {

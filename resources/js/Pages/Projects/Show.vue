@@ -24,6 +24,9 @@
                                 Users
                             </jet-dropdown-link>
 
+                            <!-- users modal -->
+                            <users-modal :owner="project.owner" :usersCurrent="project.all_users" :usersFrom="$page.users" :title="'Project Users'" :path="project.path + '/users'" :show="showingUsers" @close="showingUsers = false"/>
+
                             <div class="border-t dropdown-divider-color"></div>
 
                             <jet-dropdown-link @click.native="editingProject = true" as="button">
@@ -165,65 +168,6 @@
             </template>
         </jet-dialog-modal>
 
-        <!-- users -->
-        <jet-dialog-modal :show="showingUsers" @close="showingUsers = false" >
-            <template #title>
-                Project Users
-            </template>
-
-            <template #content>
-                <div v-if="filteredUsers && filteredUsers.length > 0 && $page.user.id == project.owner.id" class="flex items-center">
-                    <select-input id="user" class="mr-4" v-model="userForm.id" v-bind:options="filteredUsers" v-bind:placeholder="'-- select user --'" required/>
-                    <jet-button type="submit" size="small" :class="{ 'opacity-25': userForm.processing }" :disabled="userForm.processing" @click.native="addUser">
-                        Add User
-                    </jet-button>
-                </div>
-                <p class="my-3 text-lg heading-color">
-                    Owner
-                </p>
-                <p class="my-3">
-                    <span>{{ project.owner.name }}</span>
-                    <span class="text-secondary-color ml-1">({{ project.owner.email }})</span>
-                </p>
-                <div v-if="project.users.length > 0">
-                    <hr>
-                    <p class="my-3 text-lg heading-color">
-                        Members
-                    </p>
-                    <div v-for="user in project.users" class="my-3">
-                        <p class="flex items-center" :class="{ 'opacity-25': removeUserForm.processing && removeUserForm.id == user.id }">
-                            <span>{{ user.name }}</span>
-                            <span v-if="user.email" class="text-secondary-color ml-1">({{ user.email }})</span>
-
-                            <span v-if="$page.user.id == project.owner.id" class="inline-block ml-2">
-                                <jet-dropdown align="center" width="48" position="fixed">
-                                    <template #trigger>
-                                        <button class="flex link link-color">
-                                            <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-                                                <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                            </svg>
-                                        </button>
-                                    </template>
-
-                                    <template #content >
-                                        <jet-dropdown-link :disabled="removeUserForm.processing" @click.native="removeUser(user)" as="button">
-                                            Remove from project
-                                        </jet-dropdown-link>
-                                    </template>
-                                </jet-dropdown>
-                            </span>
-                        </p>
-                    </div>
-                </div>
-            </template>
-
-            <template #footer>
-                <jet-secondary-button @click.native="showingUsers = false">
-                    Close
-                </jet-secondary-button>
-            </template>
-        </jet-dialog-modal>
-
         <!-- edit modal -->
         <modal-form :show="editingProject" @close="editingProject = false" @submitted="updateProject">
             <template #title>
@@ -293,6 +237,7 @@
     import SectionBoard from '@/Components/SectionBoard'
     import SectionBoardNew from '@/Components/SectionBoardNew'
     import NavButton from '@/Components/NavButton'
+    import UsersModal from '@/Components/UsersModal'
 
     import draggable  from 'vuedraggable'
 
@@ -328,6 +273,7 @@
             SectionBoard,
             SectionBoardNew,
             NavButton,
+            UsersModal,
         },
 
         directives: {
@@ -350,12 +296,6 @@
                     description: this.project.description,
                     layout: this.project.layout,
                 }),
-                userForm: this.$inertia.form({
-                    id: null,
-                }),
-                removeUserForm: this.$inertia.form({
-                    id: null,
-                }),
             }
         },
         mounted() {
@@ -370,17 +310,6 @@
             }
         },
         computed: {
-            filteredUsers() {
-                if(!this.users) {
-                    return false
-                } else if(this.users.length == this.project.users.length ) {
-                    return false;
-                } else if(this.users.length > 0 && this.project.users.length > 0) {
-                    return this.users.filter(x => this.project.users.some(y => x.id != y.id) && x.id != this.project.owner_id);
-                } else {
-                    return this.users;
-                }
-            },
             layout() {
                 if(this.layoutButton) {
                     return this.layoutButton;
@@ -398,7 +327,6 @@
                         this.showingTask = this.project.tasks[i];
                     }
                 }
-                this.userForm.id = null;
 
                 this.form =  this.$inertia.form({
                     id: this.project.id,
@@ -421,15 +349,6 @@
             },
             closeDetails() {
                 this.showingTask = false;
-            },
-            addUser() {
-                this.userForm.post(this.project.path + '/users');
-            },
-            removeUser(user) {
-                this.removeUserForm.id = user.id;
-                this.removeUserForm.delete(this.project.path + '/users/' + user.id, {
-                    preserveState: true,
-                });
             },
             updateSectionWeights(target) {
                 let newIndex = target.moved.newIndex + 1;

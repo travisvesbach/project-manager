@@ -22,7 +22,8 @@ class Project extends Model
     ];
 
     protected $appends = [
-        'path'
+        'path',
+        'all_users'
     ];
 
     protected static function booted()
@@ -110,10 +111,17 @@ class Project extends Model
     public function uninvite(User $user) {
         $this->users()->detach($user->id);
         $this->recordActivity('left_project', $user->id);
+        foreach($this->tasks as $task) {
+            $task->uninvite($user);
+        }
     }
 
     public function users() {
         return $this->belongsToMany(User::class)->withTimestamps()->orderBy('name', 'ASC');
+    }
+
+    public function getAllUsersAttribute() {
+        return array_merge([$this->owner], $this->users->toArray());
     }
 
 }

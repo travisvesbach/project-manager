@@ -1,5 +1,5 @@
 <template>
-    <div class="inline-block px-1 mx-1 text-sm text-color rounded-md" :class="colorClassesComputed">
+    <div class="inline-block px-1 mx-1 text-sm text-color rounded-md" :class="colorClasses">
         {{ value }}
     </div>
 </template>
@@ -7,15 +7,16 @@
 <script>
 
     export default {
-        props: ['value', 'colorClasses'],
-
+        props: ['value', 'color'],
 
         computed: {
-            colorClassesComputed() {
-                if(this.colorClasses) {
-                    return this.colorClasses;
-                } else {
-                    return 'bg-gray-200 dark:bg-gray-600 text-color';
+            colorClasses() {
+                switch(this.color) {
+                    case 'light-gray':
+                        return 'bg-gray-300 dark:bg-gray-500 text-color'
+                        break;
+                    default:
+                        return 'bg-gray-200 dark:bg-gray-600 text-color';
                 }
             },
         },
