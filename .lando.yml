@@ -2,6 +2,9 @@ name: project
 recipe: laravel
 config:
   webroot: public
+proxy:
+  mailhog:
+    - mail.project.test
 services:
   node:
     type: node:12
@@ -9,6 +12,10 @@ services:
       - npm install
   phpmyadmin:
     type: phpmyadmin
+  mailhog:
+    type: mailhog
+    hogfrom:
+      - appserver
 tooling:
   npm:
     service: node

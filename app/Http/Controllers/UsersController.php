@@ -9,6 +9,7 @@ use Laravel\Fortify\Rules\Password;
 use Illuminate\Validation\Rule;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use App\Notifications\UserCreated;
 
 class UsersController extends Controller
 {
@@ -30,12 +31,21 @@ class UsersController extends Controller
     public function store(Request $request) {
         $this->authorize('manageUsers', User::class);
 
-        User::create(request()->validate([
+        request()->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', new Password, 'confirmed'],
             'role' => ['required', 'string'],
-        ]));
+        ]);
+
+        $user = User::create([
+            'name' => request()->input('name'),
+            'email' => request()->input('email'),
+            'password' => Hash::make(request()->input('password')),
+            'role' => request()->input('role'),
+        ]);
+
+        $user->notify(new UserCreated());
 
         return redirect('/users');
     }
