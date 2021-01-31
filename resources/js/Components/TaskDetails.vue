@@ -63,7 +63,15 @@
 
             </div>
 
+            <div>
+                <span class="text-secondary-color text-sm">Collaborators: </span>
 
+                <img class="h-5 w-5 rounded-full object-cover inline-block hover:opacity-75 " :src="user.profile_photo_url" :title="user.name" :alt="user.name" v-if="user.profile_photo_url"/>
+
+                <svg class="h-5 w-5 link-color inline-block" @click="managingCollaborators = true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+            </div>
 
         </div>
     </transition>
@@ -96,12 +104,16 @@
 
         data() {
             return {
+                managingCollaborators: false,
                 form: this.$inertia.form({
                     id: this.task.id,
                     name: this.task.name,
                     description: this.task.description,
                     completed: this.task.completed,
                     due_date: this.task.due_date,
+                }),
+                removeUserForm: this.$inertia.form({
+                    id: null,
                 }),
             }
         },
@@ -144,6 +156,12 @@
             deleteTask() {
                 this.$inertia.delete(this.task.path);
                 this.$emit('close');
+            },
+            removeUser(user) {
+                if(this.task.users.includes(user)) {
+                    this.removeUserForm.id = user.id;
+                    this.removeUserForm.delete(this.task.path + '/users/' + user.id, { preserveState: true });
+                }
             },
         }
     }

@@ -39,7 +39,7 @@ class Section extends Model
     }
 
     public function tasks() {
-        return $this->hasMany(Task::class)->orderBy('weight', 'ASC')->with('activity');
+        return $this->hasMany(Task::class)->orderBy('weight', 'ASC')->with('activity', 'users');
     }
 
     public function updateTaskWeights() {

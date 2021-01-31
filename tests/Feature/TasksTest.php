@@ -7,6 +7,7 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\Project;
 use App\Models\Task;
+use App\Models\User;
 use Facades\Tests\Setup\ProjectFactory;
 
 class TasksTest extends TestCase
@@ -182,5 +183,16 @@ class TasksTest extends TestCase
 
         $this->assertCount(2, $project->tasks);
         $this->assertEquals(2, $project->tasks->last()->weight);
+    }
+
+    /** @test **/
+    public function inviting_a_user_to_a_task_adds_them_to_the_project() {
+        $project = ProjectFactory::withTasks(1)->create();
+        $task = $project->tasks->first();
+
+        $task->invite($user = User::factory()->create());
+        $this->assertTrue($task->users->contains($user));
+        $this->assertTrue($project->users->contains($user));
+
     }
 }

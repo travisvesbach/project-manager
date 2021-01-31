@@ -7,7 +7,9 @@ use Illuminate\Database\Eloquent\Model;
 use App\Models\Project;
 use App\Models\Section;
 use App\Models\Activity;
+use App\Models\User;
 use App\Traits\RecordsActivity;
+use Auth;
 
 class Task extends Model
 {
@@ -54,6 +56,10 @@ class Task extends Model
                 $task->weight = count($task->section->tasks) > 0 ? $task->section->tasks->sortByDesc('weight')->first()->weight + 1 : 1;
             }
         });
+
+        static::created(function ($task) {
+            $task->users()->attach(Auth::user());
+        });
     }
 
     public function project() {
@@ -62,6 +68,10 @@ class Task extends Model
 
     public function section() {
         return $this->belongsTo(Section::class);
+    }
+
+    public function users() {
+        return $this->belongsToMany(User::class);
     }
 
     public function path() {
@@ -82,5 +92,16 @@ class Task extends Model
         $this->update(['completed' => false]);
 
         $this->recordActivity('incompleted_task');
+    }
+
+    public function invite(User $user) {
+        $this->users()->attach($user);
+        if(!$this->project->users->contains($user) && $this->project->owner != $user) {
+            $this->project->invite($user);
+        }
+    }
+
+    public function uninvite(User $user) {
+        $this->users()->detach($user->id);
     }
 }

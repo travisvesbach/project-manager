@@ -8,6 +8,7 @@ use App\Http\Controllers\TasksController;
 use App\Http\Controllers\SectionsController;
 use App\Http\Controllers\NotificationsController;
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\TaskUsersController;
 
 /*
 |--------------------------------------------------------------------------
@@ -62,4 +63,8 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
     Route::get('/users/{user}/edit', [UsersController::class, 'edit'])->name('users.edit');
     Route::patch('/users/{user}', [UsersController::class, 'update'])->name('users.update');
     Route::delete('/users/{user}', [UsersController::class, 'destroy'])->name('users.destroy');
+
+
+    Route::post('/projects/{project}/tasks/{task}/users', [TaskUsersController::class, 'store'])->name('taskusers.store');
+    Route::delete('/projects/{project}/tasks/{task}/users/{user}', [TaskUsersController::class, 'destroy'])->name('taskusers.destroy');
 });

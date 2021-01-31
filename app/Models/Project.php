@@ -42,7 +42,7 @@ class Project extends Model
     }
 
     public function tasks() {
-        return $this->hasMany(Task::class)->with('activity');
+        return $this->hasMany(Task::class)->with('activity', 'users');
     }
 
     public function updateTaskWeights($order = false) {

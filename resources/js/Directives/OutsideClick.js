@@ -52,6 +52,13 @@ let OutsideClick = {
                     clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : flatpickrs[i].contains(e.target);
                 }
             }
+            // exception for modals
+            if(!clickedOnExcludedEl && document.getElementsByClassName('vue-portal-target').length > 0) {
+                let flatpickrs = document.getElementsByClassName('vue-portal-target');
+                for(let i=0;i < flatpickrs.length;i++) {
+                    clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : flatpickrs[i].contains(e.target);
+                }
+            }
 
             // We check to see if the clicked element is not
             // the dialog element and not excluded

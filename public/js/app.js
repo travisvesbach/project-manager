@@ -3271,6 +3271,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -3293,12 +3301,16 @@ __webpack_require__.r(__webpack_exports__);
   },
   data: function data() {
     return {
+      managingCollaborators: false,
       form: this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
         description: this.task.description,
         completed: this.task.completed,
         due_date: this.task.due_date
+      }),
+      removeUserForm: this.$inertia.form({
+        id: null
       })
     };
   },
@@ -3340,6 +3352,14 @@ __webpack_require__.r(__webpack_exports__);
     deleteTask: function deleteTask() {
       this.$inertia["delete"](this.task.path);
       this.$emit('close');
+    },
+    removeUser: function removeUser(user) {
+      if (this.task.users.includes(user)) {
+        this.removeUserForm.id = user.id;
+        this.removeUserForm["delete"](this.task.path + '/users/' + user.id, {
+          preserveState: true
+        });
+      }
     }
   }
 });
@@ -6562,7 +6582,7 @@ __webpack_require__.r(__webpack_exports__);
         return this.users.filter(function (x) {
           return _this.project.users.some(function (y) {
             return x.id != y.id;
-          });
+          }) && x.id != _this.project.owner_id;
         });
       } else {
         return this.users;
@@ -82669,6 +82689,53 @@ var render = function() {
                 }),
                 0
               )
+            ]),
+            _vm._v(" "),
+            _c("div", [
+              _c("span", { staticClass: "text-secondary-color text-sm" }, [
+                _vm._v("Collaborators: ")
+              ]),
+              _vm._v(" "),
+              _vm.user.profile_photo_url
+                ? _c("img", {
+                    staticClass:
+                      "h-5 w-5 rounded-full object-cover inline-block hover:opacity-75 ",
+                    attrs: {
+                      src: _vm.user.profile_photo_url,
+                      title: _vm.user.name,
+                      alt: _vm.user.name
+                    }
+                  })
+                : _vm._e(),
+              _vm._v(" "),
+              _c(
+                "svg",
+                {
+                  staticClass: "h-5 w-5 link-color inline-block",
+                  attrs: {
+                    xmlns: "http://www.w3.org/2000/svg",
+                    fill: "none",
+                    viewBox: "0 0 24 24",
+                    stroke: "currentColor"
+                  },
+                  on: {
+                    click: function($event) {
+                      _vm.managingCollaborators = true
+                    }
+                  }
+                },
+                [
+                  _c("path", {
+                    attrs: {
+                      "stroke-linecap": "round",
+                      "stroke-linejoin": "round",
+                      "stroke-width": "2",
+                      d:
+                        "M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"
+                    }
+                  })
+                ]
+              )
             ])
           ]
         )
@@ -104860,15 +104927,14 @@ __webpack_require__.r(__webpack_exports__);
 /*!*******************************************!*\
   !*** ./resources/js/Components/Badge.vue ***!
   \*******************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Badge_vue_vue_type_template_id_5c09bee8___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Badge.vue?vue&type=template&id=5c09bee8& */ "./resources/js/Components/Badge.vue?vue&type=template&id=5c09bee8&");
 /* harmony import */ var _Badge_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Badge.vue?vue&type=script&lang=js& */ "./resources/js/Components/Badge.vue?vue&type=script&lang=js&");
-/* harmony reexport (unknown) */ for(var __WEBPACK_IMPORT_KEY__ in _Badge_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__) if(["default"].indexOf(__WEBPACK_IMPORT_KEY__) < 0) (function(key) { __webpack_require__.d(__webpack_exports__, key, function() { return _Badge_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__[key]; }) }(__WEBPACK_IMPORT_KEY__));
-/* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
 
 
 
@@ -104898,7 +104964,7 @@ component.options.__file = "resources/js/Components/Badge.vue"
 /*!********************************************************************!*\
   !*** ./resources/js/Components/Badge.vue?vue&type=script&lang=js& ***!
   \********************************************************************/
-/*! no static exports found */
+/*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -106367,6 +106433,15 @@ var OutsideClick = {
 
         for (var i = 0; i < flatpickrs.length; i++) {
           clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : flatpickrs[i].contains(e.target);
+        }
+      } // exception for modals
+
+
+      if (!clickedOnExcludedEl && document.getElementsByClassName('vue-portal-target').length > 0) {
+        var _flatpickrs = document.getElementsByClassName('vue-portal-target');
+
+        for (var _i = 0; _i < _flatpickrs.length; _i++) {
+          clickedOnExcludedEl = clickedOnExcludedEl ? clickedOnExcludedEl : _flatpickrs[_i].contains(e.target);
         }
       } // We check to see if the clicked element is not
       // the dialog element and not excluded

@@ -376,7 +376,7 @@
                 } else if(this.users.length == this.project.users.length ) {
                     return false;
                 } else if(this.users.length > 0 && this.project.users.length > 0) {
-                    return this.users.filter(x => this.project.users.some(y => x.id != y.id));
+                    return this.users.filter(x => this.project.users.some(y => x.id != y.id) && x.id != this.project.owner_id);
                 } else {
                     return this.users;
                 }
