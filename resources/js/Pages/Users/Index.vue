@@ -32,6 +32,12 @@
                         <div class="flex items-center">
                             <badge class="ml-0" :value="user.role"/>
                             <a :href="'mailto:' + user.email" class="text-sm link-color">{{ user.email }}</a>
+                            <div class="inline-block flex items-center text-secondary-color" :title="user.projects.length + (user.projects.length == 1 ? ' project' : ' projects')" v-if="user.projects.length > 0">
+                                <svg class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01" />
+                                </svg>
+                                <span class="text-sm">{{ user.projects.length }}</span>
+                            </div>
                         </div>
                     </div>
                     <div class="inline-block">

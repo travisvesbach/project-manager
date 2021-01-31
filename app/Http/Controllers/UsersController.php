@@ -17,7 +17,7 @@ class UsersController extends Controller
     public function index() {
         $this->authorize('manageUsers', User::class);
 
-        $users = User::orderBy('name')->get();
+        $users = User::orderBy('name')->with(['projects'])->get();
 
         return Inertia::render('Users/Index', compact('users'));
     }
