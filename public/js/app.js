@@ -83380,96 +83380,103 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _c(
-                        "div",
-                        { staticClass: "inline-block" },
-                        [
-                          _c("jet-dropdown", {
-                            staticClass: "hover-target",
-                            attrs: {
-                              align: "right",
-                              width: "48",
-                              position: "fixed"
-                            },
-                            scopedSlots: _vm._u(
-                              [
-                                {
-                                  key: "trigger",
-                                  fn: function() {
-                                    return [
-                                      _c(
-                                        "button",
-                                        { staticClass: "flex link link-color" },
-                                        [
+                      _vm.type == "task" ||
+                      (_vm.type == "project" && user.id != _vm.owner.id)
+                        ? _c(
+                            "div",
+                            { staticClass: "inline-block" },
+                            [
+                              _c("jet-dropdown", {
+                                staticClass: "hover-target",
+                                attrs: {
+                                  align: "right",
+                                  width: "48",
+                                  position: "fixed"
+                                },
+                                scopedSlots: _vm._u(
+                                  [
+                                    {
+                                      key: "trigger",
+                                      fn: function() {
+                                        return [
                                           _c(
-                                            "svg",
+                                            "button",
                                             {
                                               staticClass:
-                                                "fill-current h-8 w-8",
-                                              attrs: {
-                                                xmlns:
-                                                  "http://www.w3.org/2000/svg",
-                                                viewBox: "0 0 20 20"
-                                              }
+                                                "flex link link-color"
                                             },
                                             [
-                                              _c("path", {
-                                                attrs: {
-                                                  "fill-rule": "evenodd",
-                                                  d:
-                                                    "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
-                                                  "clip-rule": "evenodd"
-                                                }
-                                              })
+                                              _c(
+                                                "svg",
+                                                {
+                                                  staticClass:
+                                                    "fill-current h-8 w-8",
+                                                  attrs: {
+                                                    xmlns:
+                                                      "http://www.w3.org/2000/svg",
+                                                    viewBox: "0 0 20 20"
+                                                  }
+                                                },
+                                                [
+                                                  _c("path", {
+                                                    attrs: {
+                                                      "fill-rule": "evenodd",
+                                                      d:
+                                                        "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
+                                                      "clip-rule": "evenodd"
+                                                    }
+                                                  })
+                                                ]
+                                              )
                                             ]
                                           )
                                         ]
-                                      )
-                                    ]
-                                  },
-                                  proxy: true
-                                },
-                                {
-                                  key: "content",
-                                  fn: function() {
-                                    return [
-                                      _c(
-                                        "jet-dropdown-link",
-                                        {
-                                          attrs: {
-                                            disabled: _vm.removeForm.processing,
-                                            as: "button"
-                                          },
-                                          nativeOn: {
-                                            click: function($event) {
-                                              return _vm.removeUser(user)
-                                            }
-                                          }
-                                        },
-                                        [
-                                          _vm._v(
-                                            "\n                                " +
-                                              _vm._s(
-                                                _vm.type == "task"
-                                                  ? "Remove from task"
-                                                  : "Remove from project"
-                                              ) +
-                                              "\n                            "
+                                      },
+                                      proxy: true
+                                    },
+                                    {
+                                      key: "content",
+                                      fn: function() {
+                                        return [
+                                          _c(
+                                            "jet-dropdown-link",
+                                            {
+                                              attrs: {
+                                                disabled:
+                                                  _vm.removeForm.processing,
+                                                as: "button"
+                                              },
+                                              nativeOn: {
+                                                click: function($event) {
+                                                  return _vm.removeUser(user)
+                                                }
+                                              }
+                                            },
+                                            [
+                                              _vm._v(
+                                                "\n                                " +
+                                                  _vm._s(
+                                                    _vm.type == "task"
+                                                      ? "Remove from task"
+                                                      : "Remove from project"
+                                                  ) +
+                                                  "\n                            "
+                                              )
+                                            ]
                                           )
                                         ]
-                                      )
-                                    ]
-                                  },
-                                  proxy: true
-                                }
-                              ],
-                              null,
-                              true
-                            )
-                          })
-                        ],
-                        1
-                      )
+                                      },
+                                      proxy: true
+                                    }
+                                  ],
+                                  null,
+                                  true
+                                )
+                              })
+                            ],
+                            1
+                          )
+                        : _vm._e()
                     ]
                   )
                 ]
@@ -88698,7 +88705,7 @@ var render = function() {
                                   owner: _vm.project.owner,
                                   usersCurrent: _vm.project.all_users,
                                   usersFrom: _vm.$page.users,
-                                  title: "Project Users",
+                                  type: "project",
                                   path: _vm.project.path + "/users",
                                   show: _vm.showingUsers
                                 },

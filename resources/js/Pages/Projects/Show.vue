@@ -25,7 +25,7 @@
                             </jet-dropdown-link>
 
                             <!-- users modal -->
-                            <users-modal :owner="project.owner" :usersCurrent="project.all_users" :usersFrom="$page.users" :title="'Project Users'" :path="project.path + '/users'" :show="showingUsers" @close="showingUsers = false"/>
+                            <users-modal :owner="project.owner" :usersCurrent="project.all_users" :usersFrom="$page.users" :type="'project'" :path="project.path + '/users'" :show="showingUsers" @close="showingUsers = false"/>
 
                             <div class="border-t dropdown-divider-color"></div>
 

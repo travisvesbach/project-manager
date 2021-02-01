@@ -36,7 +36,7 @@
                             <a :href="'mailto:' + user.email" class="text-sm link-color">{{ user.email }}</a>
                         </div>
                     </div>
-                    <div class="inline-block">
+                    <div class="inline-block" v-if="type == 'task' || (type == 'project' && user.id != owner.id)">
                         <!-- dropdown -->
                         <jet-dropdown align="right" width="48" position="fixed" class="hover-target">
                             <template #trigger>
