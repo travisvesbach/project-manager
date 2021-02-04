@@ -27,6 +27,19 @@ class NotificationsTest extends TestCase
     }
 
     /** @test **/
+    public function making_another_user_the_project_owner() {
+        $this->signIn();
+
+        $project = ProjectFactory::create();
+
+        $project->invite($user = User::factory()->create());
+        $this->assertCount(1, $user->notifications);
+
+        $project->changeOwner($user);
+        $this->assertCount(2, $user->fresh()->notifications);
+    }
+
+    /** @test **/
     public function can_be_marked_as_read() {
         $this->signIn();
 

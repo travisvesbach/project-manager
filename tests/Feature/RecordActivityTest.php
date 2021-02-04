@@ -211,4 +211,18 @@ class RecordActivityTest extends TestCase
 
         $this->assertCount(1, $project->fresh()->activity);
     }
+
+    /** @test **/
+    public function changing_project_owner() {
+        $this->withoutExceptionHandling();
+        $project = ProjectFactory::create();
+
+        $project->invite($new_owner = User::factory()->create());
+        $this->assertCount(2, $project->fresh()->activity);
+
+        $project->changeOwner($new_owner);
+        $this->assertCount(3, $project->activity);
+        $this->assertEquals('updated_project', $project->fresh()->activity->last()->description);
+
+    }
 }

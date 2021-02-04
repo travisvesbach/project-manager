@@ -9,6 +9,7 @@ use App\Models\Task;
 use App\Models\Activity;
 use App\Traits\RecordsActivity;
 use App\Notifications\InvitedToProject;
+use App\Notifications\PromotedToProjectOwner;
 
 class Project extends Model
 {
@@ -114,6 +115,15 @@ class Project extends Model
         foreach($this->tasks as $task) {
             $task->uninvite($user);
         }
+    }
+
+    public function changeOwner(User $user) {
+        $this->users()->attach($this->owner);
+
+        $this->owner_id = $user->id;
+        $this->users()->detach($user);
+        $this->save();
+        $user->notify(new PromotedToProjectOwner($this));
     }
 
     public function users() {

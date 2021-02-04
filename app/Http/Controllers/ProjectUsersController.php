@@ -17,6 +17,14 @@ class ProjectUsersController extends Controller
         return redirect($project->path());
     }
 
+    public function changeOwner(Request $request, Project $project, User $user) {
+        $this->authorize('delete', $project);
+
+        $project->changeOwner($user);
+
+        return redirect($project->path());
+    }
+
     public function destroy(Project $project, User $user) {
         $this->authorize('delete', $project);
 

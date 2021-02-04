@@ -86,4 +86,39 @@ class ProjectUsersTest extends TestCase
 
         $this->assertTrue($project->users->contains($userToUninvite));
     }
+
+    /** @test **/
+    public function a_project_owner_can_make_another_member_the_owner() {
+        $project = ProjectFactory::create();
+
+        $old_owner = $project->owner;
+
+        $project->invite($new_owner = User::factory()->create());
+
+        $this->actingAs($old_owner)
+            ->post($project->path() . '/users/' . $new_owner->id . '/owner')
+            ->assertRedirect($project->path());
+
+        $this->assertEquals($new_owner->id, $project->fresh()->owner_id);
+        $this->assertFalse($project->fresh()->users->contains($new_owner));
+        $this->assertTrue($project->fresh()->users->contains($old_owner));
+    }
+
+    /** @test **/
+    public function non_owners_cannot_make_another_member_the_owner() {
+        $project = ProjectFactory::create();
+
+        $owner = $project->owner;
+
+        $project->invite($user = User::factory()->create());
+
+        $this->actingAs($user)
+            ->post($project->path() . '/users/' . $user->id . '/owner')
+            ->assertStatus(403);
+
+        $this->assertEquals($owner->id, $project->fresh()->owner_id);
+        $this->assertTrue($project->fresh()->users->contains($user));
+        $this->assertFalse($project->fresh()->users->contains($owner));
+    }
+
 }

@@ -48,6 +48,7 @@ Route::group(['middleware' => ['auth:sanctum', 'verified']], function() {
     Route::delete('/projects/{project}/tasks/{task}', [TasksController::class, 'destroy'])->name('tasks.destroy');
 
     Route::post('/projects/{project}/users', [ProjectUsersController::class, 'store']);
+    Route::post('/projects/{project}/users/{user}/owner', [ProjectUsersController::class, 'changeOwner']);
     Route::delete('/projects/{project}/users/{user}', [ProjectUsersController::class, 'destroy']);
 
     Route::post('/projects/{project}/sections', [SectionsController::class, 'store'])->name('sections.store');

@@ -42,6 +42,9 @@
                     case 'App\\Notifications\\InvitedToProject':
                         description += 'invited you to ' + this.notification.data['project_name'];
                         break;
+                    case 'App\\Notifications\\PromotedToProjectOwner':
+                        description += 'made you ' + this.notification.data['project_name'] + '\'s owner';
+                        break;
 
                     default:
                 }
@@ -50,9 +53,9 @@
         },
         methods: {
             markAsRead() {
-                console.log('making as read');
                 if(this.notification.read_at == null) {
                     this.read = true;
+                    this.notification.read_at = true;
 
                     axios.patch('/notifications/' + this.notification.id, {
                         'read': true,

@@ -13,7 +13,7 @@
                     <span class="ml-1">{{ usersCurrent.length }} {{ usersCurrent.length == 1 ? 'user' : 'users' }}</span>
                 </div>
 
-                <div class="ml-auto" :class="{ 'opacity-25': addDisabled }">
+                <div class="ml-auto" :class="{ 'opacity-25': addDisabled }" v-if="$page.user.id == owner.id">
                     <select-input id="user" class="mr-4" v-model="form.id" v-bind:options="filteredUsers" v-bind:placeholder="'-- select user --'" required :disabled="addDisabled"/>
                     <jet-button type="submit" size="small" :disabled="addDisabled" @click.native="addUser">
                         {{ addText }}
@@ -23,7 +23,7 @@
 
             <div class="border-b-2 border-secondary-color w-full"></div>
 
-            <div class="border-b-2 border-secondary-color w-full" :class="{ 'opacity-25': removeForm.processing && removeForm.id == user.id }" v-for="user in usersCurrent" >
+            <div class="border-b-2 border-secondary-color w-full" :class="{ 'opacity-25': (removeForm.processing && removeForm.id == user.id) || (ownerForm.processing && ownerForm.id == user.id) }" v-for="user in usersCurrent" >
                 <div class="pl-1 py-1 flex items-center text-color flex-1 hover-trigger">
 
                     <img class="h-8 w-8 rounded-full object-cover" :src="user.profile_photo_url" :alt="user.name" />
@@ -48,6 +48,9 @@
                             </template>
 
                             <template #content >
+                                <jet-dropdown-link :disabled="ownerForm.processing" @click.native="makeOwner(user)" as="button" v-if="type == 'project' && $page.user.id == owner.id">
+                                    Make project owner
+                                </jet-dropdown-link>
                                 <jet-dropdown-link :disabled="removeForm.processing" @click.native="removeUser(user)" as="button">
                                     {{ type == 'task' ? 'Remove from task' : 'Remove from project' }}
                                 </jet-dropdown-link>
@@ -99,6 +102,9 @@
                 removeForm: this.$inertia.form({
                     id: null,
                 }),
+                ownerForm: this.$inertia.form({
+                    id: null,
+                }),
             }
         },
         computed: {
@@ -140,6 +146,12 @@
                 if(this.usersCurrent.includes(user)) {
                     this.removeForm.id = user.id;
                     this.removeForm.delete(this.path + '/' + user.id, { preserveState: true });
+                }
+            },
+            makeOwner(user) {
+                if(this.usersCurrent.includes(user)) {
+                    this.ownerForm.id = user.id;
+                    this.ownerForm.post(this.path + '/' + user.id + '/owner', { preserveState: true });
                 }
             },
             close() {

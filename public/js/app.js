@@ -1960,6 +1960,8 @@ __webpack_require__.r(__webpack_exports__);
       return this.activity.created_at ? moment__WEBPACK_IMPORTED_MODULE_0___default()(this.activity.created_at).format() : null;
     },
     description: function description() {
+      var _this = this;
+
       var description = this.activity.user.name + ' ';
 
       switch (this.activity.description) {
@@ -1968,7 +1970,12 @@ __webpack_require__.r(__webpack_exports__);
           break;
 
         case 'updated_project':
-          if (Object.keys(this.activity.changes.after).length == 1) {
+          if (Object.keys(this.activity.changes.after).length == 1 && Object.keys(this.activity.changes.after)[0] == 'owner_id') {
+            var user = this.$page.users.find(function (x) {
+              return x.id === Object.keys(_this.activity.changes.after)[1];
+            });
+            description += 'made ' + user.name + ' the project owner';
+          } else if (Object.keys(this.activity.changes.after).length == 1) {
             description += 'updated the project\'s ' + Object.keys(this.activity.changes.after)[0];
           } else {
             description += 'updatd the project';
@@ -2438,6 +2445,10 @@ __webpack_require__.r(__webpack_exports__);
           description += 'invited you to ' + this.notification.data['project_name'];
           break;
 
+        case 'App\\Notifications\\PromotedToProjectOwner':
+          description += 'made you ' + this.notification.data['project_name'] + '\'s owner';
+          break;
+
         default:
       }
 
@@ -2446,10 +2457,9 @@ __webpack_require__.r(__webpack_exports__);
   },
   methods: {
     markAsRead: function markAsRead() {
-      console.log('making as read');
-
       if (this.notification.read_at == null) {
         this.read = true;
+        this.notification.read_at = true;
         axios.patch('/notifications/' + this.notification.id, {
           'read': true
         }).then(function (response) {// this.notification = response.data;
@@ -3672,6 +3682,9 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
 
 
 
@@ -3698,6 +3711,9 @@ __webpack_require__.r(__webpack_exports__);
         id: null
       }),
       removeForm: this.$inertia.form({
+        id: null
+      }),
+      ownerForm: this.$inertia.form({
         id: null
       })
     };
@@ -3747,6 +3763,14 @@ __webpack_require__.r(__webpack_exports__);
       if (this.usersCurrent.includes(user)) {
         this.removeForm.id = user.id;
         this.removeForm["delete"](this.path + '/' + user.id, {
+          preserveState: true
+        });
+      }
+    },
+    makeOwner: function makeOwner(user) {
+      if (this.usersCurrent.includes(user)) {
+        this.ownerForm.id = user.id;
+        this.ownerForm.post(this.path + '/' + user.id + '/owner', {
           preserveState: true
         });
       }
@@ -83264,56 +83288,58 @@ var render = function() {
                 ])
               ]),
               _vm._v(" "),
-              _c(
-                "div",
-                {
-                  staticClass: "ml-auto",
-                  class: { "opacity-25": _vm.addDisabled }
-                },
-                [
-                  _c("select-input", {
-                    staticClass: "mr-4",
-                    attrs: {
-                      id: "user",
-                      options: _vm.filteredUsers,
-                      placeholder: "-- select user --",
-                      required: "",
-                      disabled: _vm.addDisabled
-                    },
-                    model: {
-                      value: _vm.form.id,
-                      callback: function($$v) {
-                        _vm.$set(_vm.form, "id", $$v)
-                      },
-                      expression: "form.id"
-                    }
-                  }),
-                  _vm._v(" "),
-                  _c(
-                    "jet-button",
+              _vm.$page.user.id == _vm.owner.id
+                ? _c(
+                    "div",
                     {
-                      attrs: {
-                        type: "submit",
-                        size: "small",
-                        disabled: _vm.addDisabled
-                      },
-                      nativeOn: {
-                        click: function($event) {
-                          return _vm.addUser($event)
-                        }
-                      }
+                      staticClass: "ml-auto",
+                      class: { "opacity-25": _vm.addDisabled }
                     },
                     [
-                      _vm._v(
-                        "\n                    " +
-                          _vm._s(_vm.addText) +
-                          "\n                "
+                      _c("select-input", {
+                        staticClass: "mr-4",
+                        attrs: {
+                          id: "user",
+                          options: _vm.filteredUsers,
+                          placeholder: "-- select user --",
+                          required: "",
+                          disabled: _vm.addDisabled
+                        },
+                        model: {
+                          value: _vm.form.id,
+                          callback: function($$v) {
+                            _vm.$set(_vm.form, "id", $$v)
+                          },
+                          expression: "form.id"
+                        }
+                      }),
+                      _vm._v(" "),
+                      _c(
+                        "jet-button",
+                        {
+                          attrs: {
+                            type: "submit",
+                            size: "small",
+                            disabled: _vm.addDisabled
+                          },
+                          nativeOn: {
+                            click: function($event) {
+                              return _vm.addUser($event)
+                            }
+                          }
+                        },
+                        [
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(_vm.addText) +
+                              "\n                "
+                          )
+                        ]
                       )
-                    ]
+                    ],
+                    1
                   )
-                ],
-                1
-              )
+                : _vm._e()
             ]),
             _vm._v(" "),
             _c("div", {
@@ -83327,7 +83353,9 @@ var render = function() {
                   staticClass: "border-b-2 border-secondary-color w-full",
                   class: {
                     "opacity-25":
-                      _vm.removeForm.processing && _vm.removeForm.id == user.id
+                      (_vm.removeForm.processing &&
+                        _vm.removeForm.id == user.id) ||
+                      (_vm.ownerForm.processing && _vm.ownerForm.id == user.id)
                   }
                 },
                 [
@@ -83438,6 +83466,30 @@ var render = function() {
                                       key: "content",
                                       fn: function() {
                                         return [
+                                          _vm.type == "project" &&
+                                          _vm.$page.user.id == _vm.owner.id
+                                            ? _c(
+                                                "jet-dropdown-link",
+                                                {
+                                                  attrs: {
+                                                    disabled:
+                                                      _vm.ownerForm.processing,
+                                                    as: "button"
+                                                  },
+                                                  nativeOn: {
+                                                    click: function($event) {
+                                                      return _vm.makeOwner(user)
+                                                    }
+                                                  }
+                                                },
+                                                [
+                                                  _vm._v(
+                                                    "\n                                Make project owner\n                            "
+                                                  )
+                                                ]
+                                              )
+                                            : _vm._e(),
+                                          _vm._v(" "),
                                           _c(
                                             "jet-dropdown-link",
                                             {
