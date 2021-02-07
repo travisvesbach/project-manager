@@ -385,7 +385,11 @@
                     targetId = target.moved.element.id;
                 }
 
-                if(newIndex && targetId && !sort) {
+                // console.log(target);
+                // console.log(target.moved.element.id);
+                // console.log(target.moved.element.name);
+
+                if(newIndex && targetId) {
                     this.project.sections.forEach(function(section) {
                         let weight = 1;
 
@@ -396,7 +400,7 @@
                             }
                             section.tasks.forEach(function(task) {
                                 task.section_id = section.id;
-                                if(task.completed) {
+                                if(task.completed_at) {
                                     task.weight = null;
                                 } else if(task.id == targetId) {
                                     task.weight = newIndex;
@@ -410,7 +414,7 @@
                         } else {
                             section.tasks.forEach(function(task) {
                                 task.section_id = section.id;
-                                if(task.completed) {
+                                if(task.completed_at) {
                                     task.weight = null;
                                 } else {
                                     task.weight = weight;

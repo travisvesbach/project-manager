@@ -39,12 +39,14 @@ class Section extends Model
     }
 
     public function tasks() {
-        return $this->hasMany(Task::class)->orderBy('weight', 'ASC')->with('activity', 'users');
+        // return $this->hasMany(Task::class)->orderBy('weight', 'ASC')->with('activity', 'users');
+        // use -weight DESC to order weight in ASC order but with null values at the end
+        return $this->hasMany(Task::class)->orderByRaw('-weight DESC')->with('activity', 'users');
     }
 
     public function updateTaskWeights() {
         // used when a task is deleted or completed
-        foreach($this->tasks->where('completed', false) as $index => $task) {
+        foreach($this->tasks->where('completed_at', null) as $index => $task) {
             $task->weight = $index + 1;
             $task->save();
         }

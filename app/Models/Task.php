@@ -18,7 +18,7 @@ class Task extends Model
     protected $fillable = [
         'name',
         'description',
-        'completed',
+        'completed_at',
         'project_id',
         'section_id',
         'due_date',
@@ -32,13 +32,14 @@ class Task extends Model
     protected $casts = [
         'due_date' => 'date:Y-m-d',
         'description' => 'array',
-        'completed' => 'boolean',
+        // 'completed' => 'boolean',
     ];
 
     protected $dates = [
         'created_at',
         'updated_at',
-        'due_date'
+        'due_date',
+        'completed_at'
     ];
 
     // updates the project's updated_at time wheneever this is updated
@@ -83,13 +84,13 @@ class Task extends Model
     }
 
     public function complete() {
-        $this->update(['completed' => true]);
+        $this->update(['completed_at' => date('Y-m-d H:i:s')]);
 
         $this->recordActivity('completed_task');
     }
 
     public function incomplete() {
-        $this->update(['completed' => false]);
+        $this->update(['completed_at' => null]);
 
         $this->recordActivity('incompleted_task');
     }

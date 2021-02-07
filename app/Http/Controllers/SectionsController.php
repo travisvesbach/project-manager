@@ -30,7 +30,7 @@ class SectionsController extends Controller
             $weight = count($new_seciton->tasks) > 0 ? $new_seciton->tasks->last()->weight + 1 : 1;
             foreach($section->tasks as $task) {
                 $task->section_id = $new_seciton->id;
-                if(!$task->completed) {
+                if(!$task->completed_at) {
                     $task->weight = $weight;
                     $weight++;
                 }

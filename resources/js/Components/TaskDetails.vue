@@ -3,7 +3,7 @@
         <div class="fixed right-0 top-16 bottom-0 max-w-xl p-2 w-full sm:w-1/2 flex flex-col card-color text-color" v-if="task">
             <div>
                 <div class="flex space-between mb-2">
-                    <button class="inline-flex items-center p-1 bg-transparent border rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:border-green-500 hover:ring-green-500 focus:outline-none focus:border-green-500 focus:ring-green transition duration-150 dark:text-gray-300 " :class="form.completed ? 'bg-green-500 border-green-500 dark:bg-green-500' : 'border-gray-300'" @click="toggleCompleted()">
+                    <button class="inline-flex items-center p-1 bg-transparent border rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:border-green-500 hover:ring-green-500 focus:outline-none focus:border-green-500 focus:ring-green transition duration-150 dark:text-gray-300 " :class="form.completed_at ? 'bg-green-500 border-green-500 dark:bg-green-500' : 'border-gray-300'" @click="toggleCompleted()">
                         <svg class="h-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
                         </svg> {{ completedButtonText }}
@@ -115,7 +115,7 @@
                     id: this.task.id,
                     name: this.task.name,
                     description: this.task.description,
-                    completed: this.task.completed,
+                    completed: this.task.completed_at,
                     due_date: this.task.due_date,
                 }),
                 removeUserForm: this.$inertia.form({
@@ -129,14 +129,14 @@
                     id: this.task.id,
                     name: this.task.name,
                     description: this.task.description,
-                    completed: this.task.completed,
+                    completed: this.task.completed_at,
                     due_date: this.task.due_date,
                 });
             }
         },
         computed: {
             completedButtonText() {
-                return this.task.completed ? 'Completed' : 'Mark Complete';
+                return this.task.completed_at ? 'Completed' : 'Mark Complete';
             },
         },
         methods: {
@@ -148,15 +148,15 @@
                     this.form.name = this.task.name;
                 } else if( this.form.name != this.task.name ||
                         this.form.description != this.task.description ||
-                        this.form.completed != this.task.completed ||
+                        this.form.completed_at != this.task.completed_at ||
                         this.form.due_date != this.task.due_date
                     ) {
                     this.form.patch(this.task.path);
                 }
             },
             toggleCompleted() {
-                this.task.completed = !this.task.completed ? true : false;
-                this.form.completed = this.task.completed;
+                this.task.completed_at = !this.task.completed_at ? moment().toDate() : null;
+                this.form.completed_at = this.task.completed_at;
                 this.form.patch(this.task.path);
             },
             deleteTask() {

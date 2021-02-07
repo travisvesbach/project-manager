@@ -86,7 +86,7 @@ class RecordActivityTest extends TestCase
         $this->actingAs($project->owner)
             ->patch($project->tasks[0]->path(), [
                 'name' => 'Some task',
-                'completed' => true
+                'completed_at' => date('Y-m-d H:i:s')
             ]);
 
         $this->assertCount(3, $project->activity);
@@ -104,7 +104,7 @@ class RecordActivityTest extends TestCase
         $this->actingAs($project->owner)
             ->patch($project->tasks[0]->path(), [
                 'name' => 'Some task',
-                'completed' => true
+                'completed_at' => date('Y-m-d H:i:s')
             ]);
 
         $this->assertCount(3, $project->activity);
@@ -112,7 +112,7 @@ class RecordActivityTest extends TestCase
         $this->actingAs($project->owner)
             ->patch($project->tasks[0]->path(), [
                 'name' => 'Some task',
-                'completed' => false
+                'completed_at' => null
             ]);
 
         $project->refresh();

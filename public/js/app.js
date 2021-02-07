@@ -1992,7 +1992,7 @@ __webpack_require__.r(__webpack_exports__);
 
           if (Object.keys(this.activity.changes.after).length == 1) {
             if (Object.keys(this.activity.changes.after)[0] == 'completed') {
-              description += 'marked ' + identifier + (this.activity.changes.after.completed ? ' complete' : ' incomplete');
+              description += 'marked ' + identifier + (this.activity.changes.after.completed_at ? ' complete' : ' incomplete');
             } else {
               description += 'updated ' + identifier + '\'s ' + Object.keys(this.activity.changes.after)[0];
             }
@@ -2614,7 +2614,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 
 
@@ -2653,8 +2652,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
-    sortedTasks: function sortedTasks() {
-      var output = this.section.tasks;
+    incompleteTasks: function incompleteTasks() {
+      var output = this.section.tasks.filter(function (task) {
+        return task.completed_at == null;
+      });
 
       if (this.sort == 'due date') {
         output.sort(function (a, b) {
@@ -2672,16 +2673,22 @@ __webpack_require__.r(__webpack_exports__);
 
       return output;
     },
-    filteredTasks: function filteredTasks() {
-      var output = this.sortedTasks;
+    completedTasks: function completedTasks() {
+      var output = this.section.tasks.filter(function (task) {
+        return task.completed_at != null;
+      });
 
-      if (this.completedFilter == 'Incomplete') {
-        output = output.filter(function (task) {
-          return task.completed == false;
+      if (this.sort == 'due date') {
+        output.sort(function (a, b) {
+          return (a.due_date === null) - (b.due_date === null) || +(a.due_date > b.due_date) || -(a.due_date < b.due_date);
         });
-      } else if (this.completedFilter == 'Completed') {
-        output = output.filter(function (task) {
-          return task.completed == true;
+      } else if (this.sort == 'alphabetical') {
+        output.sort(function (a, b) {
+          return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+        });
+      } else {
+        output.sort(function (a, b) {
+          return (a.completed_at === null) - (b.completed_at === null) || +(a.completed_at < b.completed_at) || -(a.completed_at > b.completed_at);
         });
       }
 
@@ -2901,7 +2908,7 @@ __webpack_require__.r(__webpack_exports__);
   computed: {
     incompleteTasks: function incompleteTasks() {
       var output = this.section.tasks.filter(function (task) {
-        return task.completed == false;
+        return task.completed_at == null;
       });
 
       if (this.sort == 'due date') {
@@ -2922,7 +2929,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     completedTasks: function completedTasks() {
       var output = this.section.tasks.filter(function (task) {
-        return task.completed == true;
+        return task.completed_at != null;
       });
 
       if (this.sort == 'due date') {
@@ -2935,7 +2942,7 @@ __webpack_require__.r(__webpack_exports__);
         });
       } else {
         output.sort(function (a, b) {
-          return (a.updated_at === null) - (b.updated_at === null) || +(a.updated_at < b.updated_at) || -(a.updated_at > b.updated_at);
+          return (a.completed_at === null) + (b.completed_at === null) || +(a.completed_at < b.completed_at) || -(a.completed_at > b.completed_at);
         });
       }
 
@@ -3110,7 +3117,7 @@ __webpack_require__.r(__webpack_exports__);
       form: this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        completed: this.task.completed,
+        completed_at: this.task.completed_at,
         weight: this.task.weight
       })
     };
@@ -3125,18 +3132,18 @@ __webpack_require__.r(__webpack_exports__);
       this.form = this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        completed: this.task.completed,
+        completed_at: this.task.completed_at,
         weight: this.task.weight
       });
     }
   },
   methods: {
     toggleCompleted: function toggleCompleted() {
-      this.task.completed = !this.task.completed ? true : false;
-      this.task.weight = this.task.completed ? null : Math.max.apply(Math, this.section.tasks.map(function (x) {
+      this.task.completed_at = !this.task.completed_at ? moment__WEBPACK_IMPORTED_MODULE_1___default()().toDate() : null;
+      this.task.weight = this.task.completed_at ? null : Math.max.apply(Math, this.section.tasks.map(function (x) {
         return x.weight;
       })) + 1;
-      this.form.completed = this.task.completed;
+      this.form.completed_at = this.task.completed_at;
       this.form.weight = this.task.weight;
       this.form.patch(this.task.path);
     }
@@ -3334,7 +3341,7 @@ __webpack_require__.r(__webpack_exports__);
         id: this.task.id,
         name: this.task.name,
         description: this.task.description,
-        completed: this.task.completed,
+        completed: this.task.completed_at,
         due_date: this.task.due_date
       }),
       removeUserForm: this.$inertia.form({
@@ -3348,14 +3355,14 @@ __webpack_require__.r(__webpack_exports__);
         id: this.task.id,
         name: this.task.name,
         description: this.task.description,
-        completed: this.task.completed,
+        completed: this.task.completed_at,
         due_date: this.task.due_date
       });
     }
   },
   computed: {
     completedButtonText: function completedButtonText() {
-      return this.task.completed ? 'Completed' : 'Mark Complete';
+      return this.task.completed_at ? 'Completed' : 'Mark Complete';
     }
   },
   methods: {
@@ -3368,13 +3375,13 @@ __webpack_require__.r(__webpack_exports__);
 
       if (this.form.name == '') {
         this.form.name = this.task.name;
-      } else if (this.form.name != this.task.name || this.form.description != this.task.description || this.form.completed != this.task.completed || this.form.due_date != this.task.due_date) {
+      } else if (this.form.name != this.task.name || this.form.description != this.task.description || this.form.completed_at != this.task.completed_at || this.form.due_date != this.task.due_date) {
         this.form.patch(this.task.path);
       }
     },
     toggleCompleted: function toggleCompleted() {
-      this.task.completed = !this.task.completed ? true : false;
-      this.form.completed = this.task.completed;
+      this.task.completed_at = !this.task.completed_at ? moment().toDate() : null;
+      this.form.completed_at = this.task.completed_at;
       this.form.patch(this.task.path);
     },
     deleteTask: function deleteTask() {
@@ -3449,7 +3456,7 @@ __webpack_require__.r(__webpack_exports__);
       form: this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        completed: this.task.completed,
+        completed_at: this.task.completed_at,
         weight: this.task.weight
       })
     };
@@ -3464,7 +3471,7 @@ __webpack_require__.r(__webpack_exports__);
       this.form = this.$inertia.form({
         id: this.task.id,
         name: this.task.name,
-        completed: this.task.completed,
+        completed_at: this.task.completed_at,
         weight: this.task.weight
       });
     }
@@ -3481,12 +3488,11 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     toggleCompleted: function toggleCompleted() {
-      this.task.completed = !this.task.completed ? true : false;
-      this.task.weight = this.task.completed ? null : Math.max.apply(Math, this.section.tasks.map(function (x) {
+      this.task.completed_at = !this.task.completed_at ? moment__WEBPACK_IMPORTED_MODULE_1___default()().toDate() : null;
+      this.task.weight = this.task.completed_at ? null : Math.max.apply(Math, this.section.tasks.map(function (x) {
         return x.weight;
       })) + 1;
-      this.task.updated_at = moment__WEBPACK_IMPORTED_MODULE_1___default()().toDate();
-      this.form.completed = this.task.completed;
+      this.form.completed_at = this.task.completed_at;
       this.form.weight = this.task.weight;
       this.form.patch(this.task.path);
     }
@@ -6802,9 +6808,12 @@ __webpack_require__.r(__webpack_exports__);
         oldIndex = target.moved.oldIndex + 1;
         newIndex = target.moved.newIndex + 1;
         targetId = target.moved.element.id;
-      }
+      } // console.log(target);
+      // console.log(target.moved.element.id);
+      // console.log(target.moved.element.name);
 
-      if (newIndex && targetId && !sort) {
+
+      if (newIndex && targetId) {
         this.project.sections.forEach(function (section) {
           var weight = 1; // if section contains the modified task
 
@@ -6820,7 +6829,7 @@ __webpack_require__.r(__webpack_exports__);
             section.tasks.forEach(function (task) {
               task.section_id = section.id;
 
-              if (task.completed) {
+              if (task.completed_at) {
                 task.weight = null;
               } else if (task.id == targetId) {
                 task.weight = newIndex;
@@ -6834,7 +6843,7 @@ __webpack_require__.r(__webpack_exports__);
             section.tasks.forEach(function (task) {
               task.section_id = section.id;
 
-              if (task.completed) {
+              if (task.completed_at) {
                 task.weight = null;
               } else {
                 task.weight = weight;
@@ -81575,7 +81584,7 @@ var render = function() {
         "div",
         { staticClass: "mx-2" },
         [
-          _vm.sort == null
+          _vm.completedFilter != "Completed"
             ? _c(
                 "draggable",
                 {
@@ -81586,12 +81595,16 @@ var render = function() {
                   },
                   on: { change: _vm.updateTaskWeights }
                 },
-                _vm._l(_vm.filteredTasks, function(task, index) {
+                _vm._l(_vm.incompleteTasks, function(task, index) {
                   return _c(
                     "div",
                     [
                       _c("task-card", {
-                        attrs: { task: task, section: _vm.section },
+                        attrs: {
+                          task: task,
+                          draggable: _vm.sort != null ? false : true,
+                          section: _vm.section
+                        },
                         on: {
                           show: function($event) {
                             return _vm.$emit("show", task)
@@ -81609,13 +81622,17 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm._l(_vm.filteredTasks, function(task, index) {
-            return _vm.sort
+          _vm._l(_vm.completedTasks, function(task, index) {
+            return _vm.completedFilter != "Incomplete"
               ? _c(
                   "div",
                   [
                     _c("task-card", {
-                      attrs: { task: task, section: _vm.section },
+                      attrs: {
+                        task: task,
+                        draggable: false,
+                        section: _vm.section
+                      },
                       on: {
                         show: function($event) {
                           return _vm.$emit("show", task)
@@ -81669,13 +81686,13 @@ var render = function() {
                     "\n                This seciton includes " +
                       _vm._s(
                         _vm.section.tasks.filter(function(x) {
-                          return x.completed === true
+                          return x.completed_at != null
                         }).length
                       ) +
                       " completed tasks and " +
                       _vm._s(
                         _vm.section.tasks.filter(function(x) {
-                          return x.completed === false
+                          return x.completed === null
                         }).length
                       ) +
                       " incomplete tasks.\n            "
@@ -82095,13 +82112,13 @@ var render = function() {
                     "\n                This seciton includes " +
                       _vm._s(
                         _vm.section.tasks.filter(function(x) {
-                          return x.completed === true
+                          return x.completed_at != null
                         }).length
                       ) +
                       " completed tasks and " +
                       _vm._s(
                         _vm.section.tasks.filter(function(x) {
-                          return x.completed === false
+                          return x.completed === null
                         }).length
                       ) +
                       " incomplete tasks.\n            "
@@ -82358,7 +82375,7 @@ var render = function() {
     {
       staticClass:
         "w-full relative flex flex-col focus:outline-none focus:border-0 my-2 p-2 rounded-lg",
-      class: this.task.completed
+      class: this.task.completed_at
         ? "text-secondary-color card-secondary-color"
         : "text-color card-color drag-task",
       attrs: { title: "details" },
@@ -82375,7 +82392,7 @@ var render = function() {
             "svg",
             {
               staticClass: "h-5 -mt-1 hover:text-green-500 inline-block",
-              class: _vm.task.completed ? "text-green-500" : "",
+              class: _vm.task.completed_at ? "text-green-500" : "",
               attrs: {
                 xmlns: "http://www.w3.org/2000/svg",
                 fill: "none",
@@ -82548,7 +82565,7 @@ var render = function() {
                     {
                       staticClass:
                         "inline-flex items-center p-1 bg-transparent border rounded-md font-semibold text-xs text-black uppercase tracking-widest hover:border-green-500 hover:ring-green-500 focus:outline-none focus:border-green-500 focus:ring-green transition duration-150 dark:text-gray-300 ",
-                      class: _vm.form.completed
+                      class: _vm.form.completed_at
                         ? "bg-green-500 border-green-500 dark:bg-green-500"
                         : "border-gray-300",
                       on: {
@@ -82940,7 +82957,7 @@ var render = function() {
     "div",
     {
       staticClass: "ml-4 my-1 flex items-center h-7 hover-trigger",
-      class: this.task.completed ? "text-secondary-color" : "text-color"
+      class: this.task.completed_at ? "text-secondary-color" : "text-color"
     },
     [
       _c(
@@ -82949,7 +82966,9 @@ var render = function() {
           staticClass:
             "ml-3 h-4 inline-block text-secondary-color drag-task cursor-move",
           class:
-            _vm.draggable && !_vm.task.completed ? "hover-target" : "invisible",
+            _vm.draggable && !_vm.task.completed_at
+              ? "hover-target"
+              : "invisible",
           attrs: {
             xmlns: "http://www.w3.org/2000/svg",
             fill: "none",
@@ -82973,7 +82992,7 @@ var render = function() {
         "svg",
         {
           staticClass: "h-5 ml-3 inline-block hover:text-green-500",
-          class: _vm.task.completed ? "text-green-500" : "",
+          class: _vm.task.completed_at ? "text-green-500" : "",
           attrs: {
             xmlns: "http://www.w3.org/2000/svg",
             fill: "none",
@@ -83002,7 +83021,7 @@ var render = function() {
         "div",
         { staticClass: "inline-block ml-1" },
         [
-          !_vm.task.completed
+          !_vm.task.completed_at
             ? _c("input-hidden", {
                 ref: "inputHidden",
                 attrs: { id: "name" },
@@ -83026,7 +83045,7 @@ var render = function() {
               })
             : _vm._e(),
           _vm._v(" "),
-          _vm.task.completed
+          _vm.task.completed_at
             ? _c("span", [_vm._v(_vm._s(_vm.form.name))])
             : _vm._e()
         ],

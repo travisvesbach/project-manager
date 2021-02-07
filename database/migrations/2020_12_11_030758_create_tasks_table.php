@@ -20,7 +20,7 @@ class CreateTasksTable extends Migration
             $table->bigInteger('section_id')->unsigned();
             $table->string('name');
             $table->json('description')->nullable();
-            $table->boolean('completed')->default(false);
+            $table->timestamp('completed_at')->nullable();
             $table->date('due_date')->nullable();
             $table->integer('weight')->nullable();
 

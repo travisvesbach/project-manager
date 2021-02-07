@@ -38,22 +38,22 @@ class TaskTest extends TestCase
     public function it_can_be_completed() {
         $task = Task::factory()->create();
 
-        $this->assertFalse($task->completed);
+        $this->assertNull($task->completed_at);
 
         $task->complete();
 
-        $this->assertTrue($task->fresh()->completed);
+        $this->assertNotNull($task->fresh()->completed_at);
     }
 
     /** @test **/
     public function it_can_be_marked_as_incomplete() {
-        $task = Task::factory()->create(['completed' => true]);
+        $task = Task::factory()->create(['completed_at' => date('Y-m-d H:i:s')]);
 
-        $this->assertTrue($task->completed);
+        $this->assertNotNull($task->completed_at);
 
         $task->incomplete();
 
-        $this->assertFalse($task->fresh()->completed);
+        $this->assertNull($task->fresh()->completed_at);
     }
 
     /** @test **/
@@ -70,7 +70,7 @@ class TaskTest extends TestCase
         $task = $project->tasks->first();
 
         $task->invite($user = User::factory()->create());
-        $this->assertTrue($task->users->contains($user));
+        $this->assertTrue($task->fresh()->users->contains($user));
     }
 
     /** @test **/
@@ -79,7 +79,7 @@ class TaskTest extends TestCase
         $task = $project->tasks->first();
 
         $task->invite($user = User::factory()->create());
-        $this->assertTrue($task->users->contains($user));
+        $this->assertTrue($task->fresh()->users->contains($user));
 
         $task->uninvite($user);
         $this->assertFalse($task->fresh()->users->contains($user));

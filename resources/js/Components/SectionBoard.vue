@@ -25,16 +25,15 @@
         </div>
 
         <div class="mx-2">
-            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks" v-if="sort == null">
-                <div v-for="(task, index) in filteredTasks">
-                    <task-card v-bind:task="task" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
+            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks" v-if="completedFilter != 'Completed'">
+                <div v-for="(task, index) in incompleteTasks">
+                    <task-card v-bind:task="task" v-bind:draggable="sort != null ? false : true" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
                 </div>
             </draggable>
 
-            <div v-for="(task, index) in filteredTasks" v-if="sort">
-                <task-card v-bind:task="task" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
+            <div v-for="(task, index) in completedTasks" v-if="completedFilter != 'Incomplete'">
+                <task-card v-bind:task="task" v-bind:draggable="false" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
             </div>
-
 
             <div>
                 <task-card-new v-bind:section="section" ref="newTaskInput"/>
@@ -49,7 +48,7 @@
 
             <template #content>
                 <p>
-                    This seciton includes {{ section.tasks.filter((x) => x.completed === true).length }} completed tasks and {{ section.tasks.filter((x) => x.completed === false).length }} incomplete tasks.
+                    This seciton includes {{ section.tasks.filter((x) => x.completed_at != null).length }} completed tasks and {{ section.tasks.filter((x) => x.completed === null).length }} incomplete tasks.
                 </p>
                 <div class="mt-5">
                     <label><input type="radio" id="keep" value="keep" v-model="deleteForm.tasks"> Delete this section, but keep all its tasks</label>
@@ -117,8 +116,11 @@
             }
         },
         computed: {
-            sortedTasks() {
-                let output = this.section.tasks;
+            incompleteTasks() {
+                let output = this.section.tasks.filter(function(task) {
+                    return task.completed_at == null;
+                });
+
                 if(this.sort == 'due date') {
                     output.sort(function(a, b) {
                         return (a.due_date === null) - (b.due_date === null) || + (a.due_date > b.due_date) || - (a.due_date < b.due_date);
@@ -132,19 +134,24 @@
                 }
                 return output;
             },
-            filteredTasks() {
-                let output = this.sortedTasks;
-                if(this.completedFilter == 'Incomplete') {
-                    output = output.filter(function(task) {
-                        return task.completed == false;
+            completedTasks() {
+                let output = this.section.tasks.filter(function(task) {
+                    return task.completed_at != null;
+                });
+
+                if(this.sort == 'due date') {
+                    output.sort(function(a, b) {
+                        return (a.due_date === null) - (b.due_date === null) || + (a.due_date > b.due_date) || - (a.due_date < b.due_date);
                     });
-                } else if(this.completedFilter == 'Completed') {
-                    output = output.filter(function(task) {
-                        return task.completed == true;
+                } else if(this.sort == 'alphabetical') {
+                    output.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
+                } else {
+                    output.sort(function(a, b) {
+                        return (a.completed_at === null) - (b.completed_at === null) || + (a.completed_at < b.completed_at) || - (a.completed_at > b.completed_at);
                     });
                 }
-                return output;
-            },
+                return output
+            }
         },
         watch: {
             section: function() {

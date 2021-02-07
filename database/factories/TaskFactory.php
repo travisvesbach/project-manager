@@ -29,7 +29,7 @@ class TaskFactory extends Factory
             'description' => $this->faker->sentence,
             'project_id' => Project::factory()->create(),
             'due_date' => $this->faker->dateTimeBetween('now', '+1 month'),
-            'completed' => false
+            'completed_at' => null
         ];
     }
 }

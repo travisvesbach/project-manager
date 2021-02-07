@@ -48,7 +48,7 @@
 
             <template #content>
                 <p>
-                    This seciton includes {{ section.tasks.filter((x) => x.completed === true).length }} completed tasks and {{ section.tasks.filter((x) => x.completed === false).length }} incomplete tasks.
+                    This seciton includes {{ section.tasks.filter((x) => x.completed_at != null).length }} completed tasks and {{ section.tasks.filter((x) => x.completed === null).length }} incomplete tasks.
                 </p>
                 <div class="mt-5">
                     <label><input type="radio" id="keep" value="keep" v-model="deleteForm.tasks"> Delete this section, but keep all its tasks</label>
@@ -117,7 +117,7 @@
         computed: {
             incompleteTasks() {
                 let output = this.section.tasks.filter(function(task) {
-                    return task.completed == false;
+                    return task.completed_at == null;
                 });
 
                 if(this.sort == 'due date') {
@@ -135,7 +135,7 @@
             },
             completedTasks() {
                 let output = this.section.tasks.filter(function(task) {
-                    return task.completed == true;
+                    return task.completed_at != null;
                 });
 
                 if(this.sort == 'due date') {
@@ -146,7 +146,7 @@
                     output.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
                 } else {
                     output.sort(function(a, b) {
-                        return (a.updated_at === null) - (b.updated_at === null) || + (a.updated_at < b.updated_at) || - (a.updated_at > b.updated_at);
+                        return (a.completed_at === null) + (b.completed_at === null) || + (a.completed_at < b.completed_at) || - (a.completed_at > b.completed_at);
                     });
                 }
                 return output

@@ -29,7 +29,7 @@ class TaskRequest extends FormRequest
         return [
             'name' => 'required',
             'description' => 'array|nullable',
-            'completed' => 'nullable',
+            'completed_at' => 'nullable',
             'due_date' => 'nullable',
             'section_id' => 'integer|exists:sections,id',
             'weight' => 'integer|nullable'

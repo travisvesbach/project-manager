@@ -70,7 +70,7 @@ class TasksTest extends TestCase
         $this->actingAs($project->owner)
             ->patch($project->tasks->first()->path(), $attributes = [
                 'name' => 'changed name',
-                'completed' => true
+                'completed_at' => date('Y-m-d H:i:s')
             ]);
 
         $this->assertDatabaseHas('tasks', $attributes);
@@ -83,13 +83,13 @@ class TasksTest extends TestCase
         $this->actingAs($project->owner)
             ->patch($project->tasks->first()->path(), $attributes = [
                 'name' => 'changed name',
-                'completed' => true
+                'completed_at' => date('Y-m-d H:i:s')
             ]);
 
         $this->actingAs($project->owner)
             ->patch($project->tasks->first()->path(), $attributes = [
                 'name' => 'changed name',
-                'completed' => false
+                'completed_at' => null
             ]);
 
         $this->assertDatabaseHas('tasks', $attributes);
@@ -191,8 +191,8 @@ class TasksTest extends TestCase
         $task = $project->tasks->first();
 
         $task->invite($user = User::factory()->create());
-        $this->assertTrue($task->users->contains($user));
-        $this->assertTrue($project->users->contains($user));
+        $this->assertTrue($task->fresh()->users->contains($user));
+        $this->assertTrue($project->fresh()->users->contains($user));
 
     }
 }
