@@ -45,10 +45,15 @@ trait RecordsActivity
     }
 
     public function recordActivity($description, $user_id = null) {
+        $changes = $this->activityChanges();
+        if(($description == 'updated_task' || $description == 'updated_section') && count($changes['before']) == 0 && count($changes['after']) == 0) {
+            return;
+        }
+
         $this->activity()->create([
             'user_id' => $user_id ?? $this->activityOwner()->id,
             'description' => $description,
-            'changes' => $this->activityChanges(),
+            'changes' => $changes,
             'project_id' => class_basename($this) === 'Project' ? $this->id : $this->project_id,
         ]);
     }
