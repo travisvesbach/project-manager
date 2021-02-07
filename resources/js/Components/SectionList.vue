@@ -25,14 +25,14 @@
         </div>
         <div class="border-t-2 border-color">
 
-            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks" v-if="sort == null">
-                <div class="border-b-2 border-color" v-for="(task, index) in filteredTasks">
+            <draggable :list="section.tasks" @change="updateTaskWeights" handle=".drag-task" group="tasks" v-if="completedFilter != 'Completed'">
+                <div class="border-b-2 border-color" v-for="(task, index) in incompleteTasks">
                     <task-row v-bind:task="task" v-bind:draggable="sort != null ? false : true" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
                 </div>
             </draggable>
 
-            <div class="border-b-2 border-color" v-for="(task, index) in filteredTasks" v-if="sort">
-                <task-row v-bind:task="task" v-bind:draggable="sort != null ? false : true" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
+            <div class="border-b-2 border-color" v-for="(task, index) in completedTasks" v-if="completedFilter != 'Incomplete'">
+                <task-row v-bind:task="task" v-bind:draggable="false" v-bind:section="section" @show="$emit('show', task)" @focusnew="focusNew()"/>
             </div>
 
             <div>
@@ -115,8 +115,11 @@
             }
         },
         computed: {
-            sortedTasks() {
-                let output = this.section.tasks;
+            incompleteTasks() {
+                let output = this.section.tasks.filter(function(task) {
+                    return task.completed == false;
+                });
+
                 if(this.sort == 'due date') {
                     output.sort(function(a, b) {
                         return (a.due_date === null) - (b.due_date === null) || + (a.due_date > b.due_date) || - (a.due_date < b.due_date);
@@ -130,18 +133,23 @@
                 }
                 return output;
             },
-            filteredTasks() {
-                let output = this.sortedTasks;
-                if(this.completedFilter == 'Incomplete') {
-                    output = output.filter(function(task) {
-                        return task.completed == false;
+            completedTasks() {
+                let output = this.section.tasks.filter(function(task) {
+                    return task.completed == true;
+                });
+
+                if(this.sort == 'due date') {
+                    output.sort(function(a, b) {
+                        return (a.due_date === null) - (b.due_date === null) || + (a.due_date > b.due_date) || - (a.due_date < b.due_date);
                     });
-                } else if(this.completedFilter == 'Completed') {
-                    output = output.filter(function(task) {
-                        return task.completed == true;
+                } else if(this.sort == 'alphabetical') {
+                    output.sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase()) ? 1 : -1);
+                } else {
+                    output.sort(function(a, b) {
+                        return (a.updated_at === null) - (b.updated_at === null) || + (a.updated_at < b.updated_at) || - (a.updated_at > b.updated_at);
                     });
                 }
-                return output;
+                return output
             }
         },
         watch: {

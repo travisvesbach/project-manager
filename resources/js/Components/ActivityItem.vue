@@ -35,7 +35,7 @@
 
                     case 'updated_project':
                         if(Object.keys(this.activity.changes.after).length == 1 && Object.keys(this.activity.changes.after)[0] == 'owner_id') {
-                            let user = this.$page.users.find(x => x.id === Object.keys(this.activity.changes.after)[1]);
+                            let user = this.$page.users.find(x => x.id === this.activity.changes.after.owner_id);
                             description += 'made ' + user.name + ' the project owner';
                         } else if(Object.keys(this.activity.changes.after).length == 1) {
                             description += 'updated the project\'s ' + Object.keys(this.activity.changes.after)[0];

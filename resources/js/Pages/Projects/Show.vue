@@ -82,7 +82,7 @@
                         </jet-dropdown-link>
                     </template>
                 </jet-dropdown>
-                <jet-dropdown class="mx-4 pb-1" align="left" width="48" v-if="completedFilter == 'Incomplete'">
+                <jet-dropdown class="mx-4 pb-1" align="left" width="48">
                     <template #trigger>
                         <button class="flex link link-color">
                             <span class="text-base">Sort</span>
@@ -385,13 +385,17 @@
                     targetId = target.moved.element.id;
                 }
 
-                if(newIndex && targetId) {
+                if(newIndex && targetId && !sort) {
                     this.project.sections.forEach(function(section) {
                         let weight = 1;
-                        section.tasks.forEach(function(task) {
-                            task.section_id = section.id;
-                            // if section contains the modified task
-                            if(section.tasks.some(x => x.id === targetId) && oldIndex) {
+
+                        // if section contains the modified task
+                        if(section.tasks.some(x => x.id === targetId)) {
+                            if(!oldIndex) {
+                                oldIndex = Math.max.apply(Math, section.tasks.map(function(x) { return x.weight; })) + 1;
+                            }
+                            section.tasks.forEach(function(task) {
+                                task.section_id = section.id;
                                 if(task.completed) {
                                     task.weight = null;
                                 } else if(task.id == targetId) {
@@ -401,15 +405,19 @@
                                 } else if(task.weight < oldIndex && task.weight >= newIndex) {
                                     task.weight++;
                                 }
-                            } else {
+                            });
+
+                        } else {
+                            section.tasks.forEach(function(task) {
+                                task.section_id = section.id;
                                 if(task.completed) {
                                     task.weight = null;
                                 } else {
                                     task.weight = weight;
                                     weight++;
                                 }
-                            }
-                        });
+                            });
+                        }
                     });
 
                     let weightForm = this.$inertia.form({

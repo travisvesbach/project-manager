@@ -1972,7 +1972,7 @@ __webpack_require__.r(__webpack_exports__);
         case 'updated_project':
           if (Object.keys(this.activity.changes.after).length == 1 && Object.keys(this.activity.changes.after)[0] == 'owner_id') {
             var user = this.$page.users.find(function (x) {
-              return x.id === Object.keys(_this.activity.changes.after)[1];
+              return x.id === _this.activity.changes.after.owner_id;
             });
             description += 'made ' + user.name + ' the project owner';
           } else if (Object.keys(this.activity.changes.after).length == 1) {
@@ -2899,8 +2899,10 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   computed: {
-    sortedTasks: function sortedTasks() {
-      var output = this.section.tasks;
+    incompleteTasks: function incompleteTasks() {
+      var output = this.section.tasks.filter(function (task) {
+        return task.completed == false;
+      });
 
       if (this.sort == 'due date') {
         output.sort(function (a, b) {
@@ -2918,16 +2920,22 @@ __webpack_require__.r(__webpack_exports__);
 
       return output;
     },
-    filteredTasks: function filteredTasks() {
-      var output = this.sortedTasks;
+    completedTasks: function completedTasks() {
+      var output = this.section.tasks.filter(function (task) {
+        return task.completed == true;
+      });
 
-      if (this.completedFilter == 'Incomplete') {
-        output = output.filter(function (task) {
-          return task.completed == false;
+      if (this.sort == 'due date') {
+        output.sort(function (a, b) {
+          return (a.due_date === null) - (b.due_date === null) || +(a.due_date > b.due_date) || -(a.due_date < b.due_date);
         });
-      } else if (this.completedFilter == 'Completed') {
-        output = output.filter(function (task) {
-          return task.completed == true;
+      } else if (this.sort == 'alphabetical') {
+        output.sort(function (a, b) {
+          return a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1;
+        });
+      } else {
+        output.sort(function (a, b) {
+          return (a.updated_at === null) - (b.updated_at === null) || +(a.updated_at < b.updated_at) || -(a.updated_at > b.updated_at);
         });
       }
 
@@ -3477,6 +3485,7 @@ __webpack_require__.r(__webpack_exports__);
       this.task.weight = this.task.completed ? null : Math.max.apply(Math, this.section.tasks.map(function (x) {
         return x.weight;
       })) + 1;
+      this.task.updated_at = moment__WEBPACK_IMPORTED_MODULE_1___default()().toDate();
       this.form.completed = this.task.completed;
       this.form.weight = this.task.weight;
       this.form.patch(this.task.path);
@@ -6795,15 +6804,22 @@ __webpack_require__.r(__webpack_exports__);
         targetId = target.moved.element.id;
       }
 
-      if (newIndex && targetId) {
+      if (newIndex && targetId && !sort) {
         this.project.sections.forEach(function (section) {
-          var weight = 1;
-          section.tasks.forEach(function (task) {
-            task.section_id = section.id; // if section contains the modified task
+          var weight = 1; // if section contains the modified task
 
-            if (section.tasks.some(function (x) {
-              return x.id === targetId;
-            }) && oldIndex) {
+          if (section.tasks.some(function (x) {
+            return x.id === targetId;
+          })) {
+            if (!oldIndex) {
+              oldIndex = Math.max.apply(Math, section.tasks.map(function (x) {
+                return x.weight;
+              })) + 1;
+            }
+
+            section.tasks.forEach(function (task) {
+              task.section_id = section.id;
+
               if (task.completed) {
                 task.weight = null;
               } else if (task.id == targetId) {
@@ -6813,15 +6829,19 @@ __webpack_require__.r(__webpack_exports__);
               } else if (task.weight < oldIndex && task.weight >= newIndex) {
                 task.weight++;
               }
-            } else {
+            });
+          } else {
+            section.tasks.forEach(function (task) {
+              task.section_id = section.id;
+
               if (task.completed) {
                 task.weight = null;
               } else {
                 task.weight = weight;
                 weight++;
               }
-            }
-          });
+            });
+          }
         });
         var weightForm = this.$inertia.form({
           tasks_array: this.project.sections.map(function (section) {
@@ -81971,7 +81991,7 @@ var render = function() {
         "div",
         { staticClass: "border-t-2 border-color" },
         [
-          _vm.sort == null
+          _vm.completedFilter != "Completed"
             ? _c(
                 "draggable",
                 {
@@ -81982,7 +82002,7 @@ var render = function() {
                   },
                   on: { change: _vm.updateTaskWeights }
                 },
-                _vm._l(_vm.filteredTasks, function(task, index) {
+                _vm._l(_vm.incompleteTasks, function(task, index) {
                   return _c(
                     "div",
                     { staticClass: "border-b-2 border-color" },
@@ -82010,8 +82030,8 @@ var render = function() {
               )
             : _vm._e(),
           _vm._v(" "),
-          _vm._l(_vm.filteredTasks, function(task, index) {
-            return _vm.sort
+          _vm._l(_vm.completedTasks, function(task, index) {
+            return _vm.completedFilter != "Incomplete"
               ? _c(
                   "div",
                   { staticClass: "border-b-2 border-color" },
@@ -82019,7 +82039,7 @@ var render = function() {
                     _c("task-row", {
                       attrs: {
                         task: task,
-                        draggable: _vm.sort != null ? false : true,
+                        draggable: false,
                         section: _vm.section
                       },
                       on: {
@@ -82927,8 +82947,9 @@ var render = function() {
         "svg",
         {
           staticClass:
-            "ml-3 h-4 inline-block text-secondary-color drag-task cursor-move hover-target",
-          class: _vm.draggable && !_vm.task.completed ? "" : "invisible",
+            "ml-3 h-4 inline-block text-secondary-color drag-task cursor-move",
+          class:
+            _vm.draggable && !_vm.task.completed ? "hover-target" : "invisible",
           attrs: {
             xmlns: "http://www.w3.org/2000/svg",
             fill: "none",
@@ -89033,194 +89054,183 @@ var render = function() {
                     ])
                   }),
                   _vm._v(" "),
-                  _vm.completedFilter == "Incomplete"
-                    ? _c("jet-dropdown", {
-                        staticClass: "mx-4 pb-1",
-                        attrs: { align: "left", width: "48" },
-                        scopedSlots: _vm._u(
-                          [
-                            {
-                              key: "trigger",
-                              fn: function() {
-                                return [
-                                  _c(
-                                    "button",
-                                    { staticClass: "flex link link-color" },
-                                    [
-                                      _c("span", { staticClass: "text-base" }, [
-                                        _vm._v("Sort")
-                                      ]),
-                                      _vm._v(" "),
-                                      _c(
-                                        "svg",
-                                        {
-                                          staticClass:
-                                            "fill-current h-4 w-4 ml-1",
+                  _c("jet-dropdown", {
+                    staticClass: "mx-4 pb-1",
+                    attrs: { align: "left", width: "48" },
+                    scopedSlots: _vm._u([
+                      {
+                        key: "trigger",
+                        fn: function() {
+                          return [
+                            _c(
+                              "button",
+                              { staticClass: "flex link link-color" },
+                              [
+                                _c("span", { staticClass: "text-base" }, [
+                                  _vm._v("Sort")
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "svg",
+                                  {
+                                    staticClass: "fill-current h-4 w-4 ml-1",
+                                    attrs: {
+                                      xmlns: "http://www.w3.org/2000/svg",
+                                      viewBox: "0 0 20 20"
+                                    }
+                                  },
+                                  [
+                                    _c("path", {
+                                      attrs: {
+                                        "fill-rule": "evenodd",
+                                        d:
+                                          "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
+                                        "clip-rule": "evenodd"
+                                      }
+                                    })
+                                  ]
+                                )
+                              ]
+                            )
+                          ]
+                        },
+                        proxy: true
+                      },
+                      {
+                        key: "content",
+                        fn: function() {
+                          return [
+                            _c(
+                              "jet-dropdown-link",
+                              {
+                                attrs: { as: "button" },
+                                nativeOn: {
+                                  click: function($event) {
+                                    _vm.sort = null
+                                  }
+                                }
+                              },
+                              [
+                                _vm.sort == null
+                                  ? _c(
+                                      "svg",
+                                      {
+                                        staticClass: "h-5 absolute",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          fill: "none",
+                                          viewBox: "0 0 24 24",
+                                          stroke: "currentColor"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
                                           attrs: {
-                                            xmlns: "http://www.w3.org/2000/svg",
-                                            viewBox: "0 0 20 20"
+                                            "stroke-linecap": "round",
+                                            "stroke-linejoin": "round",
+                                            "stroke-width": "2",
+                                            d: "M5 13l4 4L19 7"
                                           }
-                                        },
-                                        [
-                                          _c("path", {
-                                            attrs: {
-                                              "fill-rule": "evenodd",
-                                              d:
-                                                "M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z",
-                                              "clip-rule": "evenodd"
-                                            }
-                                          })
-                                        ]
-                                      )
-                                    ]
-                                  )
-                                ]
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "ml-6" }, [
+                                  _vm._v("Drag & Drop")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "jet-dropdown-link",
+                              {
+                                attrs: { as: "button" },
+                                nativeOn: {
+                                  click: function($event) {
+                                    _vm.sort = "due date"
+                                  }
+                                }
                               },
-                              proxy: true
-                            },
-                            {
-                              key: "content",
-                              fn: function() {
-                                return [
-                                  _c(
-                                    "jet-dropdown-link",
-                                    {
-                                      attrs: { as: "button" },
-                                      nativeOn: {
-                                        click: function($event) {
-                                          _vm.sort = null
+                              [
+                                _vm.sort == "due date"
+                                  ? _c(
+                                      "svg",
+                                      {
+                                        staticClass: "h-5 absolute",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          fill: "none",
+                                          viewBox: "0 0 24 24",
+                                          stroke: "currentColor"
                                         }
-                                      }
-                                    },
-                                    [
-                                      _vm.sort == null
-                                        ? _c(
-                                            "svg",
-                                            {
-                                              staticClass: "h-5 absolute",
-                                              attrs: {
-                                                xmlns:
-                                                  "http://www.w3.org/2000/svg",
-                                                fill: "none",
-                                                viewBox: "0 0 24 24",
-                                                stroke: "currentColor"
-                                              }
-                                            },
-                                            [
-                                              _c("path", {
-                                                attrs: {
-                                                  "stroke-linecap": "round",
-                                                  "stroke-linejoin": "round",
-                                                  "stroke-width": "2",
-                                                  d: "M5 13l4 4L19 7"
-                                                }
-                                              })
-                                            ]
-                                          )
-                                        : _vm._e(),
-                                      _vm._v(" "),
-                                      _c("span", { staticClass: "ml-6" }, [
-                                        _vm._v("Drag & Drop")
-                                      ])
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "jet-dropdown-link",
-                                    {
-                                      attrs: { as: "button" },
-                                      nativeOn: {
-                                        click: function($event) {
-                                          _vm.sort = "due date"
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _vm.sort == "due date"
-                                        ? _c(
-                                            "svg",
-                                            {
-                                              staticClass: "h-5 absolute",
-                                              attrs: {
-                                                xmlns:
-                                                  "http://www.w3.org/2000/svg",
-                                                fill: "none",
-                                                viewBox: "0 0 24 24",
-                                                stroke: "currentColor"
-                                              }
-                                            },
-                                            [
-                                              _c("path", {
-                                                attrs: {
-                                                  "stroke-linecap": "round",
-                                                  "stroke-linejoin": "round",
-                                                  "stroke-width": "2",
-                                                  d: "M5 13l4 4L19 7"
-                                                }
-                                              })
-                                            ]
-                                          )
-                                        : _vm._e(),
-                                      _vm._v(" "),
-                                      _c("span", { staticClass: "ml-6" }, [
-                                        _vm._v("Due Date")
-                                      ])
-                                    ]
-                                  ),
-                                  _vm._v(" "),
-                                  _c(
-                                    "jet-dropdown-link",
-                                    {
-                                      attrs: { as: "button" },
-                                      nativeOn: {
-                                        click: function($event) {
-                                          _vm.sort = "alphabetical"
-                                        }
-                                      }
-                                    },
-                                    [
-                                      _vm.sort == "alphabetical"
-                                        ? _c(
-                                            "svg",
-                                            {
-                                              staticClass: "h-5 absolute",
-                                              attrs: {
-                                                xmlns:
-                                                  "http://www.w3.org/2000/svg",
-                                                fill: "none",
-                                                viewBox: "0 0 24 24",
-                                                stroke: "currentColor"
-                                              }
-                                            },
-                                            [
-                                              _c("path", {
-                                                attrs: {
-                                                  "stroke-linecap": "round",
-                                                  "stroke-linejoin": "round",
-                                                  "stroke-width": "2",
-                                                  d: "M5 13l4 4L19 7"
-                                                }
-                                              })
-                                            ]
-                                          )
-                                        : _vm._e(),
-                                      _vm._v(" "),
-                                      _c("span", { staticClass: "ml-6" }, [
-                                        _vm._v("Alphabetical")
-                                      ])
-                                    ]
-                                  )
-                                ]
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            "stroke-linecap": "round",
+                                            "stroke-linejoin": "round",
+                                            "stroke-width": "2",
+                                            d: "M5 13l4 4L19 7"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "ml-6" }, [
+                                  _vm._v("Due Date")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "jet-dropdown-link",
+                              {
+                                attrs: { as: "button" },
+                                nativeOn: {
+                                  click: function($event) {
+                                    _vm.sort = "alphabetical"
+                                  }
+                                }
                               },
-                              proxy: true
-                            }
-                          ],
-                          null,
-                          false,
-                          2903487861
-                        )
-                      })
-                    : _vm._e()
+                              [
+                                _vm.sort == "alphabetical"
+                                  ? _c(
+                                      "svg",
+                                      {
+                                        staticClass: "h-5 absolute",
+                                        attrs: {
+                                          xmlns: "http://www.w3.org/2000/svg",
+                                          fill: "none",
+                                          viewBox: "0 0 24 24",
+                                          stroke: "currentColor"
+                                        }
+                                      },
+                                      [
+                                        _c("path", {
+                                          attrs: {
+                                            "stroke-linecap": "round",
+                                            "stroke-linejoin": "round",
+                                            "stroke-width": "2",
+                                            d: "M5 13l4 4L19 7"
+                                          }
+                                        })
+                                      ]
+                                    )
+                                  : _vm._e(),
+                                _vm._v(" "),
+                                _c("span", { staticClass: "ml-6" }, [
+                                  _vm._v("Alphabetical")
+                                ])
+                              ]
+                            )
+                          ]
+                        },
+                        proxy: true
+                      }
+                    ])
+                  })
                 ],
                 1
               )
