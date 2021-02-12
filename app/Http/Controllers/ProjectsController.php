@@ -53,7 +53,7 @@ class ProjectsController extends Controller
 
         $project = auth()->user()->projects()->create($attributes);
 
-        return redirect($project->path());
+        return redirect($project->path())->with(['flash_message' => 'project created', 'flash_status' => 'success']);
     }
 
     public function update(Project $project) {
@@ -65,7 +65,7 @@ class ProjectsController extends Controller
             'layout'
         ]));
 
-        return redirect($project->path());
+        return redirect($project->path())->with(['flash_message' => 'project updated', 'flash_status' => 'success']);
     }
 
     public function updateSectionWeights(Request $request, Project $project) {
@@ -89,6 +89,6 @@ class ProjectsController extends Controller
 
         $project->delete();
 
-        return redirect('/projects');
+        return redirect('/projects')->with(['flash_message' => 'project deleted', 'flash_status' => 'danger']);
     }
 }

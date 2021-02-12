@@ -313,6 +313,9 @@
         <!-- Modal Portal -->
         <portal-target name="modal" multiple>
         </portal-target>
+
+        <!-- Flash Message -->
+        <flash v-bind:message="$page.flash.message" v-bind:status="$page.flash.status"></flash>
     </div>
 </template>
 
@@ -323,6 +326,7 @@
     import JetNavLink from '@/Jetstream/NavLink'
     import JetResponsiveNavLink from '@/Jetstream/ResponsiveNavLink'
     import NotificationItem from '@/Components/NotificationItem'
+    import Flash from '@/Components/Flash'
 
     export default {
         components: {
@@ -332,6 +336,7 @@
             JetNavLink,
             JetResponsiveNavLink,
             NotificationItem,
+            Flash,
         },
 
         data() {
