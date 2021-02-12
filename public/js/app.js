@@ -2297,11 +2297,13 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['message', 'status'],
   data: function data() {
     return {
-      show: false
+      messageArray: []
     };
   },
   created: function created() {
@@ -2314,26 +2316,27 @@ __webpack_require__.r(__webpack_exports__);
       this.flash();
     }
   },
-  computed: {
-    statusClasses: function statusClasses() {
-      return {
-        'bg-green-100 text-green-800': this.status == 'success',
-        'bg-red-200 text-red-900': this.status == 'danger',
-        'bg-blue-200 text-blue-800': this.status == 'info',
-        'bg-indigo-200 text-indigo-800': this.status == 'primary'
-      };
-    }
-  },
   methods: {
+    getStatusClasses: function getStatusClasses(status) {
+      return {
+        'bg-green-100 text-green-800': status == 'success',
+        'bg-red-200 text-red-900': status == 'danger',
+        'bg-blue-200 text-blue-800': status == 'info',
+        'bg-indigo-200 text-indigo-800': status == 'primary'
+      };
+    },
     flash: function flash() {
-      this.show = true;
+      this.messageArray.push({
+        message: this.message,
+        status: this.status
+      });
       this.hide();
     },
     hide: function hide() {
       var _this = this;
 
       setTimeout(function () {
-        _this.show = false;
+        _this.messageArray.shift();
       }, 3000);
     }
   }
@@ -3031,7 +3034,11 @@ __webpack_require__.r(__webpack_exports__);
       this.$emit('updateTaskWeights', target);
     },
     deleteSection: function deleteSection() {
-      this.deleteForm.post(this.section.path);
+      var _this = this;
+
+      this.deleteForm.post(this.section.path).then(function (response) {
+        _this.confirmingDeleteSection = false;
+      });
     }
   }
 });
@@ -3247,7 +3254,6 @@ __webpack_require__.r(__webpack_exports__);
     return {
       form: this.$inertia.form({
         name: null,
-        completed: false,
         section_id: this.section.id
       })
     };
@@ -3288,6 +3294,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_DatePicker__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/Components/DatePicker */ "./resources/js/Components/DatePicker.vue");
 /* harmony import */ var _Components_ActivityItem__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/Components/ActivityItem */ "./resources/js/Components/ActivityItem.vue");
 /* harmony import */ var _Components_UsersModal__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @/Components/UsersModal */ "./resources/js/Components/UsersModal.vue");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! moment */ "./node_modules/moment/moment.js");
+/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_9__);
 //
 //
 //
@@ -3371,6 +3379,7 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+
 
 
 
@@ -3400,7 +3409,7 @@ __webpack_require__.r(__webpack_exports__);
         id: this.task.id,
         name: this.task.name,
         description: this.task.description,
-        completed: this.task.completed_at,
+        completed_at: this.task.completed_at,
         due_date: this.task.due_date
       }),
       removeUserForm: this.$inertia.form({
@@ -3414,7 +3423,7 @@ __webpack_require__.r(__webpack_exports__);
         id: this.task.id,
         name: this.task.name,
         description: this.task.description,
-        completed: this.task.completed_at,
+        completed_at: this.task.completed_at,
         due_date: this.task.due_date
       });
     }
@@ -3439,7 +3448,7 @@ __webpack_require__.r(__webpack_exports__);
       }
     },
     toggleCompleted: function toggleCompleted() {
-      this.task.completed_at = !this.task.completed_at ? moment().toDate() : null;
+      this.task.completed_at = !this.task.completed_at ? moment__WEBPACK_IMPORTED_MODULE_9___default()().toDate() : null;
       this.form.completed_at = this.task.completed_at;
       this.form.patch(this.task.path);
     },
@@ -3600,7 +3609,6 @@ __webpack_require__.r(__webpack_exports__);
     return {
       form: this.$inertia.form({
         name: null,
-        completed: false,
         section_id: this.section.id
       })
     };
@@ -81245,18 +81253,24 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c(
     "div",
-    {
-      directives: [
-        { name: "show", rawName: "v-show", value: _vm.show, expression: "show" }
-      ],
-      staticClass: "rounded py-3 px-5 alert-flash",
-      class: _vm.statusClasses,
-      attrs: { id: "alert", role: "alert" }
-    },
-    [
-      _vm.status == "success" ? _c("strong", [_vm._v("Success!")]) : _vm._e(),
-      _vm._v(" " + _vm._s(_vm.message) + "\n")
-    ]
+    { staticClass: "alert-flash flex flex-col items-end" },
+    _vm._l(_vm.messageArray, function(messageObj) {
+      return _c(
+        "div",
+        {
+          staticClass: "rounded py-3 px-5 my-2 opacity-80",
+          class: _vm.getStatusClasses(messageObj.status),
+          attrs: { id: "alert", role: "alert" }
+        },
+        [
+          messageObj.status == "success"
+            ? _c("strong", [_vm._v("Success!")])
+            : _vm._e(),
+          _vm._v(" " + _vm._s(messageObj.message) + "\n    ")
+        ]
+      )
+    }),
+    0
   )
 }
 var staticRenderFns = []

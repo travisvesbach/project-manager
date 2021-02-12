@@ -47,7 +47,7 @@ class UsersController extends Controller
 
         $user->notify(new UserCreated());
 
-        return redirect('/users');
+        return redirect('/users')->with(['flash_message' => $user->name . ' created', 'flash_status' => 'success']);
     }
 
     public function edit(User $user) {
@@ -75,7 +75,7 @@ class UsersController extends Controller
 
         $user->save();
 
-        return redirect('/users');
+        return redirect('/users')->with(['flash_message' => $user->name . ' updated', 'flash_status' => 'success']);
     }
 
     public function destroy(User $user) {
@@ -83,6 +83,6 @@ class UsersController extends Controller
 
         $user->delete();
 
-        return redirect('/users');
+        return redirect('/users')->with(['flash_message' => $user->name . ' deleted', 'flash_status' => 'danger']);
     }
 }

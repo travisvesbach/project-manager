@@ -23,7 +23,7 @@ class TasksController extends Controller
     public function store(TaskRequest $request, Project $project) {
         $project->addTask($request->validated());
 
-        return redirect($project->path());
+        return redirect($project->path())->with(['flash_message' => $request->input('name') . ' created', 'flash_status' => 'success']);
     }
 
     public function update(TaskRequest $request, Project $project, Task $task) {
@@ -41,6 +41,6 @@ class TasksController extends Controller
 
         $section->updateTaskWeights();
 
-        return redirect($project->path());
+        return redirect($project->path())->with(['flash_message' => $task->name . ' deleted', 'flash_status' => 'danger']);
     }
 }

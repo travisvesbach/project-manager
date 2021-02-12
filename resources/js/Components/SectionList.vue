@@ -175,7 +175,9 @@
                 this.$emit('updateTaskWeights', target);
             },
             deleteSection() {
-                this.deleteForm.post(this.section.path);
+                this.deleteForm.post(this.section.path).then(response => {
+                    this.confirmingDeleteSection = false
+                });
             }
         }
     }

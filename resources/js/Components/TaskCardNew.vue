@@ -29,7 +29,6 @@
             return {
                 form: this.$inertia.form({
                     name: null,
-                    completed: false,
                     section_id: this.section.id
                 }),
             }

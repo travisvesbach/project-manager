@@ -13,7 +13,7 @@ class SectionsController extends Controller
     public function store(SectionRequest $request, Project $project) {
         $project->addSection($request->validated());
 
-        return redirect($project->path());
+        return redirect($project->path())->with(['flash_message' => $request->input('name') . ' created', 'flash_status' => 'success']);
     }
 
     public function update(SectionRequest $request, Project $project, Section $section) {
@@ -46,6 +46,6 @@ class SectionsController extends Controller
 
         $project->updateSectionWeights();
 
-        return redirect($project->path());
+        return redirect($project->path())->with(['flash_message' => $section->name . ' deleted', 'flash_status' => 'danger']);
     }
 }

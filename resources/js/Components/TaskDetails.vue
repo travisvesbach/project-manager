@@ -92,6 +92,7 @@
     import DatePicker from '@/Components/DatePicker'
     import ActivityItem from '@/Components/ActivityItem'
     import UsersModal from '@/Components/UsersModal'
+    import moment from 'moment'
 
     export default {
         props: ['task'],
@@ -115,7 +116,7 @@
                     id: this.task.id,
                     name: this.task.name,
                     description: this.task.description,
-                    completed: this.task.completed_at,
+                    completed_at: this.task.completed_at,
                     due_date: this.task.due_date,
                 }),
                 removeUserForm: this.$inertia.form({
@@ -129,7 +130,7 @@
                     id: this.task.id,
                     name: this.task.name,
                     description: this.task.description,
-                    completed: this.task.completed_at,
+                    completed_at: this.task.completed_at,
                     due_date: this.task.due_date,
                 });
             }
