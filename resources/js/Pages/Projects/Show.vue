@@ -32,7 +32,7 @@
                             <jet-dropdown-link @click.native="editingProject = true" as="button">
                                 Edit Project
                             </jet-dropdown-link>
-                            <jet-dropdown-link @click.native="confirmingDeleteProject = true" as="button">
+                            <jet-dropdown-link @click.native="confirmingDeleteProject = true" as="button" v-if="$page.user.id == project.owner_id">
                                 Delete Project
                             </jet-dropdown-link>
                         </template>

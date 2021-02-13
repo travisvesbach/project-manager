@@ -75,7 +75,7 @@ class ProjectUsersTest extends TestCase
     }
 
     /** @test **/
-    public function non_owners_cannot_uninvite_users() {
+    public function non_owners_cannot_uninvite_other_users() {
         $project = ProjectFactory::create();
 
         $project->invite($userToUninvite = User::factory()->create());
@@ -85,6 +85,21 @@ class ProjectUsersTest extends TestCase
             ->assertStatus(403);
 
         $this->assertTrue($project->users->contains($userToUninvite));
+    }
+
+    /** @test **/
+    public function non_owners_can_uninvite_themselves() {
+        $this->withoutExceptionHandling();
+
+        $project = ProjectFactory::create();
+
+        $project->invite($user = User::factory()->create());
+
+        $this->actingAs($user)
+            ->delete($project->path() . '/users/' . $user->id)
+            ->assertRedirect('/projects');
+
+        $this->assertFalse($project->fresh()->users->contains($user));
     }
 
     /** @test **/

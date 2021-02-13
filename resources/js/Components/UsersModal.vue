@@ -36,7 +36,7 @@
                             <a :href="'mailto:' + user.email" class="text-sm link-color">{{ user.email }}</a>
                         </div>
                     </div>
-                    <div class="inline-block" v-if="type == 'task' || (type == 'project' && user.id != owner.id)">
+                    <div class="inline-block" v-if="showDropdown(user)">
                         <!-- dropdown -->
                         <jet-dropdown align="right" width="48" position="fixed" class="hover-target">
                             <template #trigger>
@@ -52,7 +52,7 @@
                                     Make project owner
                                 </jet-dropdown-link>
                                 <jet-dropdown-link :disabled="removeForm.processing" @click.native="removeUser(user)" as="button">
-                                    {{ type == 'task' ? 'Remove from task' : 'Remove from project' }}
+                                    {{ $page.user.id == user.id ? 'Leave' : 'Remove from' }} {{ type == 'task' ? 'task' : 'project' }}
                                 </jet-dropdown-link>
                             </template>
                         </jet-dropdown>
@@ -158,6 +158,21 @@
                 this.form.id = null;
                 this.removeForm.id = null;
                 this.$emit('close');
+            },
+            showDropdown(user) {
+                // show on task
+                if(this.type == 'task') {
+                    return true;
+
+                // show if logged in user is owner and if user is not ower
+                } else if(this.$page.user.id == this.owner.id && this.owner.id != user.id) {
+                    return true;
+
+                // show if logged in user is user and not owner
+                } else if(this.$page.user.id == user.id && this.owner.id != user.id) {
+                    return true;
+                }
+                return false;
             }
         }
     }

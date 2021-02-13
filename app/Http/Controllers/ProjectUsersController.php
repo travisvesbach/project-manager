@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Project;
 use App\Models\User;
 use App\Http\Requests\ProjectUserRequest;
+use Auth;
 
 class ProjectUsersController extends Controller
 {
@@ -26,10 +27,14 @@ class ProjectUsersController extends Controller
     }
 
     public function destroy(Project $project, User $user) {
+        if(Auth::user()->id == $user->id && $user->id != $project->owner_id) {
+            $project->uninvite($user);
+            return redirect('/projects')->with(['flash_message' => 'You left ' . $project->name, 'flash_status' => 'danger']);
+        }
         $this->authorize('delete', $project);
 
         $project->uninvite($user);
 
-        return redirect($project->path());
+        return redirect($project->path())->with(['flash_message' => $user->name . ' was removed from the project', 'flash_status' => 'danger']);
     }
 }

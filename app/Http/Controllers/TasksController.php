@@ -11,7 +11,7 @@ use App\Http\Requests\TaskRequest;
 class TasksController extends Controller
 {
     public function create() {
-        $projects = auth()->user()->projects()->orderBy('name')->with('tasks')->get();
+        $projects = auth()->user()->allProjects()->sortBy('name');
 
         return Inertia::render('Tasks/Create', compact('projects'));
     }

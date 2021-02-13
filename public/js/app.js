@@ -1991,7 +1991,7 @@ __webpack_require__.r(__webpack_exports__);
           var identifier = this["for"] == 'task' ? 'this task' : '<strong>' + this.activity.subject.name + '</strong>';
 
           if (Object.keys(this.activity.changes.after).length == 1) {
-            if (Object.keys(this.activity.changes.after)[0] == 'completed') {
+            if (Object.keys(this.activity.changes.after)[0] == 'completed_at') {
               description += 'marked ' + identifier + (this.activity.changes.after.completed_at ? ' complete' : ' incomplete');
             } else {
               description += 'updated ' + identifier + '\'s ' + Object.keys(this.activity.changes.after)[0];
@@ -3861,6 +3861,18 @@ __webpack_require__.r(__webpack_exports__);
       this.form.id = null;
       this.removeForm.id = null;
       this.$emit('close');
+    },
+    showDropdown: function showDropdown(user) {
+      // show on task
+      if (this.type == 'task') {
+        return true; // show if logged in user is owner and if user is not ower
+      } else if (this.$page.user.id == this.owner.id && this.owner.id != user.id) {
+        return true; // show if logged in user is user and not owner
+      } else if (this.$page.user.id == user.id && this.owner.id != user.id) {
+        return true;
+      }
+
+      return false;
     }
   }
 });
@@ -83614,8 +83626,7 @@ var render = function() {
                         )
                       ]),
                       _vm._v(" "),
-                      _vm.type == "task" ||
-                      (_vm.type == "project" && user.id != _vm.owner.id)
+                      _vm.showDropdown(user)
                         ? _c(
                             "div",
                             { staticClass: "inline-block" },
@@ -83714,9 +83725,15 @@ var render = function() {
                                               _vm._v(
                                                 "\n                                " +
                                                   _vm._s(
+                                                    _vm.$page.user.id == user.id
+                                                      ? "Leave"
+                                                      : "Remove from"
+                                                  ) +
+                                                  " " +
+                                                  _vm._s(
                                                     _vm.type == "task"
-                                                      ? "Remove from task"
-                                                      : "Remove from project"
+                                                      ? "task"
+                                                      : "project"
                                                   ) +
                                                   "\n                            "
                                               )
@@ -89002,22 +89019,24 @@ var render = function() {
                                 ]
                               ),
                               _vm._v(" "),
-                              _c(
-                                "jet-dropdown-link",
-                                {
-                                  attrs: { as: "button" },
-                                  nativeOn: {
-                                    click: function($event) {
-                                      _vm.confirmingDeleteProject = true
-                                    }
-                                  }
-                                },
-                                [
-                                  _vm._v(
-                                    "\n                                Delete Project\n                            "
+                              _vm.$page.user.id == _vm.project.owner_id
+                                ? _c(
+                                    "jet-dropdown-link",
+                                    {
+                                      attrs: { as: "button" },
+                                      nativeOn: {
+                                        click: function($event) {
+                                          _vm.confirmingDeleteProject = true
+                                        }
+                                      }
+                                    },
+                                    [
+                                      _vm._v(
+                                        "\n                                Delete Project\n                            "
+                                      )
+                                    ]
                                   )
-                                ]
-                              )
+                                : _vm._e()
                             ]
                           },
                           proxy: true
