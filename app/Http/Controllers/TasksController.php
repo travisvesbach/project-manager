@@ -27,7 +27,13 @@ class TasksController extends Controller
     }
 
     public function update(TaskRequest $request, Project $project, Task $task) {
+        $old_completed_at = $task->completed_at;
+
         $task->update($request->validated());
+
+        if($old_completed_at != $task->completed_at) {
+            $task->completed_at != null ? $task->notifyUsers('complete') : $task->notifyUsers('incomplete');
+        }
 
         return redirect($project->path());
     }

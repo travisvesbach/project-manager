@@ -52,7 +52,7 @@
                         let identifier = (this.for == 'task' ? 'this task' : '<strong>' + this.activity.subject.name + '</strong>');
                         if(Object.keys(this.activity.changes.after).length == 1) {
                             if(Object.keys(this.activity.changes.after)[0] == 'completed_at') {
-                                description += 'marked ' + identifier + (this.activity.changes.after.completed_at ? ' complete' : ' incomplete');
+                                description += 'marked ' + identifier + (this.activity.changes.after.completed_at ? ' as complete' : ' as incomplete');
                             } else {
                                 description += 'updated ' + identifier + '\'s ' + Object.keys(this.activity.changes.after)[0];
                             }

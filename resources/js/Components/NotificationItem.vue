@@ -45,6 +45,16 @@
                     case 'App\\Notifications\\PromotedToProjectOwner':
                         description += 'made you ' + this.notification.data['project_name'] + '\'s owner';
                         break;
+                    case 'App\\Notifications\\TaskGeneralNotification':
+                        switch(this.notification.data['description']) {
+                            case 'complete':
+                                description+= 'marked ' + this.notification.data['task_name'] + ' as complete';
+                                break;
+                            case 'incomplete':
+                                description+= 'marked ' + this.notification.data['task_name'] + ' as incomplete'
+                                break;
+                        }
+                        break;
 
                     default:
                 }

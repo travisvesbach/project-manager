@@ -55,4 +55,28 @@ class NotificationsTest extends TestCase
 
         $this->assertNotNull($notification->fresh()->read_at);
     }
+
+    /** @test **/
+    public function changing_a_tasks_completed_at() {
+        $project = ProjectFactory::withTasks(1)->create();
+
+        $task = $project->tasks->first();
+
+        $task->invite($user = User::factory()->create());
+        $this->assertCount(1, $user->notifications);
+
+        $this->actingAs($project->owner)
+            ->patch($task->path(), [
+                'name' => 'changed name',
+                'completed_at' => date('Y-m-d H:i:s')
+            ]);
+        $this->assertCount(2, $user->fresh()->notifications);
+
+        $this->actingAs($project->owner)
+            ->patch($task->path(), [
+                'name' => 'changed name',
+                'completed_at' => null
+            ]);
+        $this->assertCount(3, $user->fresh()->notifications);
+    }
 }

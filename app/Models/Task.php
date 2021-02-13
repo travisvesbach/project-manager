@@ -9,6 +9,7 @@ use App\Models\Section;
 use App\Models\Activity;
 use App\Models\User;
 use App\Traits\RecordsActivity;
+use App\Notifications\TaskGeneralNotification;
 use Auth;
 
 class Task extends Model
@@ -83,16 +84,12 @@ class Task extends Model
         return $this->path();
     }
 
-    public function complete() {
-        $this->update(['completed_at' => date('Y-m-d H:i:s')]);
-
-        $this->recordActivity('completed_task');
-    }
-
-    public function incomplete() {
-        $this->update(['completed_at' => null]);
-
-        $this->recordActivity('incompleted_task');
+    public function notifyUsers($description) {
+        foreach($this->users as $user) {
+            if($user->id != Auth::user()->id) {
+                $user->notify(new TaskGeneralNotification($this, $description));
+            }
+        }
     }
 
     public function invite(User $user) {
