@@ -46,8 +46,16 @@
     @apply dark:bg-gray-700;
 }
 
-.form-input-color {
+.form-input-color, .vs__selected, .vs__search, .vs__actions, .vs__dropdown-menu, .vs__dropdown-option {
     @apply dark:bg-gray-700 dark:text-white dark:placeholder-gray-100;
+}
+
+.vs__dropdown-option {
+    @apply dark:hover:bg-gray-600 dark:focus:bg-gray-600;
+}
+
+.vs__open-indicator, .vs__clear {
+    @apply fill-current dark:text-white !important;
 }
 
 .hidden-input-color {

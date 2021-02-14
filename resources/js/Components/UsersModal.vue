@@ -14,7 +14,7 @@
                 </div>
 
                 <div class="ml-auto" :class="{ 'opacity-25': addDisabled }" v-if="$page.user.id == owner.id">
-                    <select-input id="user" class="mr-4" v-model="form.id" v-bind:options="filteredUsers" v-bind:placeholder="'-- select user --'" required :disabled="addDisabled"/>
+                    <select-input id="user" class="mr-4 w-48" v-model="form.id" v-bind:options="filteredUsers" v-bind:placeholder="'-- select user --'" required :disabled="addDisabled"/>
                     <jet-button type="submit" size="small" :disabled="addDisabled" @click.native="addUser">
                         {{ addText }}
                     </jet-button>

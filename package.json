@@ -33,6 +33,7 @@
         "vue-flatpickr-component": "^8.1.6",
         "vue-input-autowidth": "^1.0.10",
         "vue-moments-ago": "^0.2.0",
+        "vue-select": "^3.11.2",
         "vuedraggable": "^2.24.3"
     }
 }
