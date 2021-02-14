@@ -8,8 +8,7 @@ use App\Models\User;
 use App\Models\Task;
 use App\Models\Activity;
 use App\Traits\RecordsActivity;
-use App\Notifications\InvitedToProject;
-use App\Notifications\PromotedToProjectOwner;
+use App\Notifications\ProjectGeneralNotification;
 
 class Project extends Model
 {
@@ -106,7 +105,7 @@ class Project extends Model
     public function invite(User $user) {
         $this->users()->attach($user);
         $this->recordActivity('joined_project', $user->id);
-        $user->notify(new InvitedToProject($this));
+        $user->notify(new ProjectGeneralNotification($this, 'invited to project'));
     }
 
     public function uninvite(User $user) {
@@ -123,7 +122,7 @@ class Project extends Model
         $this->owner_id = $user->id;
         $this->users()->detach($user);
         $this->save();
-        $user->notify(new PromotedToProjectOwner($this));
+        $user->notify(new ProjectGeneralNotification($this, 'promoted to project owner'));
     }
 
     public function users() {

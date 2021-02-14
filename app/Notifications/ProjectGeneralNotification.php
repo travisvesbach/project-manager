@@ -9,22 +9,24 @@ use Illuminate\Notifications\Notification;
 use App\Models\Project;
 use Auth;
 
-class PromotedToProjectOwner extends Notification
+class ProjectGeneralNotification extends Notification
 {
     use Queueable;
 
     protected $project;
     protected $user;
+    protected $description;
 
     /**
      * Create a new notification instance.
      *
      * @return void
      */
-    public function __construct(Project $project)
+    public function __construct(Project $project, $description)
     {
         $this->project = $project;
         $this->user = Auth::user() ? Auth::user() : $project->owner;
+        $this->description = $description;
     }
 
     /**
@@ -69,6 +71,7 @@ class PromotedToProjectOwner extends Notification
             'project_id' => $this->project->id,
             'project_name' => $this->project->name,
             'path' => $this->project->path(),
+            'description' => $this->description,
         ];
     }
 }

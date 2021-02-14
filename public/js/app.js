@@ -2503,12 +2503,17 @@ __webpack_require__.r(__webpack_exports__);
       var description = this.notification.data['user']['name'] + ' ';
 
       switch (this.notification.type) {
-        case 'App\\Notifications\\InvitedToProject':
-          description += 'invited you to ' + this.notification.data['project_name'];
-          break;
+        case 'App\\Notifications\\ProjectGeneralNotification':
+          switch (this.notification.data['description']) {
+            case 'invited to project':
+              description += 'invited you to ' + this.notification.data['project_name'];
+              break;
 
-        case 'App\\Notifications\\PromotedToProjectOwner':
-          description += 'made you ' + this.notification.data['project_name'] + '\'s owner';
+            case 'promoted to project owner':
+              description += 'made you ' + this.notification.data['project_name'] + '\'s owner';
+              break;
+          }
+
           break;
 
         case 'App\\Notifications\\TaskGeneralNotification':
